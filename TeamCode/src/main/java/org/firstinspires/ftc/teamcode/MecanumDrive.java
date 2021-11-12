@@ -41,8 +41,8 @@ public class MecanumDrive {
     }
     public void driveBackwardsWithPower(double power){
         move(0,power,0);
-
     }
+
     public void strafeLeftWithPower(double power){
         move(-power,0,0);
     }
@@ -56,7 +56,6 @@ public class MecanumDrive {
         move(0,0, power);
     }
     public void stop(){
-
         move(0,0,0);
     }
 
