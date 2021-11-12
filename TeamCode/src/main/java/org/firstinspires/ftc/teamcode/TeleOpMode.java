@@ -12,7 +12,6 @@ public class TeleOpMode extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     MecanumDrive drive = new MecanumDrive(hardwareMap);
 
-
     @Override
     public void runOpMode() {
 
