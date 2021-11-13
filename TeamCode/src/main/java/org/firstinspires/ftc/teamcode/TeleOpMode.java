@@ -10,10 +10,10 @@ import com.qualcomm.robotcore.util.Range;
 public class TeleOpMode extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    MecanumDrive drive = new MecanumDrive(hardwareMap);
 
     @Override
     public void runOpMode() {
+        MecanumDrive drive = new MecanumDrive(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();

@@ -9,12 +9,13 @@ import com.qualcomm.robotcore.util.Range;
 @Autonomous(name = "Autonomous - Park")
 public class Autonomous_Park extends LinearOpMode{
 
-    MecanumDrive drive = new MecanumDrive(hardwareMap);
 //    Pose2d startingPose= new Pose2d(-60.0,-36.0,Math.toRadians(180));
 //    Trajectory t1;
 //    Pose2d warehouse = new Pose2d(-5.0,-3.5,Math.toRadians(180.0));
 
     public void runOpMode() {
+        MecanumDrive drive = new MecanumDrive(hardwareMap);
+
         waitForStart();
 
         drive.move(0.5, 0.5, 0);
