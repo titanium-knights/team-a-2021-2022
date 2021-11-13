@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class MecanumDrive {
@@ -11,6 +12,11 @@ public class MecanumDrive {
         fr = hmap.dcMotor.get("fr");
         bl = hmap.dcMotor.get("bl");
         br = hmap.dcMotor.get("br");
+
+        fl.setDirection(DcMotorSimple.Direction.REVERSE);
+        fr.setDirection(DcMotorSimple.Direction.FORWARD);
+        bl.setDirection(DcMotorSimple.Direction.REVERSE);
+        br.setDirection(DcMotorSimple.Direction.FORWARD);
     }
     double[] powerArr = new double[4];
 
