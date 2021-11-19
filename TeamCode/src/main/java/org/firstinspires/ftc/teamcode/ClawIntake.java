@@ -1,15 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@Config
 public class ClawIntake {
     DcMotor arm;
     Servo claw;
-    double releasePos = 0.47;
-    double grabPos = 0.86;
-    double armMultiplier = -0.5;
+    public static double releasePos = 0.47;
+    public static double ballPos = 0.8;
+    public static double grabPos = 0.86;
+    public static double armMultiplier = -0.5;
     public ClawIntake(HardwareMap hardwareMap) {
         this.arm = hardwareMap.dcMotor.get("lift");
         this.claw = hardwareMap.servo.get("claw"); //slide open and close
@@ -29,14 +32,19 @@ public class ClawIntake {
     }
 
     public void grab() {
-        claw.setPosition(this.grabPos);
+        claw.setPosition(grabPos);
     }
+
+    public void grabBall() {
+        claw.setPosition(ballPos);
+    }
+
     public void setArmPower(double p){
         arm.setPower(p * armMultiplier);
         if (p == 0) this.arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     public void release() {
-        claw.setPosition(this.releasePos);
+        claw.setPosition(releasePos);
     }
 
     public void incrementClawPosition(double amount) {

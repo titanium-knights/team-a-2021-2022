@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Carousel;
 
 @TeleOp(name = "Tele-Op Mode")
@@ -17,6 +20,12 @@ public class TeleOpMode extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap);
         ClawIntake intake = new ClawIntake(hardwareMap);
         Carousel carousel = new Carousel(hardwareMap);
+
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        Telemetry telemetry = dashboard.getTelemetry();
+
+        boolean dpad_left_down = false;
+        boolean dpad_right_down = false;
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -35,13 +44,17 @@ public class TeleOpMode extends LinearOpMode {
             drive.move(gamepad1.left_stick_x, -gamepad1.left_stick_y,gamepad1.right_stick_x);
             if(gamepad1.right_bumper) {
                 intake.grab();
+            } else if (gamepad1.y) {
+                intake.grabBall();
             } else if(gamepad1.left_bumper) {
                 intake.release();
-            } else if (gamepad1.dpad_left) {
-                intake.incrementClawPosition(-0.05);
-            } else if (gamepad1.dpad_right) {
-                intake.incrementClawPosition(0.05);
+            } else if (gamepad1.dpad_left && !dpad_left_down) {
+                intake.incrementClawPosition(-0.07);
+            } else if (gamepad1.dpad_right && !dpad_right_down) {
+                intake.incrementClawPosition(0.07);
             }
+            dpad_left_down = gamepad1.dpad_left;
+            dpad_right_down = gamepad1.dpad_right;
             if(Math.abs(gamepad1.left_trigger)>0.15){
                 intake.setArmPower(gamepad1.left_trigger);
             }
@@ -58,6 +71,10 @@ public class TeleOpMode extends LinearOpMode {
                 carousel.stop();
             }
 
+            telemetry.addData("Left Trigger", gamepad1.left_trigger);
+            telemetry.addData("Right Trigger", gamepad1.right_trigger);
+            telemetry.addData("Claw Position", intake.claw.getPosition());
+            telemetry.update();
 
         }
     }
