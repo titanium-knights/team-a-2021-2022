@@ -28,7 +28,7 @@ public class RobotCentricTeleop extends OpMode {
             intake.grab();
         }
         if(Math.abs(gamepad1.left_trigger)>0.15){
-            intake.setArmPower(-gamepad1.left_trigger);
+            intake.setArmPower(gamepad1.left_trigger);
         }
         else if(Math.abs(gamepad1.right_trigger)>0.15){
             intake.setArmPower(-gamepad1.right_trigger);
