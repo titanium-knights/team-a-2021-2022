@@ -14,7 +14,7 @@ public class TeleOpMode extends LinearOpMode {
     @Override
     public void runOpMode() {
         MecanumDrive drive = new MecanumDrive(hardwareMap);
-        FlywheelIntake intake = new FlywheelIntake(hardwareMap);
+        ClawIntake intake = new ClawIntake(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -32,11 +32,13 @@ public class TeleOpMode extends LinearOpMode {
 
             drive.move(gamepad1.left_stick_x, -gamepad1.left_stick_y,gamepad1.right_stick_x);
             if(gamepad1.y) {
-                intake.intakeCargo();
+                intake.grab();
             } else if(gamepad1.a) {
-                intake.placeCargo();
-            } else {
-                intake.stopCargo();
+                intake.release();
+            } else if (gamepad1.left_bumper) {
+                intake.incrementClawPosition(-0.05);
+            } else if (gamepad1.right_bumper) {
+                intake.incrementClawPosition(0.05);
             }
             if(gamepad1.dpad_up) {
                 intake.liftArm();

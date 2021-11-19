@@ -31,4 +31,13 @@ public class ClawIntake {
     public void release() {
         claw.setPosition(0);
     }
+
+    public void incrementClawPosition(double amount) {
+        double position = claw.getPosition();
+
+        if (amount > 0 && position >= 1) return;
+        if (amount < 0 && position <= 0) return;
+
+        claw.setPosition(position + amount);
+    }
 }
