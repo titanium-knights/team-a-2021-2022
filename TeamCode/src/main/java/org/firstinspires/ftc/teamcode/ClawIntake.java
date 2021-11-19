@@ -19,10 +19,12 @@ public class ClawIntake {
     }
 
     public void liftArm() {
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm.setPower(armMultiplier);
     }
 
     public void lowerArm(){
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm.setPower(-armMultiplier);
     }
 
@@ -40,8 +42,14 @@ public class ClawIntake {
     }
 
     public void setArmPower(double p){
+        if (p != 0) {
+            arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
         arm.setPower(p * armMultiplier);
-        if (p == 0) this.arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        if (p == 0) {
+            arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
     }
     public void release() {
         claw.setPosition(releasePos);
