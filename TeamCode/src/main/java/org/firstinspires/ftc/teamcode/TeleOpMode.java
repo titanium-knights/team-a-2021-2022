@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import org.firstinspires.ftc.teamcode.util.Carousel;
 
 @TeleOp(name = "Tele-Op Mode")
 public class TeleOpMode extends LinearOpMode {
@@ -15,6 +16,7 @@ public class TeleOpMode extends LinearOpMode {
     public void runOpMode() {
         MecanumDrive drive = new MecanumDrive(hardwareMap);
         ClawIntake intake = new ClawIntake(hardwareMap);
+        Carousel carousel = new Carousel(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -31,23 +33,30 @@ public class TeleOpMode extends LinearOpMode {
             //rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
             drive.move(gamepad1.left_stick_x, -gamepad1.left_stick_y,gamepad1.right_stick_x);
-            if(gamepad1.y) {
+            if(gamepad1.right_bumper) {
                 intake.grab();
-            } else if(gamepad1.a) {
+            } else if(gamepad1.left_bumper) {
                 intake.release();
-            } else if (gamepad1.left_bumper) {
+            } else if (gamepad1.dpad_left) {
                 intake.incrementClawPosition(-0.05);
-            } else if (gamepad1.right_bumper) {
+            } else if (gamepad1.dpad_right) {
                 intake.incrementClawPosition(0.05);
             }
-            if(gamepad1.dpad_up) {
-                intake.liftArm();
-            } else if(gamepad1.dpad_down) {
-                intake.lowerArm();
-            } else {
-                intake.stopArm();
+            if(Math.abs(gamepad1.left_trigger)>0.15){
+                intake.setArmPower(gamepad1.left_trigger);
             }
-
+            else if(Math.abs(gamepad1.right_trigger)>0.15){
+                intake.setArmPower(-gamepad1.right_trigger);
+            }
+            if(gamepad1.b){
+                carousel.spin();
+            }
+            else if(gamepad1.x){
+                carousel.spinReverse();
+            }
+            else{
+                carousel.stop();
+            }
 
 
         }
