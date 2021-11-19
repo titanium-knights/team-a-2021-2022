@@ -27,7 +27,9 @@ public class ClawIntake {
     public void grab() {
         claw.setPosition(0.8);
     }
-
+    public void setArmPower(double p){
+        arm.setPower(p);
+    }
     public void release() {
         claw.setPosition(0);
     }
