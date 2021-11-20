@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,6 +21,8 @@ public class TeleOpMode extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap);
         ClawIntake intake = new ClawIntake(hardwareMap);
         Carousel carousel = new Carousel(hardwareMap);
+        RevBlinkinLedDriver leds = hardwareMap.get(RevBlinkinLedDriver.class, "oohshiny");
+        leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.BEATS_PER_MINUTE_LAVA_PALETTE);
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry telemetry = dashboard.getTelemetry();
@@ -72,6 +75,16 @@ public class TeleOpMode extends LinearOpMode {
             }
             else{
                 carousel.stop();
+            }
+
+            if (Math.abs(intake.claw.getPosition() - ClawIntake.grabPos) < 0.03) {
+                leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
+            } else if (Math.abs(intake.claw.getPosition() - ClawIntake.ballPos) < 0.03) {
+                leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.WHITE);
+            } else if (Math.abs(intake.claw.getPosition() - ClawIntake.releasePos) < 0.03) {
+                leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE);
+            } else {
+                leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
             }
 
             telemetry.addData("Left Trigger", gamepad1.left_trigger);
