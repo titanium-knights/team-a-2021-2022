@@ -59,10 +59,10 @@ public class TeleOpMode extends LinearOpMode {
             dpad_left_down = gamepad1.dpad_left;
             dpad_right_down = gamepad1.dpad_right;
             if(Math.abs(gamepad1.right_trigger)>0.15){
-                intake.setArmPower(gamepad1.left_trigger);
+                intake.setArmPower(gamepad1.right_trigger);
             }
             else if(Math.abs(gamepad1.left_trigger)>0.15){
-                intake.setArmPower(-gamepad1.right_trigger);
+                intake.setArmPower(-gamepad1.left_trigger);
             }
             else {
                 intake.setArmPower(0);
