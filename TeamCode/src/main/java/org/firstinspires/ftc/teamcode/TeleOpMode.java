@@ -29,6 +29,8 @@ public class TeleOpMode extends LinearOpMode {
 
         boolean dpad_left_down = false;
         boolean dpad_right_down = false;
+        boolean a_down = false;
+        boolean slowMode = false;
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -44,7 +46,8 @@ public class TeleOpMode extends LinearOpMode {
             //leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             //rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
-            drive.move(gamepad1.left_stick_x, -gamepad1.left_stick_y,gamepad1.right_stick_x);
+            double multiplier = slowMode ? 0.3 : 0.75;
+            drive.move(gamepad1.left_stick_x * multiplier, -gamepad1.left_stick_y * multiplier,gamepad1.right_stick_x * multiplier);
             if(gamepad1.right_bumper) {
                 intake.grab();
             } else if (gamepad1.y) {
@@ -68,14 +71,18 @@ public class TeleOpMode extends LinearOpMode {
                 intake.setArmPower(0);
             }
             if(gamepad1.b){
-                carousel.spin();
+                carousel.spin(true);
             }
             else if(gamepad1.x){
-                carousel.spinReverse();
+                carousel.spinReverse(true);
             }
             else{
                 carousel.stop();
             }
+            if (gamepad1.a && !a_down) {
+                slowMode = !slowMode;
+            }
+            a_down = gamepad1.a;
 
             if (Math.abs(intake.claw.getPosition() - ClawIntake.grabPos) < 0.03) {
                 leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
@@ -90,6 +97,8 @@ public class TeleOpMode extends LinearOpMode {
             telemetry.addData("Left Trigger", gamepad1.left_trigger);
             telemetry.addData("Right Trigger", gamepad1.right_trigger);
             telemetry.addData("Claw Position", intake.claw.getPosition());
+            this.telemetry.addData("TorqueNADO Mode", slowMode ? "Yes" : "No");
+            this.telemetry.update();
             telemetry.update();
 
         }

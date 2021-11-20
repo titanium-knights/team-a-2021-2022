@@ -30,6 +30,7 @@ public class ClawIntake {
 
     public void stopArm() {
         arm.setPower(0);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
@@ -45,6 +46,7 @@ public class ClawIntake {
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm.setPower(p * armMultiplier);
         if (p == 0) {
+            arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
     }

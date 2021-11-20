@@ -9,11 +9,17 @@ public class Carousel {
     public Carousel(HardwareMap hmap){
         m=hmap.get(DcMotor.class,"carousel");
     }
-    public void spin(){
-        m.setPower(0.75);
+    public void spin(boolean fast){
+        m.setPower(fast ? (0.75 / 2) : (0.75 / 4));
+    }
+    public void spin() {
+        this.spin(false);
     }
     public void stop(){
         m.setPower(0);
     }
-    public void spinReverse(){ m.setPower(-0.75); }
+    public void spinReverse(boolean fast){ m.setPower(fast ? (-0.75 / 2) : (-0.75 / 4)); }
+    public void spinReverse() {
+        this.spinReverse(false);
+    }
 }
