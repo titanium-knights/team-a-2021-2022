@@ -42,12 +42,9 @@ public class ClawIntake {
     }
 
     public void setArmPower(double p){
-        if (p != 0) {
-            arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm.setPower(p * armMultiplier);
         if (p == 0) {
-            arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
     }
