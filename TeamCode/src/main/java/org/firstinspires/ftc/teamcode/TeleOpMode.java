@@ -61,6 +61,9 @@ public class TeleOpMode extends LinearOpMode {
             else if(Math.abs(gamepad1.right_trigger)>0.15){
                 intake.setArmPower(-gamepad1.right_trigger);
             }
+            else {
+                intake.setArmPower(0);
+            }
             if(gamepad1.b){
                 carousel.spin();
             }
