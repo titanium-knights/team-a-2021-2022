@@ -22,6 +22,12 @@ public class LEDAuton extends LinearOpMode {
             sleep(2000);
             leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.STROBE_GOLD);
             sleep(2000);
+            for(int i = 0; i < 50; i++) {
+                leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+                sleep(500);
+                leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
+                sleep(500);
+            }
         }
     }
 }
