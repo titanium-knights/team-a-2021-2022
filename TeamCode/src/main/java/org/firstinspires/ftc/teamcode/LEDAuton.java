@@ -17,7 +17,7 @@ public class LEDAuton extends LinearOpMode {
             leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.COLOR_WAVES_LAVA_PALETTE);
             sleep(2000);
             leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.COLOR_WAVES_RAINBOW_PALETTE);
-            sleep(2000);
+            sleep(8000);
             leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.TWINKLES_FOREST_PALETTE);
             sleep(2000);
             leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.STROBE_GOLD);
