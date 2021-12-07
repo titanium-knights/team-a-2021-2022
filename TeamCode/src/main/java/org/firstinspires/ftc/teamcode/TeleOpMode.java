@@ -21,7 +21,7 @@ public class TeleOpMode extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap);
         ClawIntake intake = new ClawIntake(hardwareMap);
         Carousel carousel = new Carousel(hardwareMap);
-        RevBlinkinLedDriver leds = hardwareMap.get(RevBlinkinLedDriver.class, "oohshiny");
+        RevBlinkinLedDriver leds = hardwareMap.get(RevBlinkinLedDriver.class, "blingbling");
         leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.BEATS_PER_MINUTE_LAVA_PALETTE);
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
