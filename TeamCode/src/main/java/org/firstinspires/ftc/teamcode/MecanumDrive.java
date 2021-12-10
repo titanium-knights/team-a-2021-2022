@@ -2,7 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.teamcode.util.IMU;
 
 public class MecanumDrive {
     DcMotor fl, fr, bl, br;
@@ -19,7 +22,15 @@ public class MecanumDrive {
         br.setDirection(DcMotorSimple.Direction.FORWARD);
     }
     double[] powerArr = new double[4];
-
+    public void teleOpFieldCentric(Gamepad g1, IMU imu, double multiplier){
+        double angle = Math.toRadians(imu.getZAngle());
+        double inputY = -g1.left_stick_y;
+        double inputX = g1.left_stick_x;
+        double rot = g1.right_stick_x;
+        double x = Math.cos(angle) * inputX - Math.sin(angle) * inputY;
+        double y = Math.sin(angle) * inputX + Math.cos(angle) * inputY;
+        move(x*multiplier,y*multiplier,rot*multiplier);
+    }
     public void move(double x, double y, double turn) {
         powerArr[0] = x+y+turn; //fl power
         powerArr[1] = y-x-turn; //Fr Power
