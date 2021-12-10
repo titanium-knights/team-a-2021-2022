@@ -10,14 +10,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Carousel;
+import org.firstinspires.ftc.teamcode.util.IMU;
 
 @TeleOp(name = "Tele-Op Mode")
 public class TeleOpMode extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-
+    IMU imu;
     @Override
     public void runOpMode() {
+        imu = new IMU(hardwareMap);
+        imu.initializeIMU();
         MecanumDrive drive = new MecanumDrive(hardwareMap);
         ClawIntake intake = new ClawIntake(hardwareMap);
         Carousel carousel = new Carousel(hardwareMap);
@@ -48,6 +51,7 @@ public class TeleOpMode extends LinearOpMode {
             //rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
             double multiplier = slowMode ? 0.3 : 0.75;
+            drive.teleOpFieldCentric(gamepad1,imu,multiplier);
             drive.move(gamepad1.left_stick_x * multiplier, -gamepad1.left_stick_y * multiplier,gamepad1.right_stick_x * multiplier);
             if(gamepad1.right_bumper) {
                 intake.grab();
