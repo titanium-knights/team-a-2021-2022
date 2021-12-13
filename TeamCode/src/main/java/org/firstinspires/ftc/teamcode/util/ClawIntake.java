@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
 public class ClawIntake {
-    DcMotorEx arm;
+    public DcMotorEx arm;
     public Servo claw;
     public static double releasePos = 0.47;
     public static double ballPos = 0.8;
@@ -69,7 +69,7 @@ public class ClawIntake {
 
         claw.setPosition(position + amount);
     }
-//    public void goDumpPos(){
+    //    public void goDumpPos(){
 //        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //    }
 //    public void goInitPos(){
@@ -79,5 +79,8 @@ public class ClawIntake {
         arm.setTargetPosition(pos);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+    }
+    public void turnOffRTP(){
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }

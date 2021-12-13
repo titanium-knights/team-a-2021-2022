@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Carousel;
 import org.firstinspires.ftc.teamcode.util.ClawIntake;
@@ -33,8 +35,8 @@ public class TeleOpMode extends LinearOpMode {
         boolean dpad_right_down = false;
         boolean a_down = false;
         boolean slowMode = false;
-
-
+        boolean y_down = false;
+        boolean positionMode = false;
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -42,7 +44,7 @@ public class TeleOpMode extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-           // POV Mode uses left stick to go forward, and right stick to turn.
+            // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
 //            double drive = -gamepad1.left_stick_y;
 //            double turn  =  gamepad1.right_stick_x;
@@ -51,12 +53,14 @@ public class TeleOpMode extends LinearOpMode {
 
             double multiplier = slowMode ? 0.3 : 0.75;
             drive.teleOpFieldCentric(gamepad1,imu,multiplier);
-            drive.move(gamepad1.left_stick_x * multiplier, -gamepad1.left_stick_y * multiplier,gamepad1.right_stick_x * multiplier);
+//            drive.move(gamepad1.left_stick_x * multiplier, -gamepad1.left_stick_y * multiplier,gamepad1.right_stick_x * multiplier);
             if(gamepad1.right_bumper) {
                 intake.grab();
-            } else if (gamepad1.y) {
-                intake.grabBall();
-            } else if(gamepad1.left_bumper) {
+            }
+//          else if (gamepad1.y) {
+//                intake.grabBall();
+            //}
+            else if(gamepad1.left_bumper) {
                 intake.release();
             } else if (gamepad1.dpad_left && !dpad_left_down) {
                 intake.incrementClawPosition(-0.07);
@@ -65,15 +69,8 @@ public class TeleOpMode extends LinearOpMode {
             }
             dpad_left_down = gamepad1.dpad_left;
             dpad_right_down = gamepad1.dpad_right;
-            if(Math.abs(gamepad1.right_trigger)>0.15){
-                intake.setArmPower(gamepad1.right_trigger);
-            }
-            else if(Math.abs(gamepad1.left_trigger)>0.15){
-                intake.setArmPower(-gamepad1.left_trigger);
-            }
-            else {
-                intake.setArmPower(0);
-            }
+
+
             if(gamepad1.b){
                 carousel.spin(true);
             }
@@ -86,8 +83,32 @@ public class TeleOpMode extends LinearOpMode {
             if (gamepad1.a && !a_down) {
                 slowMode = !slowMode;
             }
+            if(gamepad1.y && !y_down){
+                positionMode=!positionMode;
+            }
+            if(positionMode){
+                if(gamepad1.dpad_up){
+                    intake.setArmPosition(-412);
+                }
+                if(gamepad1.dpad_down){
+                    intake.setArmPosition(-10);
+                }
+                intake.setArmPower(0.5);
+            }
+            else{
+                intake.turnOffRTP();
+                if(Math.abs(gamepad1.right_trigger)>0.15){
+                    intake.setArmPower(gamepad1.right_trigger);
+                }
+                else if(Math.abs(gamepad1.left_trigger)>0.15){
+                    intake.setArmPower(-gamepad1.left_trigger);
+                }
+                else {
+                    intake.setArmPower(0);
+                }
+            }
             a_down = gamepad1.a;
-
+            y_down = gamepad1.y;
             if (Math.abs(intake.claw.getPosition() - ClawIntake.grabPos) < 0.03) {
                 leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
             } else if (Math.abs(intake.claw.getPosition() - ClawIntake.ballPos) < 0.03) {
@@ -102,6 +123,7 @@ public class TeleOpMode extends LinearOpMode {
             telemetry.addData("Right Trigger", gamepad1.right_trigger);
             telemetry.addData("Claw Position", intake.claw.getPosition());
             this.telemetry.addData("TorqueNADO Mode", slowMode ? "Yes" : "No");
+            this.telemetry.addData("RTP Mode", positionMode ? "Yes" : "No");
             this.telemetry.update();
             telemetry.update();
 
