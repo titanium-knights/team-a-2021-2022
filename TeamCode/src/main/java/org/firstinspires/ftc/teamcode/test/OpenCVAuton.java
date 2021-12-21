@@ -16,7 +16,7 @@ public class OpenCVAuton extends LinearOpMode {
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "NAME_OF_CAMERA_IN_CONFIG_FILE");
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
         DuckMurderPipeline dmp = new DuckMurderPipeline(telemetry);
-        
+
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
