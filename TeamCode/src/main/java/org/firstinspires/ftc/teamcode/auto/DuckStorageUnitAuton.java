@@ -31,7 +31,7 @@ public class DuckStorageUnitAuton extends LinearOpMode{
                 .waitSeconds(0.5)
                 .setTangent(Math.toRadians(135))
                 .splineToSplineHeading(new Pose2d(-60, -35, Math.toRadians(0)), Math.toRadians(-90))
-                .build()
+                .build();
 
         drive.setPoseEstimate(sequence.start());
         drive.followTrajectorySequence(sequence);
