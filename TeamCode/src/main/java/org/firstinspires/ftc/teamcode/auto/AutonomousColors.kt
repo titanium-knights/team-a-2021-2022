@@ -12,14 +12,3 @@ class Autonomous_Park_Red: Autonomous_Park() {
 class Autonomous_Park_Blue: Autonomous_Park() {
     override fun isRed() = false
 }
-
-@Autonomous(name = "Duck Murder Autonomous (Red)")
-class DuckMurderAutonRed: DuckMurderAuton() {
-    override fun isRed() = true
-}
-
-@Autonomous(name = "Duck Murder Autonomous (Blue)")
-@Disabled
-class DuckMurderAutonBlue: DuckMurderAuton() {
-    override fun isRed() = false
-}
