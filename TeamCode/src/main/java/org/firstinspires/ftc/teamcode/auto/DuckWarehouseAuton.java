@@ -14,19 +14,20 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 public class DuckWarehouseAuton extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+        double colorMultiplier = 1; // TODO: Change to -1 for blue
         OdometryMecanumDrive drive = new OdometryMecanumDrive(hardwareMap);
 
         waitForStart();
 
-        TrajectorySequence sequence = drive.trajectorySequenceBuilder(new Pose2d(-36, -66, 0))
-                .lineTo(new Vector2d(-56, -66))
+        TrajectorySequence sequence = drive.trajectorySequenceBuilder(new Pose2d(-36, -66 * colorMultiplier, 0))
+                .lineTo(new Vector2d(-56, -66 * colorMultiplier))
                 .waitSeconds(0.5)
-                .splineToConstantHeading(new Vector2d(-40, -56), Math.toRadians(30))
-                .splineToSplineHeading(new Pose2d(-12, -41, Math.toRadians(-90)), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(-40, -56 * colorMultiplier), Math.toRadians(30) * colorMultiplier)
+                .splineToSplineHeading(new Pose2d(-12, -41 * colorMultiplier, Math.toRadians(-90) * colorMultiplier), Math.toRadians(90) * colorMultiplier)
                 .waitSeconds(0.5)
                 .forward(3)
-                .turn(Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(15, -44), Math.toRadians(0))
+                .turn(Math.toRadians(90) * colorMultiplier)
+                .splineToConstantHeading(new Vector2d(15, -44 * colorMultiplier), Math.toRadians(0))
                 .build();
 
         drive.setPoseEstimate(sequence.start());

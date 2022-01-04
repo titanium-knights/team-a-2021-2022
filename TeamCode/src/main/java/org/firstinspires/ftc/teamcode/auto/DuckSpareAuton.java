@@ -12,20 +12,21 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 public class DuckSpareAuton extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+        double colorMultiplier = 1; // TODO: Change to -1 for blue
         OdometryMecanumDrive drive = new OdometryMecanumDrive(hardwareMap);
 
         waitForStart();
-        TrajectorySequence sequence = drive.trajectorySequenceBuilder(new Pose2d(12, -66, 0))
+        TrajectorySequence sequence = drive.trajectorySequenceBuilder(new Pose2d(12, -66 * colorMultiplier, 0))
                 .waitSeconds(0.5)
-                .setTangent(Math.toRadians(90))
+                .setTangent(Math.toRadians(90) * colorMultiplier)
 
-                .splineToLinearHeading(new Pose2d(-12, -41,Math.toRadians(-90)), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-12, -41 * colorMultiplier, Math.toRadians(-90) * colorMultiplier), Math.toRadians(90) * colorMultiplier)
 
                 .waitSeconds(0.5)
                 .forward(3)
-                .turn(Math.toRadians(90))
+                .turn(Math.toRadians(90) * colorMultiplier)
 
-                .lineTo(new Vector2d(15, -44))
+                .lineTo(new Vector2d(15, -44 * colorMultiplier))
                 .build();
         drive.setPoseEstimate(sequence.start());
         drive.followTrajectorySequence(sequence);
