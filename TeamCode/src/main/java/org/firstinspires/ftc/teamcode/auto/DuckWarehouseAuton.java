@@ -22,7 +22,7 @@ public class DuckWarehouseAuton extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         double colorMultiplier = 1; // TODO: Change to -1 for blue
-        
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId",
                 "id", hardwareMap.appContext.getPackageName());
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "NAME_OF_CAMERA_IN_CONFIG_FILE");
