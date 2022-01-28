@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.util.ClawIntake;
 import org.firstinspires.ftc.teamcode.util.IMU;
 import org.firstinspires.ftc.teamcode.util.MecanumDrive;
 
-@TeleOp(name = "Tele-Op Mode")
-public class TeleOpMode extends LinearOpMode {
+@TeleOp(name = "Nov 20 Tele-Op Mode")
+public class TeleOpModeNov20 extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     IMU imu;
