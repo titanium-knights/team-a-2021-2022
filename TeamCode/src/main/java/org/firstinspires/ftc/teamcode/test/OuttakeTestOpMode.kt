@@ -13,13 +13,19 @@ class OuttakeTestOpMode: LinearOpMode() {
         waitForStart()
 
         while (opModeIsActive()) {
-            if (gamepad1.x) {
-                slide.power = -gamepad1.left_stick_y.toDouble()
+            if (gamepad1.b) {
+                slide.targetPosition = (Slide.minPosition + Slide.maxPosition) / 2
+                slide.power = 0.25
             } else {
-                slide.power = slide.getSafePower(-gamepad1.left_stick_y.toDouble())
-            }
-            if (gamepad1.y) {
-                slide.zeroPosition += slide.currentPosition
+                slide.targetPosition = null
+                if (gamepad1.x) {
+                    slide.power = -gamepad1.left_stick_y.toDouble()
+                } else {
+                    slide.power = slide.getSafePower(-gamepad1.left_stick_y.toDouble())
+                }
+                if (gamepad1.y) {
+                    slide.zeroPosition += slide.currentPosition
+                }
             }
 
             telemetry.addData("Slide Power", slide.power)
