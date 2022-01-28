@@ -8,7 +8,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap
  * The slide of our new robot's outtake.
  */
 @Config class Slide(hardwareMap: HardwareMap): Stoppable {
-    val motor: DcMotor = hardwareMap.dcMotor["slide"]
+    val motor: DcMotor = hardwareMap.dcMotor["lift"]
+    // val motor: DcMotor = hardwareMap.dcMotor["slide"]
 
     init {
         motor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
@@ -31,7 +32,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
             if (motor.mode == DcMotor.RunMode.STOP_AND_RESET_ENCODER) {
                 motor.mode = DcMotor.RunMode.RUN_USING_ENCODER
             }
-            motor.power = power
+            motor.power = value
         }
 
     /**
@@ -78,13 +79,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap
     }
 
     /**
-     * Whether the slide has reached its physical limits. If so, it is not safe to move the slide.
+     * Applies encoder limits to the given power.
      */
-    val isAtLimit
-        get() = !(minPosition..maxPosition).contains(currentPosition)
+    fun getSafePower(power: Double) = when {
+        power > 0.0 -> if (currentPosition > maxPosition) 0.0 else power
+        power < 0.0 -> if (currentPosition < minPosition) 0.0 else power
+        else -> 0.0
+    }
 
     companion object {
-        var minPosition = Int.MIN_VALUE
-        var maxPosition = Int.MAX_VALUE
+        var minPosition = -50
+        var maxPosition = 5600
     }
 }
