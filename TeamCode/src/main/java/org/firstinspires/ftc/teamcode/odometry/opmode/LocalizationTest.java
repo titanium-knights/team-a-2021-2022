@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.odometry.OdometryMecanumDrive;
+import org.firstinspires.ftc.teamcode.odometry.StandardTrackingWheelLocalizer;
 
 /**
  * This is a simple teleop routine for testing localization. Drive the robot around like a normal
@@ -39,6 +40,8 @@ public class LocalizationTest extends LinearOpMode {
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
+            telemetry.addData("front pos", ((StandardTrackingWheelLocalizer)drive.getLocalizer()).getWheelPositions().get(2));
+            telemetry.addData("front vel", ((StandardTrackingWheelLocalizer)drive.getLocalizer()).getWheelVelocities().get(2));
             telemetry.update();
         }
     }
