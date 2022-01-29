@@ -20,6 +20,7 @@ public class TeleOpMode extends OpMode {
         drive = new MecanumDrive(hardwareMap);
         carousel = new Carousel(hardwareMap);
         slides = new Slide(hardwareMap);
+        slides.stopAndResetEncoder();
         intake = new TubeIntake(hardwareMap);
         carriage = new Carriage(hardwareMap);
         imu = new IMU(hardwareMap);
