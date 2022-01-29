@@ -48,7 +48,7 @@ public class TeleOpMode extends OpMode {
             speed = Speed.SLOW;
         }
         else{
-            speed = speed.FAST;
+            speed = Speed.FAST;
         }
 
         if(gamepad1.left_trigger>0.1){
@@ -66,7 +66,12 @@ public class TeleOpMode extends OpMode {
         else{
             slides.stop();
         }
-
+        if(gamepad1.right_bumper){
+            carriage.dump();
+        }
+        else if(gamepad1.left_bumper){
+            carriage.idle();
+        }
 
         btB.update();
         btYSlowMode.update();
