@@ -35,5 +35,7 @@ public class CarriageServoTester extends OpMode {
         carriage.setPosition(position);
         telemetry.addData("Current Position: ", position);
         dashTelemetry.addData("Current Position: ", position);
+        telemetry.update();
+        dashTelemetry.update();
     }
 }
