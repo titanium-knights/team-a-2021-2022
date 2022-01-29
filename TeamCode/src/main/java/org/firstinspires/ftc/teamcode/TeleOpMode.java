@@ -36,14 +36,27 @@ public class TeleOpMode extends OpMode {
         double speedVal = speed==Speed.FAST ? 0.75 : 0.3;
         drive.teleOpRobotCentric(gamepad1,speedVal);
         if(gamepad1.right_bumper){
-            intake.spin();
+            double pwr = slides.getSafePower(1.0);
+            slides.setPower(pwr);
         }
         else if(gamepad1.left_bumper){
-            intake.reverse();
+            double pwr = slides.getSafePower(-1.0);
+            slides.setPower(pwr);
+        }
+        else{
+            slides.stop();
+        }
+
+        if(gamepad1.left_trigger>0.1){
+            intake.setPower(-gamepad1.left_trigger);
+        }
+        else if(gamepad1.right_trigger>0.1){
+            intake.setPower(gamepad1.right_trigger);
         }
         else{
             intake.stop();
         }
+        
 
 
         if(btYSlowMode.isActive()){
@@ -53,17 +66,7 @@ public class TeleOpMode extends OpMode {
             speed = Speed.FAST;
         }
 
-        if(gamepad1.left_trigger>0.1){
-            double pwr = slides.getSafePower(-gamepad1.left_trigger);
-            slides.setPower(pwr);
-        }
-        else if(gamepad1.right_trigger>0.1){
-            double pwr = slides.getSafePower(gamepad1.right_trigger);
-            slides.setPower(pwr);
-        }
-        else{
-            slides.stop();
-        }
+
         if(gamepad1.b && slides.getCurrentPosition() >= SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD){
             carriage.dump();
         }

@@ -25,6 +25,7 @@ public class TeleOpModePreset extends OpMode {
     Speed speed;
     ToggleButton btB, btYSlowMode,btAPresetToggle;
     State state = State.NOT_PRESET_MODE;
+    public static int SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = (Slide.getMinPosition() + Slide.getMaxPosition()) / 3;
 
     @Override
     public void init() {
@@ -75,11 +76,11 @@ public class TeleOpModePreset extends OpMode {
     public void normalTeleOpActivities(){
         double speedVal = speed==Speed.FAST ? 0.75 : 0.3;
         drive.teleOpRobotCentric(gamepad1,speedVal);
-        if(gamepad1.x){
-            intake.reverse();
-        }
-        else if(btB.isActive()){
+        if(gamepad1.right_bumper){
             intake.spin();
+        }
+        else if(gamepad1.left_bumper){
+            intake.reverse();
         }
         else{
             intake.stop();
@@ -93,14 +94,23 @@ public class TeleOpModePreset extends OpMode {
             speed = Speed.FAST;
         }
 
-
-        if(gamepad1.right_bumper){
+        if(gamepad1.left_trigger>0.1){
+            double pwr = slides.getSafePower(-gamepad1.left_trigger);
+            slides.setPower(pwr);
+        }
+        else if(gamepad1.right_trigger>0.1){
+            double pwr = slides.getSafePower(gamepad1.right_trigger);
+            slides.setPower(pwr);
+        }
+        else{
+            slides.stop();
+        }
+        if(gamepad1.b && slides.getCurrentPosition() >= SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD){
             carriage.dump();
         }
-        else if(gamepad1.left_bumper){
+        else if(gamepad1.x){
             carriage.idle();
         }
-
 
         if(gamepad1.dpad_left){
             carousel.spinReverse(true);
@@ -111,6 +121,9 @@ public class TeleOpModePreset extends OpMode {
         else{
             carousel.stop();
         }
+        btYSlowMode.update();
+        telemetry.addData("SLOW MODE",speed);
+        telemetry.update();
 
 
     }
