@@ -20,6 +20,7 @@ public class TeleOpMode extends OpMode {
         drive = new MecanumDrive(hardwareMap);
         carousel = new Carousel(hardwareMap);
         slides = new Slide(hardwareMap);
+        slides.stopAndResetEncoder();
         intake = new TubeIntake(hardwareMap);
         carriage = new Carriage(hardwareMap);
         imu = new IMU(hardwareMap);
@@ -28,6 +29,8 @@ public class TeleOpMode extends OpMode {
         btB = new ToggleButton(() -> gamepad1.b);
         btYSlowMode = new ToggleButton(() -> gamepad1.y);
     }
+
+    public static int SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = (Slide.getMinPosition() + Slide.getMaxPosition()) / 2;
 
     @Override
     public void loop() {
@@ -62,7 +65,7 @@ public class TeleOpMode extends OpMode {
         else{
             slides.stop();
         }
-        if(gamepad1.right_bumper){
+        if(gamepad1.right_bumper && slides.getCurrentPosition() >= SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD){
             carriage.dump();
         }
         else if(gamepad1.left_bumper){
