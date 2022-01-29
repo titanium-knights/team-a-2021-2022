@@ -35,6 +35,6 @@ import com.qualcomm.robotcore.hardware.Servo
 
     companion object {
         var idlePosition = 0.0
-        var dumpPosition = 0.5
+        var dumpPosition = 0.33
     }
 }
