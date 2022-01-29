@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.util
 
 import com.acmerobotics.dashboard.config.Config
+import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
 
@@ -34,7 +35,7 @@ import com.qualcomm.robotcore.hardware.Servo
     }
 
     companion object {
-        var idlePosition = 0.0
-        var dumpPosition = 0.5
+        @JvmStatic var idlePosition = 0.0
+        @JvmStatic var dumpPosition = 0.5
     }
 }

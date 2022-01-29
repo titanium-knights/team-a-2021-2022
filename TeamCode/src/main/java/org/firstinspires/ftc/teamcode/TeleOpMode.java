@@ -21,6 +21,7 @@ public class TeleOpMode extends OpMode {
     Slide slides;
     TubeIntake intake;
     Carriage carriage;
+    MotorInterpolation carriageInterpolation;
     IMU imu;
     Speed speed;
     ToggleButton btYSlowMode;
@@ -107,11 +108,12 @@ public class TeleOpMode extends OpMode {
 
 
         if(gamepad1.b && slides.getCurrentPosition() >= SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD){
-            carriage.dump();
+            carriageInterpolation.setTarget(Carriage.getDumpPosition());
         }
         else if(gamepad1.x){
-            carriage.idle();
+            carriageInterpolation.setTarget(Carriage.getIdlePosition());
         }
+        carriage.setPosition(carriageInterpolation.getCurrent());
 
         if(gamepad1.dpad_left){
             carousel.spinReverse(true);
