@@ -36,11 +36,11 @@ public class TeleOpMode extends OpMode {
         double speedVal = speed==Speed.FAST ? 0.75 : 0.3;
         drive.teleOpRobotCentric(gamepad1,speedVal);
         if(gamepad1.right_bumper){
-            double pwr = slides.getSafePower(1.0);
+            double pwr = slides.getSafePower(0.9);
             slides.setPower(pwr);
         }
         else if(gamepad1.left_bumper){
-            double pwr = slides.getSafePower(-1.0);
+            double pwr = slides.getSafePower(0.9);
             slides.setPower(pwr);
         }
         else{
@@ -56,7 +56,7 @@ public class TeleOpMode extends OpMode {
         else{
             intake.stop();
         }
-        
+
 
 
         if(btYSlowMode.isActive()){
