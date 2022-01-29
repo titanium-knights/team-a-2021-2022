@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
-@TeleOp(name="Carriage")
+@TeleOp
 public class CarriageServoTester extends OpMode {
     Servo carriage;
     public static double position = 0.0;

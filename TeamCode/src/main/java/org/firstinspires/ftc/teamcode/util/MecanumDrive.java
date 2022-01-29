@@ -31,6 +31,10 @@ public class MecanumDrive {
         double y = Math.sin(angle) * inputX + Math.cos(angle) * inputY;
         move(x*multiplier,y*multiplier,rot*multiplier);
     }
+    public void teleOpRobotCentric(Gamepad g1,double multiplier){
+        move(g1.left_stick_x*multiplier,-g1.left_stick_y*multiplier,g1.right_stick_x*multiplier);
+
+    }
     public void move(double x, double y, double turn) {
         powerArr[0] = x+y+turn; //fl power
         powerArr[1] = y-x-turn; //Fr Power

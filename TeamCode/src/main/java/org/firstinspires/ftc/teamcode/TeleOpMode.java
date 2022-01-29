@@ -32,7 +32,7 @@ public class TeleOpMode extends OpMode {
     @Override
     public void loop() {
         double speedVal = speed==Speed.FAST ? 0.75 : 0.3;
-        drive.teleOpFieldCentric(gamepad1,imu,speedVal);
+        drive.teleOpRobotCentric(gamepad1,speedVal);
         if(gamepad1.x){
             intake.reverse();
         }
