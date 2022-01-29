@@ -23,12 +23,12 @@ public class CarriageServoTester extends OpMode {
     @Override
     public void loop() {
         if(gamepad1.dpad_right){
-            if(position<1) {
+            if(position<0.95) {
                 position += 0.05;
             }
         }
         if(gamepad1.dpad_left){
-            if(position>0){
+            if(position>0.05){
                 position-=0.05;
             }
         }

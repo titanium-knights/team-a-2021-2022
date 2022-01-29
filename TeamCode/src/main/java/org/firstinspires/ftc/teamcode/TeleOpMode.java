@@ -59,7 +59,7 @@ public class TeleOpMode extends OpMode {
             slides.stop();
         }
 
-        if(gamepad1.right_trigger>0.1){
+        if(gamepad1.right_trigger>0){
             double pwr = slides.getSafePower(gamepad1.right_trigger);
             slides.setPower(pwr);
         }
