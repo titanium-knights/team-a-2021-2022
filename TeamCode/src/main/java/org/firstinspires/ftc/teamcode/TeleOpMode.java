@@ -14,7 +14,7 @@ public class TeleOpMode extends OpMode {
     Carriage carriage;
     IMU imu;
     Speed speed;
-    PushButton btB,btYSlowMode;
+    ToggleButton btB,btYSlowMode;
     @Override
     public void init() {
         drive = new MecanumDrive(hardwareMap);
@@ -25,8 +25,8 @@ public class TeleOpMode extends OpMode {
         imu = new IMU(hardwareMap);
         imu.initializeIMU();
         speed = Speed.FAST;
-        btB = new PushButton(() -> gamepad1.b);
-        btYSlowMode = new PushButton(() -> gamepad1.y);
+        btB = new ToggleButton(() -> gamepad1.b);
+        btYSlowMode = new ToggleButton(() -> gamepad1.y);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class TeleOpMode extends OpMode {
         if(gamepad1.x){
             intake.reverse();
         }
-        else if(btB.isPressed()){
+        else if(btB.isActive()){
             intake.spin();
         }
         else{
@@ -44,7 +44,7 @@ public class TeleOpMode extends OpMode {
         }
 
 
-        if(btYSlowMode.isPressed()){
+        if(btYSlowMode.isActive()){
             speed = Speed.SLOW;
         }
         else{
