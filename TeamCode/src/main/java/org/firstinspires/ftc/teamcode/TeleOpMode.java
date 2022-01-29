@@ -30,6 +30,8 @@ public class TeleOpMode extends OpMode {
         btYSlowMode = new ToggleButton(() -> gamepad1.y);
     }
 
+    public static int SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = (Slide.getMinPosition() + Slide.getMaxPosition()) / 2;
+
     @Override
     public void loop() {
         double speedVal = speed==Speed.FAST ? 0.75 : 0.3;
@@ -63,7 +65,7 @@ public class TeleOpMode extends OpMode {
         else{
             slides.stop();
         }
-        if(gamepad1.right_bumper){
+        if(gamepad1.right_bumper && slides.getCurrentPosition() >= SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD){
             carriage.dump();
         }
         else if(gamepad1.left_bumper){
