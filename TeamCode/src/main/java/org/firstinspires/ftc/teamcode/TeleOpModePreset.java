@@ -23,7 +23,7 @@ public class TeleOpModePreset extends OpMode {
     Carriage carriage;
     IMU imu;
     Speed speed;
-    ToggleButton btB, btYSlowMode,btAPresetToggle;
+    ToggleButton btYSlowMode,btAPresetToggle;
     State state = State.NOT_PRESET_MODE;
     public static int SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = (Slide.getMinPosition() + Slide.getMaxPosition()) / 3;
 
@@ -37,7 +37,6 @@ public class TeleOpModePreset extends OpMode {
         imu = new IMU(hardwareMap);
         imu.initializeIMU();
         speed = Speed.FAST;
-        btB = new ToggleButton(() -> gamepad1.b);
         btYSlowMode = new ToggleButton(() -> gamepad1.y);
         btAPresetToggle = new ToggleButton(() -> gamepad1.a);
     }
@@ -47,12 +46,12 @@ public class TeleOpModePreset extends OpMode {
         normalTeleOpActivities();
         switch (state) {
             case NOT_PRESET_MODE:
-                if(gamepad1.left_trigger>0.1){
-                    double pwr = slides.getSafePower(-gamepad1.left_trigger);
+                if(gamepad1.right_bumper){
+                    double pwr = slides.getSafePower(0.9);
                     slides.setPower(pwr);
                 }
-                else if(gamepad1.right_trigger>0.1){
-                    double pwr = slides.getSafePower(gamepad1.right_trigger);
+                else if(gamepad1.left_bumper){
+                    double pwr = slides.getSafePower(-0.9);
                     slides.setPower(pwr);
                 }
                 else{
@@ -60,8 +59,16 @@ public class TeleOpModePreset extends OpMode {
                 }
                 break;
             case PRESET_MODE:
-                if(gamepad1.dpad_up){
-
+                if(gamepad1.right_bumper){
+                    slides.setTargetPosition(5600);
+                    slides.setPower(0.8);
+                }
+                else if(gamepad1.left_bumper){
+                    slides.setTargetPosition(-50);
+                    slides.setPower(-0.8);
+                }
+                else{
+                    slides.stop();
                 }
                 break;
         }
@@ -70,21 +77,25 @@ public class TeleOpModePreset extends OpMode {
         }
         else{
             state = State.NOT_PRESET_MODE;
+            slides.clearTargetPosition();
+            slides.stop();
         }
         updateButtons();
     }
     public void normalTeleOpActivities(){
         double speedVal = speed==Speed.FAST ? 0.75 : 0.3;
         drive.teleOpRobotCentric(gamepad1,speedVal);
-        if(gamepad1.right_bumper){
-            intake.spin();
+
+        if(gamepad1.left_trigger>0.1){
+            intake.setPower(-gamepad1.left_trigger);
         }
-        else if(gamepad1.left_bumper){
-            intake.reverse();
+        else if(gamepad1.right_trigger>0.1){
+            intake.setPower(gamepad1.right_trigger);
         }
         else{
             intake.stop();
         }
+
 
 
         if(btYSlowMode.isActive()){
@@ -94,17 +105,7 @@ public class TeleOpModePreset extends OpMode {
             speed = Speed.FAST;
         }
 
-        if(gamepad1.left_trigger>0.1){
-            double pwr = slides.getSafePower(-gamepad1.left_trigger);
-            slides.setPower(pwr);
-        }
-        else if(gamepad1.right_trigger>0.1){
-            double pwr = slides.getSafePower(gamepad1.right_trigger);
-            slides.setPower(pwr);
-        }
-        else{
-            slides.stop();
-        }
+
         if(gamepad1.b && slides.getCurrentPosition() >= SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD){
             carriage.dump();
         }
@@ -121,14 +122,14 @@ public class TeleOpModePreset extends OpMode {
         else{
             carousel.stop();
         }
-        btYSlowMode.update();
+
         telemetry.addData("SLOW MODE",speed);
+        telemetry.addData("Preset Mode", btAPresetToggle.isActive());
         telemetry.update();
 
 
     }
     public void updateButtons(){
-        btB.update();
         btYSlowMode.update();
         btAPresetToggle.update();
     }
