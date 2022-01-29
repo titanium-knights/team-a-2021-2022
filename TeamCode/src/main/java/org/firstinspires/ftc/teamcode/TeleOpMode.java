@@ -72,6 +72,15 @@ public class TeleOpMode extends OpMode {
             carriage.idle();
         }
 
+        if(gamepad1.dpad_left){
+            carousel.spinReverse(true);
+        }
+        else if(gamepad1.dpad_right){
+            carousel.spin(true);
+        }
+        else{
+            carousel.stop();
+        }
         btB.update();
         btYSlowMode.update();
     }

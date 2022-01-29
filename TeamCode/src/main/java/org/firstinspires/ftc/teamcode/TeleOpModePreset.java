@@ -42,7 +42,17 @@ public class TeleOpModePreset extends OpMode {
         normalTeleOpActivities();
         switch (state) {
             case NOT_PRESET_MODE:
-
+                if(gamepad1.left_trigger>0.1){
+                    double pwr = slides.getSafePower(-gamepad1.left_trigger);
+                    slides.setPower(pwr);
+                }
+                else if(gamepad1.right_trigger>0.1){
+                    double pwr = slides.getSafePower(gamepad1.right_trigger);
+                    slides.setPower(pwr);
+                }
+                else{
+                    slides.stop();
+                }
                 break;
             case PRESET_MODE:
 
@@ -77,27 +87,30 @@ public class TeleOpModePreset extends OpMode {
             speed = Speed.FAST;
         }
 
-        if(gamepad1.left_trigger>0.1){
-            double pwr = slides.getSafePower(-gamepad1.left_trigger);
-            slides.setPower(pwr);
-        }
-        else if(gamepad1.right_trigger>0.1){
-            double pwr = slides.getSafePower(gamepad1.right_trigger);
-            slides.setPower(pwr);
-        }
-        else{
-            slides.stop();
-        }
+
         if(gamepad1.right_bumper){
             carriage.dump();
         }
         else if(gamepad1.left_bumper){
             carriage.idle();
         }
+
+
+        if(gamepad1.dpad_left){
+            carousel.spinReverse(true);
+        }
+        else if(gamepad1.dpad_right){
+            carousel.spin(true);
+        }
+        else{
+            carousel.stop();
+        }
+
+
     }
     public void updateButtons(){
         btB.update();
         btYSlowMode.update();
-
+        btAPresetToggle.update();
     }
 }
