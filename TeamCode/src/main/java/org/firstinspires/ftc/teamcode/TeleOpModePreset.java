@@ -11,7 +11,11 @@ public class TeleOpModePreset extends OpMode {
         PRESET_MODE,
         NOT_PRESET_MODE
     }
-
+    public enum PRESETMODE{
+        NOT_PRESET_MODE,
+        LIFT,
+        LOWER
+    }
     MecanumDrive drive;
     Carousel carousel;
     Slide slides;
@@ -55,7 +59,7 @@ public class TeleOpModePreset extends OpMode {
                 }
                 break;
             case PRESET_MODE:
-
+                if(dpad_)
                 break;
         }
         if(btAPresetToggle.isActive()){

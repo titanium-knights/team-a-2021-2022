@@ -14,7 +14,7 @@ public class TeleOpMode extends OpMode {
     Carriage carriage;
     IMU imu;
     Speed speed;
-    ToggleButton btB,btYSlowMode;
+    ToggleButton btYSlowMode;
     @Override
     public void init() {
         drive = new MecanumDrive(hardwareMap);
@@ -26,7 +26,6 @@ public class TeleOpMode extends OpMode {
         imu = new IMU(hardwareMap);
         imu.initializeIMU();
         speed = Speed.FAST;
-        btB = new ToggleButton(() -> gamepad1.b);
         btYSlowMode = new ToggleButton(() -> gamepad1.y);
     }
 
@@ -36,11 +35,11 @@ public class TeleOpMode extends OpMode {
     public void loop() {
         double speedVal = speed==Speed.FAST ? 0.75 : 0.3;
         drive.teleOpRobotCentric(gamepad1,speedVal);
-        if(gamepad1.x){
-            intake.reverse();
-        }
-        else if(btB.isActive()){
+        if(gamepad1.right_bumper){
             intake.spin();
+        }
+        else if(gamepad1.left_bumper){
+            intake.reverse();
         }
         else{
             intake.stop();
@@ -65,10 +64,10 @@ public class TeleOpMode extends OpMode {
         else{
             slides.stop();
         }
-        if(gamepad1.right_bumper && slides.getCurrentPosition() >= SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD){
+        if(gamepad1.b && slides.getCurrentPosition() >= SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD){
             carriage.dump();
         }
-        else if(gamepad1.left_bumper){
+        else if(gamepad1.x){
             carriage.idle();
         }
 
@@ -81,7 +80,6 @@ public class TeleOpMode extends OpMode {
         else{
             carousel.stop();
         }
-        btB.update();
         btYSlowMode.update();
     }
 }
