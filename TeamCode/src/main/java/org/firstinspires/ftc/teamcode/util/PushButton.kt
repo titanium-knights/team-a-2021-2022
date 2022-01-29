@@ -12,3 +12,16 @@ class PushButton(private val readState: () -> Boolean) {
         previousState = readState()
     }
 }
+
+class ToggleButton(readState: () -> Boolean) {
+    val pushButton = PushButton(readState)
+
+    var isActive = false
+
+    override fun update() {
+        if (pushButton.isPressed) {
+            isActive = !isActive
+        }
+        pushButton.update()
+    }
+}
