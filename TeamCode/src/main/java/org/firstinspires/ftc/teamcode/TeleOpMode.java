@@ -81,5 +81,7 @@ public class TeleOpMode extends OpMode {
             carousel.stop();
         }
         btYSlowMode.update();
+        telemetry.addData("SLOW MODE",speed);
+        telemetry.update();
     }
 }
