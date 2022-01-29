@@ -85,7 +85,7 @@ public class TeleOpMode extends OpMode {
     }
     public void normalTeleOpActivities(){
         double speedVal = speed==Speed.FAST ? 0.75 : 0.3;
-        drive.teleOpRobotCentric(gamepad1,speedVal);
+        drive.teleOpFieldCentric(gamepad1,imu,speedVal);
 
         if(gamepad1.left_trigger>0.1){
             intake.setPower(-gamepad1.left_trigger);
