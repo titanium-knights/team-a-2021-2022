@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
  * Intake on our new robot.
  */
 @Config class TubeIntake(hardwareMap: HardwareMap): Stoppable {
-    val motor: DcMotor = hardwareMap.dcMotor["tube_intake"]
+    val motor: DcMotor = hardwareMap.dcMotor["intake"]
 
     init {
         motor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE

@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.util.*;
 
-@TeleOp(name = "TeleOp", group = "Tele-Op")
+@TeleOp(name = "TeleOpMode", group = "Tele-Op")
 public class TeleOpMode extends OpMode {
     MecanumDrive drive;
     Carousel carousel;
