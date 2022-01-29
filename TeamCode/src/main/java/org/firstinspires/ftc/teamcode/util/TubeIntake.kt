@@ -31,14 +31,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap
     }
     fun reverse(){
 //        power = -1.0
-        motor.power=-1.0;
+        power= outtakePower
     }
 
     /**
      * Spins the intake in order to take in freight.
      */
     fun spin() {
-        motor.power = 1.0
+        power = intakePower
     }
 
     /**
@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
     }
 
     companion object {
-        var intakePower = 1.0
-        var outtakePower = -1.0
+        var intakePower = 0.8
+        var outtakePower = -0.8
     }
 }
