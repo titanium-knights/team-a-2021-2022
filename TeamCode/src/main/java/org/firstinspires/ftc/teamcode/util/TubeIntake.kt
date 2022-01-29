@@ -29,11 +29,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap
     override fun stop() {
         power = 0.0
     }
-
+    fun reverse(){
+        power = -intakePower
+    }
     /**
      * Spins the intake in order to take in freight.
      */
-    fun intake() {
+    fun spin() {
         power = intakePower
     }
 
