@@ -18,7 +18,7 @@ class ToggleButton(readState: () -> Boolean) {
 
     var isActive = false
 
-    override fun update() {
+    fun update() {
         if (pushButton.isPressed) {
             isActive = !isActive
         }
