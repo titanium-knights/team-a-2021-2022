@@ -59,7 +59,9 @@ public class TeleOpModePreset extends OpMode {
                 }
                 break;
             case PRESET_MODE:
-//                if(dpad_)
+                if(gamepad1.dpad_up){
+
+                }
                 break;
         }
         if(btAPresetToggle.isActive()){
