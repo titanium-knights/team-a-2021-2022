@@ -23,22 +23,24 @@ public class TeleOpMode extends OpMode {
     Carriage carriage;
     IMU imu;
     Speed speed;
-    ToggleButton btYSlowMode,btAPresetToggle;
+    ToggleButton btYSlowMode;
+    PushButton btAPresetButton;
     State state = State.NOT_PRESET_MODE;
-    public static int SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = (Slide.getMinPosition() + Slide.getMaxPosition()) / 3;
+    public static int SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = 3427;
 
     @Override
     public void init() {
         drive = new MecanumDrive(hardwareMap);
         carousel = new Carousel(hardwareMap);
         slides = new Slide(hardwareMap);
+        slides.stopAndResetEncoder();
         intake = new TubeIntake(hardwareMap);
         carriage = new Carriage(hardwareMap);
         imu = new IMU(hardwareMap);
         imu.initializeIMU();
         speed = Speed.FAST;
         btYSlowMode = new ToggleButton(() -> gamepad1.y);
-        btAPresetToggle = new ToggleButton(() -> gamepad1.a);
+        btAPresetButton = new PushButton(() -> gamepad1.a);
     }
 
     @Override
@@ -64,21 +66,19 @@ public class TeleOpMode extends OpMode {
                     slides.setPower(0.8);
                 }
                 else if(gamepad1.left_bumper){
-                    slides.setTargetPosition(-50);
+                    slides.setTargetPosition(0);
                     slides.setPower(-0.8);
-                }
-                else{
-                    slides.stop();
                 }
                 break;
         }
-        if(btAPresetToggle.isActive()){
-            state = State.PRESET_MODE;
-        }
-        else{
-            state = State.NOT_PRESET_MODE;
-            slides.clearTargetPosition();
-            slides.stop();
+        if(btAPresetButton.isPressed()){
+            if (state == State.PRESET_MODE) {
+                state = State.NOT_PRESET_MODE;
+                slides.clearTargetPosition();
+                slides.stop();
+            } else {
+                state = State.PRESET_MODE;
+            }
         }
         updateButtons();
     }
@@ -124,13 +124,13 @@ public class TeleOpMode extends OpMode {
         }
 
         telemetry.addData("SLOW MODE",speed);
-        telemetry.addData("Preset Mode", btAPresetToggle.isActive());
+        telemetry.addData("Preset Mode", state == State.PRESET_MODE);
         telemetry.update();
 
 
     }
     public void updateButtons(){
         btYSlowMode.update();
-        btAPresetToggle.update();
+        btAPresetButton.update();
     }
 }
