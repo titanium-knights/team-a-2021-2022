@@ -28,5 +28,5 @@ open class ServoTestOpMode(private val servoName: String): LinearOpMode() {
     }
 }
 
-@TeleOp(name = "Claw Test Op Mode")
-class ClawTestOpMode: ServoTestOpMode("claw")
+@TeleOp(name = "Carriage Test Op Mode")
+class ClawTestOpMode: ServoTestOpMode("carriage")
