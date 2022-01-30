@@ -36,7 +36,7 @@ public abstract class TeleOpMode extends OpMode {
         carriageInterpolation = new MotorInterpolation(carriage.getPosition(), 0.5);
         speed = Speed.FAST;
         slowModeButton = new ToggleButton(() -> gamepad1.dpad_up);
-        dumpButton = new PushButton(() -> gamepad1.b);
+        dumpButton = new PushButton(() -> gamepad1.a);
     }
 
     public void setSlidePosition(int position) {
