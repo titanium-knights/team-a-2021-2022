@@ -101,10 +101,12 @@ public abstract class TeleOpMode extends OpMode {
                 }
                 break;
             case RETURNING_TO_IDLE:
+                carriageInterpolation.setTarget(Carriage.getIdlePosition());
                 if (!carriageInterpolation.isBusy()) {
                     setSlidePosition(0);
                     dumpState = DumpState.IDLE;
                 }
+                break;
             case IDLE:
                 carriageInterpolation.setTarget(Carriage.getIdlePosition());
         }
