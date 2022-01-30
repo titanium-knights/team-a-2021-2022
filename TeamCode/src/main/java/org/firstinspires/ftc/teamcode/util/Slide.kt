@@ -88,6 +88,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 
     companion object {
         @JvmStatic var minPosition = -50
-        @JvmStatic var maxPosition = 5600
+        @JvmStatic var maxPosition = 4500
     }
 }

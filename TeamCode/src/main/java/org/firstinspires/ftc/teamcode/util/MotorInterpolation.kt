@@ -26,7 +26,7 @@ class MotorInterpolation(initial: Double, val rate: Double) {
             return if (change >= targetChange) {
                 target
             } else {
-                change + sign(target - initial) * change
+                initial + sign(target - initial) * change
             }
         }
 

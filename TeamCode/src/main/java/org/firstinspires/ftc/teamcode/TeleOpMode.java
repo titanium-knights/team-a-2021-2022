@@ -18,6 +18,7 @@ public class TeleOpMode extends OpMode {
     }
     MecanumDrive drive;
     Carousel carousel;
+    MotorInterpolation carouselInterpolation;
     Slide slides;
     TubeIntake intake;
     Carriage carriage;
@@ -26,22 +27,27 @@ public class TeleOpMode extends OpMode {
     Speed speed;
     ToggleButton btYSlowMode;
     PushButton btAPresetButton;
+    PushButton btBDumpButton;
     State state = State.NOT_PRESET_MODE;
+    boolean isDumping = false;
     public static int SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = 3427;
 
     @Override
     public void init() {
         drive = new MecanumDrive(hardwareMap);
         carousel = new Carousel(hardwareMap);
+        carouselInterpolation = new MotorInterpolation(0, 0.375);
         slides = new Slide(hardwareMap);
         slides.stopAndResetEncoder();
         intake = new TubeIntake(hardwareMap);
         carriage = new Carriage(hardwareMap);
+        carriageInterpolation = new MotorInterpolation(carriage.getPosition(), 0.5);
         imu = new IMU(hardwareMap);
         imu.initializeIMU();
         speed = Speed.FAST;
         btYSlowMode = new ToggleButton(() -> gamepad1.y);
         btAPresetButton = new PushButton(() -> gamepad1.a);
+        btBDumpButton = new PushButton(() -> gamepad1.b);
     }
 
     @Override
@@ -63,7 +69,7 @@ public class TeleOpMode extends OpMode {
                 break;
             case PRESET_MODE:
                 if(gamepad1.right_bumper){
-                    slides.setTargetPosition(5600);
+                    slides.setTargetPosition(Slide.getMaxPosition());
                     slides.setPower(0.8);
                 }
                 else if(gamepad1.left_bumper){
@@ -106,24 +112,29 @@ public class TeleOpMode extends OpMode {
             speed = Speed.FAST;
         }
 
-
-        if(gamepad1.b && slides.getCurrentPosition() >= SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD){
-            carriageInterpolation.setTarget(Carriage.getDumpPosition());
+        if(btBDumpButton.isPressed() && slides.getCurrentPosition() >= SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD) {
+            isDumping = true;
         }
-        else if(gamepad1.x){
+        if (isDumping) {
+            carriageInterpolation.setTarget(Carriage.getDumpPosition());
+            if (!carriageInterpolation.isBusy()) {
+                isDumping = false;
+            }
+        } else {
             carriageInterpolation.setTarget(Carriage.getIdlePosition());
         }
         carriage.setPosition(carriageInterpolation.getCurrent());
 
         if(gamepad1.dpad_left){
-            carousel.spinReverse(true);
+            carouselInterpolation.setTarget(0.375);
         }
         else if(gamepad1.dpad_right){
-            carousel.spin(true);
+            carouselInterpolation.setTarget(-0.375);
         }
         else{
-            carousel.stop();
+            carouselInterpolation.setTarget(0);
         }
+        carousel.motor.setPower(carouselInterpolation.getCurrent());
 
         telemetry.addData("SLOW MODE",speed);
         telemetry.addData("Preset Mode", state == State.PRESET_MODE);
