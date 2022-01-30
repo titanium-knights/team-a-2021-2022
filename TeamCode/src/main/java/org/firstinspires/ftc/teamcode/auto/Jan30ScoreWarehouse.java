@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Config public abstract class Jan30ScoreWarehouse extends Jan30ScoreBase {
     public static long PARK_DISTANCE = 72;

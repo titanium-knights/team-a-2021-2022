@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.util.Carousel;
 
     @Override
     public void initialize() {
+        super.initialize();
         carousel = new Carousel(hardwareMap);
     }
 
