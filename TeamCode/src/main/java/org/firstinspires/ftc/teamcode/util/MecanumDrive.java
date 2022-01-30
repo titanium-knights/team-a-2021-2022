@@ -61,7 +61,7 @@ public class MecanumDrive {
         move(0,power,0);
     }
     public void driveBackwardsWithPower(double power){
-        move(0,power,0);
+        move(0,-power,0);
     }
 
     public void strafeLeftWithPower(double power){

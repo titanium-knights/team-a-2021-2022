@@ -38,4 +38,9 @@ class MotorInterpolation(initial: Double, val rate: Double) {
                 field = value
             }
         }
+
+    fun setImmediate(value: Double) {
+        target = value
+        initial = value
+    }
 }

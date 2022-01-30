@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.util.Slide;
 import static java.lang.Math.abs;
 
 @Config public abstract class Jan30ScoreBase extends LinearOpMode {
-    public static long MOTION_SCALE_FACTOR = 50;
+    public static int MOTION_SCALE_FACTOR = 25;
 
     MecanumDrive drive;
     Slide slides;
@@ -23,6 +23,7 @@ import static java.lang.Math.abs;
         initialize();
         waitForStart();
         dumpInTopLevel();
+        alignWithWall();
         runAfterDump();
     }
 
@@ -42,27 +43,33 @@ import static java.lang.Math.abs;
         slides.setPower(0.8);
         sleep(2000);
 
-        drive.driveForwardsWithPower(0.5);
-        sleep(20 * MOTION_SCALE_FACTOR);
+        drive.driveBackwardsWithPower(0.5);
+        sleep(14 * MOTION_SCALE_FACTOR);
         drive.stop();
 
         carriage.dump();
-        sleep(1000);
+        sleep(2000);
         carriage.idle();
         sleep(1000);
 
-        drive.driveBackwardsWithPower(0.5);
-        sleep(10 * MOTION_SCALE_FACTOR);
+        drive.driveForwardsWithPower(0.5);
+        sleep(9 * MOTION_SCALE_FACTOR);
         drive.stop();
 
         slides.setTargetPosition(0);
-        sleep(2000);
+        sleep(4000);
         slides.stop();
+    }
 
-        turn(isRed() ? 90 : -90);
+    public void alignWithWall() {
+        turn(isRed() ? -90 : 90);
 
-        drive.strafeLeftWithPower(0.3);
-        sleep(2000);
+        if (isRed()) {
+            drive.strafeRightWithPower(0.3);
+        } else {
+            drive.strafeLeftWithPower(0.3);
+        }
+        sleep(2500);
         drive.stop();
     }
 

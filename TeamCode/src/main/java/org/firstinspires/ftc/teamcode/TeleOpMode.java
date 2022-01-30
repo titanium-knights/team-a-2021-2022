@@ -22,13 +22,13 @@ public abstract class TeleOpMode extends OpMode {
     ToggleButton slowModeButton;
     PushButton dumpButton;
     DumpState dumpState = DumpState.IDLE;
-    public static int SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = 3427;
+    public static int SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = 2200;
 
     @Override
     public void init() {
         drive = new MecanumDrive(hardwareMap);
         carousel = new Carousel(hardwareMap);
-        carouselInterpolation = new MotorInterpolation(0, 0.375);
+        carouselInterpolation = new MotorInterpolation(0, 0.75);
         slides = new Slide(hardwareMap);
         slides.stopAndResetEncoder();
         intake = new TubeIntake(hardwareMap);
@@ -41,7 +41,7 @@ public abstract class TeleOpMode extends OpMode {
 
     public void setSlidePosition(int position) {
         slides.setTargetPosition(position);
-        slides.setPower(0.8);
+        slides.setPower(0.9);
     }
 
     @Override
@@ -113,17 +113,20 @@ public abstract class TeleOpMode extends OpMode {
         carriage.setPosition(carriageInterpolation.getCurrent());
 
         if(gamepad1.dpad_right){
-            carouselInterpolation.setTarget(0.375);
+            carouselInterpolation.setTarget(0.75);
         }
         else if(gamepad1.dpad_left){
-            carouselInterpolation.setTarget(-0.375);
+            carouselInterpolation.setTarget(-0.75);
         }
         else{
-            carouselInterpolation.setTarget(0);
+            carouselInterpolation.setImmediate(0);
         }
         carousel.motor.setPower(carouselInterpolation.getCurrent());
 
         telemetry.addData("SLOW MODE",speed);
+        telemetry.addData("Left Stick X", gamepad1.left_stick_x);
+        telemetry.addData("Left Stick Y", gamepad1.left_stick_y);
+        telemetry.addData("Right Stick X", gamepad1.right_stick_x);
         telemetry.update();
     }
     public void updateButtons(){

@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.util.IMU
 
 @TeleOp(name = "TeleOpMode (Field-Centric)")
+@Disabled
 class FieldCentricTeleOpMode: TeleOpMode() {
     private lateinit var imu: IMU
 

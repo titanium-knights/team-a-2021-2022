@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.util.MecanumDrive;
 
-@Config public abstract class Autonomous_Park extends LinearOpMode{
+@Config public abstract class Autonomous_Park extends LinearOpMode {
 
     public static long parkTime = 3250;
 

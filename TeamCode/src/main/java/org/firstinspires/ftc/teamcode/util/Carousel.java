@@ -10,7 +10,7 @@ public class Carousel {
         motor =hmap.get(DcMotor.class,"carousel");
     }
     public void spin(boolean fast){
-        motor.setPower(fast ? (0.75 / 2) : (0.75 / 4));
+        motor.setPower(fast ? (0.75) : (0.75 / 2));
     }
     public void spin() {
         this.spin(false);
@@ -18,7 +18,7 @@ public class Carousel {
     public void stop(){
         motor.setPower(0);
     }
-    public void spinReverse(boolean fast){ motor.setPower(fast ? (-0.75 / 2) : (-0.75 / 4)); }
+    public void spinReverse(boolean fast){ motor.setPower(fast ? (-0.75) : (-0.75 / 2)); }
     public void spinReverse() {
         this.spinReverse(false);
     }
