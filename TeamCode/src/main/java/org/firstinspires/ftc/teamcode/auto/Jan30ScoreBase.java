@@ -59,7 +59,7 @@ import static java.lang.Math.abs;
         sleep(2000);
         slides.stop();
 
-        turn(-90);
+        turn(isRed() ? 90 : -90);
 
         drive.strafeLeftWithPower(0.3);
         sleep(2000);
