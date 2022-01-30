@@ -13,14 +13,10 @@ class FieldCentricTeleOpMode: TeleOpMode() {
         imu.initializeIMU()
     }
 
-    override fun controlDrivetrain(preferredSpeed: Double) {
-        drive.teleOpFieldCentric(gamepad1, imu, preferredSpeed);
-    }
+    override fun controlDrivetrain(preferredSpeed: Double) = drive.teleOpFieldCentric(gamepad1, imu, preferredSpeed)
 }
 
 @TeleOp(name = "TeleOpMode (Robot-Centric)")
 class RobotCentricTeleOpMode: TeleOpMode() {
-    override fun controlDrivetrain(preferredSpeed: Double) {
-        drive.teleOpRobotCentric(gamepad1, preferredSpeed)
-    }
+    override fun controlDrivetrain(preferredSpeed: Double) = drive.teleOpRobotCentric(gamepad1, preferredSpeed)
 }
