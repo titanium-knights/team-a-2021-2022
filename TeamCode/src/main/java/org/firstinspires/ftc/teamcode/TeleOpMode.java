@@ -1,21 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.util.*;
 
-@TeleOp(name = "TeleOpMode", group = "Tele-Op")
-public class TeleOpMode extends OpMode {
+public abstract class TeleOpMode extends OpMode {
     public enum State {
         PRESET_MODE,
         NOT_PRESET_MODE
     }
-    public enum PRESETMODE{
-        NOT_PRESET_MODE,
-        LIFT,
-        LOWER
-    }
+
     MecanumDrive drive;
     Carousel carousel;
     MotorInterpolation carouselInterpolation;
@@ -23,7 +17,6 @@ public class TeleOpMode extends OpMode {
     TubeIntake intake;
     Carriage carriage;
     MotorInterpolation carriageInterpolation;
-    IMU imu;
     Speed speed;
     ToggleButton btYSlowMode;
     PushButton btAPresetButton;
@@ -42,8 +35,6 @@ public class TeleOpMode extends OpMode {
         intake = new TubeIntake(hardwareMap);
         carriage = new Carriage(hardwareMap);
         carriageInterpolation = new MotorInterpolation(carriage.getPosition(), 0.5);
-        imu = new IMU(hardwareMap);
-        imu.initializeIMU();
         speed = Speed.FAST;
         btYSlowMode = new ToggleButton(() -> gamepad1.y);
         btAPresetButton = new PushButton(() -> gamepad1.a);
@@ -89,9 +80,12 @@ public class TeleOpMode extends OpMode {
         }
         updateButtons();
     }
+
+    abstract void controlDrivetrain(double preferredSpeed);
+
     public void normalTeleOpActivities(){
         double speedVal = speed==Speed.FAST ? 0.75 : 0.3;
-        drive.teleOpFieldCentric(gamepad1,imu,speedVal);
+        controlDrivetrain(speedVal);
 
         if(gamepad1.left_trigger>0.1){
             intake.setPower(-gamepad1.left_trigger);
