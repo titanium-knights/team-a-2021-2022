@@ -8,6 +8,8 @@ import org.firstinspires.ftc.teamcode.util.IMU;
 import org.firstinspires.ftc.teamcode.util.MecanumDrive;
 import org.firstinspires.ftc.teamcode.util.Slide;
 
+import static java.lang.Math.abs;
+
 public abstract class Jan30ScoreWarehouse extends LinearOpMode {
     MecanumDrive drive;
     Slide slides;
@@ -42,4 +44,24 @@ public abstract class Jan30ScoreWarehouse extends LinearOpMode {
     }
 
     public abstract void runAfterDump();
+
+    public void turn(double target, double power) {
+        double initialAngle = imu.getZAngle();
+        if (initialAngle == target) return;
+        if (abs(initialAngle - target) > 2) {
+            if (target > initialAngle) {
+                drive.turnRightWithPower(power);
+            } else {
+                drive.turnLeftWithPower(power);
+            }
+            while (abs(target - imu.getZAngle()) > 2 && opModeIsActive()) {
+                idle();
+            }
+            drive.stop();
+        }
+    }
+
+    public void turn(double target) {
+        turn(target, 0.3);
+    }
 }

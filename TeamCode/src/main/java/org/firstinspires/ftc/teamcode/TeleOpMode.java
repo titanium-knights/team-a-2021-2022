@@ -49,11 +49,11 @@ public abstract class TeleOpMode extends OpMode {
         normalTeleOpActivities();
         if (gamepad1.right_bumper) {
             slides.setTargetPosition(null);
-            double pwr = slides.getSafePower(0.9);
+            double pwr = 0.9;
             slides.setPower(pwr);
         } else if(gamepad1.left_bumper) {
             slides.setTargetPosition(null);
-            double pwr = slides.getSafePower(-0.9);
+            double pwr = -0.9;
             slides.setPower(pwr);
         } else if (gamepad1.x) { // Lift down
             setSlidePosition(0);
