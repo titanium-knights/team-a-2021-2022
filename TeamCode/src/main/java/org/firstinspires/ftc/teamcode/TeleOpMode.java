@@ -5,9 +5,15 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.util.*;
 
 public abstract class TeleOpMode extends OpMode {
-    public enum State {
+    public enum SlideState {
         PRESET_MODE,
         NOT_PRESET_MODE
+    }
+
+    public enum DumpState {
+        DUMPING,
+        RETURNING_TO_IDLE,
+        IDLE
     }
 
     MecanumDrive drive;
@@ -21,8 +27,8 @@ public abstract class TeleOpMode extends OpMode {
     ToggleButton btYSlowMode;
     PushButton btAPresetButton;
     PushButton btBDumpButton;
-    State state = State.NOT_PRESET_MODE;
-    boolean isDumping = false;
+    SlideState slideState = SlideState.NOT_PRESET_MODE;
+    DumpState dumpState = DumpState.IDLE;
     public static int SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = 3427;
 
     @Override
@@ -41,10 +47,16 @@ public abstract class TeleOpMode extends OpMode {
         btBDumpButton = new PushButton(() -> gamepad1.b);
     }
 
+    public void setSlidePosition(int position) {
+        assert slideState == SlideState.PRESET_MODE;
+        slides.setTargetPosition(position);
+        slides.setPower(0.8);
+    }
+
     @Override
     public void loop() {
         normalTeleOpActivities();
-        switch (state) {
+        switch (slideState) {
             case NOT_PRESET_MODE:
                 if(gamepad1.right_bumper){
                     double pwr = slides.getSafePower(0.9);
@@ -61,22 +73,21 @@ public abstract class TeleOpMode extends OpMode {
             case PRESET_MODE:
                 if(gamepad1.right_bumper){
                     slides.setTargetPosition(Slide.getMaxPosition());
-                    slides.setPower(0.8);
+                    setSlidePosition(Slide.getMaxPosition());
                 }
                 else if(gamepad1.left_bumper){
-                    slides.setTargetPosition(0);
-                    slides.setPower(-0.8);
+                    setSlidePosition(0);
                 }
                 break;
         }
         if(btAPresetButton.isPressed()){
-            if (state == State.PRESET_MODE) {
-                state = State.NOT_PRESET_MODE;
+            if (slideState == SlideState.PRESET_MODE) {
+                slideState = SlideState.NOT_PRESET_MODE;
                 slides.clearTargetPosition();
-                slides.stop();
             } else {
-                state = State.PRESET_MODE;
+                slideState = SlideState.PRESET_MODE;
             }
+            slides.stop();
         }
         updateButtons();
     }
@@ -97,8 +108,6 @@ public abstract class TeleOpMode extends OpMode {
             intake.stop();
         }
 
-
-
         if(btYSlowMode.isActive()){
             speed = Speed.SLOW;
         }
@@ -107,15 +116,22 @@ public abstract class TeleOpMode extends OpMode {
         }
 
         if(btBDumpButton.isPressed() && slides.getCurrentPosition() >= SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD) {
-            isDumping = true;
+            dumpState = DumpState.DUMPING;
         }
-        if (isDumping) {
-            carriageInterpolation.setTarget(Carriage.getDumpPosition());
-            if (!carriageInterpolation.isBusy()) {
-                isDumping = false;
-            }
-        } else {
-            carriageInterpolation.setTarget(Carriage.getIdlePosition());
+        switch (dumpState) {
+            case DUMPING:
+                carriageInterpolation.setTarget(Carriage.getDumpPosition());
+                if (!carriageInterpolation.isBusy()) {
+                    dumpState = DumpState.RETURNING_TO_IDLE;
+                }
+                break;
+            case RETURNING_TO_IDLE:
+                if (!carriageInterpolation.isBusy()) {
+                    if (slideState == SlideState.PRESET_MODE) setSlidePosition(0);
+                    dumpState = DumpState.IDLE;
+                }
+            case IDLE:
+                carriageInterpolation.setTarget(Carriage.getIdlePosition());
         }
         carriage.setPosition(carriageInterpolation.getCurrent());
 
@@ -131,10 +147,8 @@ public abstract class TeleOpMode extends OpMode {
         carousel.motor.setPower(carouselInterpolation.getCurrent());
 
         telemetry.addData("SLOW MODE",speed);
-        telemetry.addData("Preset Mode", state == State.PRESET_MODE);
+        telemetry.addData("Preset Mode", slideState == SlideState.PRESET_MODE);
         telemetry.update();
-
-
     }
     public void updateButtons(){
         btYSlowMode.update();
