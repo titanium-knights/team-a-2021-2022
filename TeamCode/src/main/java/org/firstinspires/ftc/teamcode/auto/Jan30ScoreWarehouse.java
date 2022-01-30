@@ -8,8 +8,7 @@ import org.firstinspires.ftc.teamcode.util.IMU;
 import org.firstinspires.ftc.teamcode.util.MecanumDrive;
 import org.firstinspires.ftc.teamcode.util.Slide;
 
-@Autonomous
-public class Jan30ScoreWarehouse extends LinearOpMode {
+public abstract class Jan30ScoreWarehouse extends LinearOpMode {
     MecanumDrive drive;
     Slide slides;
     Carriage carriage;
@@ -19,6 +18,7 @@ public class Jan30ScoreWarehouse extends LinearOpMode {
         initialize();
         waitForStart();
         dumpInTopLevel();
+        runAfterDump();
     }
 
     public void initialize(){
@@ -29,6 +29,7 @@ public class Jan30ScoreWarehouse extends LinearOpMode {
         imu = new IMU(hardwareMap);
         imu.initializeIMU();
     }
+
     public void dumpInTopLevel(){
         slides.setTargetPosition(Slide.getMaxPosition());
         sleep(2000);
@@ -39,4 +40,6 @@ public class Jan30ScoreWarehouse extends LinearOpMode {
         slides.setTargetPosition(0);
         sleep(2000);
     }
+
+    public abstract void runAfterDump();
 }
