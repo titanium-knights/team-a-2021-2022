@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.util.IMU;
 
+import static java.lang.Math.abs;
+
 public class MecanumDrive {
     DcMotor fl, fr, bl, br;
 
@@ -31,8 +33,12 @@ public class MecanumDrive {
         double y = Math.sin(angle) * inputX + Math.cos(angle) * inputY;
         move(x*multiplier,y*multiplier,rot*multiplier);
     }
+    public float deadzonify(float input) {
+        if (abs(input) < 0.15) return 0;
+        return input;
+    }
     public void teleOpRobotCentric(Gamepad g1,double multiplier){
-        move(g1.left_stick_x*multiplier,-g1.left_stick_y*multiplier,g1.right_stick_x*multiplier);
+        move(deadzonify(g1.left_stick_x)*multiplier,-deadzonify(g1.left_stick_y)*multiplier,deadzonify(g1.right_stick_x)*multiplier);
 
     }
     public void move(double x, double y, double turn) {
@@ -41,8 +47,8 @@ public class MecanumDrive {
         powerArr[2] = y-x+turn;//bl Power
         powerArr[3] = y+x-turn; //br Power
 
-        double max = Math.max(Math.abs(powerArr[0]),Math.abs(powerArr[1]));
-        double tempMax = Math.max(Math.abs(powerArr[2]),Math.abs(powerArr[3]));
+        double max = Math.max(abs(powerArr[0]), abs(powerArr[1]));
+        double tempMax = Math.max(abs(powerArr[2]), abs(powerArr[3]));
         max = Math.max(max, tempMax);
 
         if(max>1){
