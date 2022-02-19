@@ -7,16 +7,16 @@ import org.firstinspires.ftc.teamcode.util.*;
 
 @TeleOp(name = "Reversed Controls", group = "Tele-Op")
 public class ReverseIntakeAndTriggerControls extends OpMode {
-    Slide slides;
+    Slide2 slides;
     TubeIntake intake;
     @Override
     public void init() {
-        slides = new Slide(hardwareMap);
+        slides = new Slide2(hardwareMap);
         slides.stopAndResetEncoder();
         intake = new TubeIntake(hardwareMap);
     }
 
-    public static int SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = (Slide.getMinPosition() + Slide.getMaxPosition()) / 3;
+    public static int SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = (Slide2.getMinPosition() + Slide2.getMaxPosition()) / 3;
 
     @Override
     public void loop() {
