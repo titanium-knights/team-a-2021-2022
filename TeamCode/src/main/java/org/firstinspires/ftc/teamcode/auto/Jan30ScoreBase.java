@@ -3,10 +3,7 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.util.Carriage;
-import org.firstinspires.ftc.teamcode.util.IMU;
-import org.firstinspires.ftc.teamcode.util.MecanumDrive;
-import org.firstinspires.ftc.teamcode.util.Slide2;
+import org.firstinspires.ftc.teamcode.util.*;
 
 import static java.lang.Math.abs;
 
@@ -14,7 +11,7 @@ import static java.lang.Math.abs;
     public static int MOTION_SCALE_FACTOR = 25;
 
     MecanumDrive drive;
-    Slide2 slides;
+    Slide slides;
     Carriage carriage;
     IMU imu;
     @Override
@@ -30,7 +27,7 @@ import static java.lang.Math.abs;
 
     public void initialize(){
         drive = new MecanumDrive(hardwareMap);
-        slides = new Slide2(hardwareMap);
+        slides = new Slide(hardwareMap);
         slides.stopAndResetEncoder();
         carriage = new Carriage(hardwareMap);
         imu = new IMU(hardwareMap);
@@ -38,7 +35,7 @@ import static java.lang.Math.abs;
     }
 
     public void dumpInTopLevel(){
-        slides.setTargetPosition(Slide2.getMaxPosition());
+        slides.setTargetPosition(Slide.getMaxPosition());
         slides.setPower(0.8);
         sleep(2000);
 

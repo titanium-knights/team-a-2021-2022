@@ -14,7 +14,7 @@ public abstract class TeleOpMode extends OpMode {
     MecanumDrive drive;
     Carousel carousel;
     MotorInterpolation carouselInterpolation;
-    Slide2 slides;
+    Slide slides;
     TubeIntake intake;
     Carriage carriage;
     MotorInterpolation carriageInterpolation;
@@ -29,7 +29,7 @@ public abstract class TeleOpMode extends OpMode {
         drive = new MecanumDrive(hardwareMap);
         carousel = new Carousel(hardwareMap);
         carouselInterpolation = new MotorInterpolation(0, 0.75);
-        slides = new Slide2(hardwareMap);
+        slides = new Slide(hardwareMap);
         slides.stopAndResetEncoder();
         intake = new TubeIntake(hardwareMap);
         carriage = new Carriage(hardwareMap);
@@ -58,9 +58,9 @@ public abstract class TeleOpMode extends OpMode {
         } else if (gamepad1.x) { // Lift down
             setSlidePosition(0);
         } else if (gamepad1.y) {
-            setSlidePosition(Slide2.getMaxPosition() / 2);
+            setSlidePosition(Slide.getMaxPosition() / 2);
         } else if (gamepad1.b) {
-            setSlidePosition(Slide2.getMaxPosition());
+            setSlidePosition(Slide.getMaxPosition());
         } else if (slides.getTargetPosition() == null) {
             slides.stop();
         }
