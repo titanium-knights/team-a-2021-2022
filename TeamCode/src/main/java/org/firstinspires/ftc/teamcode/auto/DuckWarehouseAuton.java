@@ -21,9 +21,9 @@ public class DuckWarehouseAuton extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        double colorMultiplier = 1; // TODO: Change to -1 for blue
+        double colorMultiplier = -1; // TODO: Change to -1 for blue
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId",
+        /* int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId",
                 "id", hardwareMap.appContext.getPackageName());
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "NAME_OF_CAMERA_IN_CONFIG_FILE");
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
@@ -43,21 +43,21 @@ public class DuckWarehouseAuton extends LinearOpMode {
             {
                 /*
                  * This will be called if the camera could not be opened
-                 */
+                 *//*
 
             }
-        });
+        }); */
 
         waitForStart();
 
-        while (opModeIsActive())
+        /* while (opModeIsActive())
         {
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.update();
 
             // Don't burn CPU cycles busy-looping in this sample
             sleep(50);
-        }
+        } */
 
         OdometryMecanumDrive drive = new OdometryMecanumDrive(hardwareMap);
 

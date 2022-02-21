@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 public class DuckSpareAuton extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        double colorMultiplier = 1; // TODO: Change to -1 for blue
+        double colorMultiplier = -1; // TODO: Change to -1 for blue
         OdometryMecanumDrive drive = new OdometryMecanumDrive(hardwareMap);
 
         waitForStart();
