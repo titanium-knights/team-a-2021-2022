@@ -18,7 +18,7 @@ public class TeleOpLeagues extends OpMode {
     MecanumDrive drive;
     TubeIntake intake;
     OdometryMecanumDrive odoDrive;
-    Slide2 slide2;
+    // Slide2 slide2;
     int targetPos;
     public static int HIGH = Slide.getMaxPosition();
     public static int MID = (Slide.getMinPosition() + Slide.getMaxPosition()) / 2;
@@ -29,7 +29,7 @@ public class TeleOpLeagues extends OpMode {
         intake = new TubeIntake(hardwareMap);
         drive = new MecanumDrive(hardwareMap);
         odoDrive = new OdometryMecanumDrive(hardwareMap);
-        slide2 = new Slide2(hardwareMap);
+        // slide2 = new Slide2(hardwareMap);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class TeleOpLeagues extends OpMode {
         }
 
 
-        slide2.runToPosition(targetPos);
+        // slide2.runToPosition(targetPos);
 
         odoDrive.update();
 
