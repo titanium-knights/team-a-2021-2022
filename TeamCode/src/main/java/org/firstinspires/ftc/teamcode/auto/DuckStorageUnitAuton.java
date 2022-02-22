@@ -49,9 +49,6 @@ public class DuckStorageUnitAuton extends LinearOpMode{
         });
 
         OdometryMecanumDrive drive = new OdometryMecanumDrive(hardwareMap);
-        CapstoneMechanism capstoneMechanism = new CapstoneMechanism(hardwareMap);
-        Carriage carriage = new Carriage(hardwareMap);
-        Slide2 slide = new Slide2(hardwareMap);
 
         waitForStart();
 

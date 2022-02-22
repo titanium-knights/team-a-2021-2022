@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 
     companion object Presets {
         @JvmStatic val storage = 1.0
-        @JvmStatic val idle = 0.9
+        @JvmStatic val idle = 0.87
         @JvmStatic val preDump = 0.67
         @JvmStatic val postDump = 0.53
         @JvmStatic val pickup = 0.15
