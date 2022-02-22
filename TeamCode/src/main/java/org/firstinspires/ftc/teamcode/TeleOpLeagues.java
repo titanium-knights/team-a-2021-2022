@@ -21,6 +21,8 @@ public class TeleOpLeagues extends OpMode {
         POST_DUMPING
     }
 
+    public static Pose2d startPose = new Pose2d();
+
     public static int DELAY_MS = 300;
 
     MecanumDrive drive;
@@ -65,15 +67,16 @@ public class TeleOpLeagues extends OpMode {
         slideMidButton = new PushButton(() -> gamepad1.x);
         carriage.setPosition(carriageInterpolation.getCurrent());
         elapsedTime = new ElapsedTime();
+        odoDrive.setPoseEstimate(startPose);
     }
 
     @Override
     public void loop() {
         drive.teleOpRobotCentric(gamepad1, slowModeButton.isActive() ? 0.3 : 0.75);
         if (gamepad1.right_trigger > 0.3) {
-            intake.setPower(-gamepad1.right_trigger * 0.8);
+            intake.setPower(-gamepad1.right_trigger * 0.85);
         } else if (gamepad1.left_trigger > 0.3) {
-            intake.setPower(gamepad1.left_trigger * 0.8);
+            intake.setPower(gamepad1.left_trigger * 0.85);
         } else {
             intake.stop();
         }

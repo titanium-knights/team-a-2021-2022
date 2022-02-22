@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.TeleOpLeagues;
 import org.firstinspires.ftc.teamcode.odometry.OdometryMecanumDrive;
 import org.firstinspires.ftc.teamcode.pipelines.DuckMurderPipeline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -51,6 +52,8 @@ public class DuckSpareAuton extends LinearOpMode {
         drive.setPoseEstimate(sequenceStart.start());
         drive.followTrajectorySequence(sequenceStart);
 
+        TeleOpLeagues.startPose = drive.getPoseEstimate();
+
         do {
             if (position == 2) {
                 slide.runToPosition(Slide2.MAX_POSITION);
@@ -75,10 +78,12 @@ public class DuckSpareAuton extends LinearOpMode {
                 .lineTo(new Vector2d(15, -46 * colorMultiplier))
                 .waitSeconds(10)
                 .strafeLeft(26)
-                .forward(36)
+                .forward(24)
                 .waitSeconds(0.5)
                 .build();
 
         drive.followTrajectorySequence(sequenceEnd);
+
+        TeleOpLeagues.startPose = drive.getPoseEstimate();
     }
 }

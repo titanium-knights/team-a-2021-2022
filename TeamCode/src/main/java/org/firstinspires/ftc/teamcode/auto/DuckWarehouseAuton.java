@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.TeleOpLeagues;
 import org.firstinspires.ftc.teamcode.odometry.OdometryMecanumDrive;
 import org.firstinspires.ftc.teamcode.pipelines.DuckMurderPipeline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -25,8 +26,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous(name = "Murder Duck & Warehouse")
 public class DuckWarehouseAuton extends LinearOpMode {
     public static int TEST_POSITION = 2;
-    public static int X_POSITION = -59;
-    public static int Y_POSITION = -63;
+    public static int X_POSITION = -61;
+    public static int Y_POSITION = -56;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -71,7 +72,7 @@ public class DuckWarehouseAuton extends LinearOpMode {
         } else if (position == 1) {
             destinationY = -43.5;
         } else {
-            destinationY = -49;
+            destinationY = -47;
         }
 
         waitForStart();
@@ -89,7 +90,7 @@ public class DuckWarehouseAuton extends LinearOpMode {
         TrajectorySequence sequenceStart = drive.trajectorySequenceBuilder(new Pose2d(-36, -63 * colorMultiplier, Math.toRadians(-90) * colorMultiplier))
                 .back(8)
                 .lineToLinearHeading(new Pose2d(X_POSITION, Y_POSITION * colorMultiplier, Math.toRadians(180)))
-                .addTemporalMarker(() -> carousel.spin(false))
+                .addTemporalMarker(() -> carousel.spinReverse(false))
                 .waitSeconds(10)
                 .addTemporalMarker(carousel::stop)
                 .setTangent(0)
@@ -101,6 +102,8 @@ public class DuckWarehouseAuton extends LinearOpMode {
 
         drive.setPoseEstimate(sequenceStart.start());
         drive.followTrajectorySequence(sequenceStart);
+
+        TeleOpLeagues.startPose = drive.getPoseEstimate();
 
         do {
             slide.runToPosition(Slide2.MIN_POSITION);
@@ -124,7 +127,7 @@ public class DuckWarehouseAuton extends LinearOpMode {
         } while (opModeIsActive() && slide.getPower() < 0.0);
 
         TrajectorySequence sequenceEnd = drive.trajectorySequenceBuilder(sequenceStart.end())
-                .lineTo(new Vector2d(-6, -46 * colorMultiplier))
+                .lineTo(new Vector2d(-6, -52 * colorMultiplier))
                 .turn(Math.toRadians(90) * colorMultiplier)
 
                 .lineTo(new Vector2d(15, -46 * colorMultiplier))
@@ -134,5 +137,7 @@ public class DuckWarehouseAuton extends LinearOpMode {
                 .build();
 
         drive.followTrajectorySequence(sequenceEnd);
+
+        TeleOpLeagues.startPose = drive.getPoseEstimate();
     }
 }
