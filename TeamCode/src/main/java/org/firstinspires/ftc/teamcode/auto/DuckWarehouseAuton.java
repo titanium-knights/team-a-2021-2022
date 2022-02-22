@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.auto;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -9,6 +10,9 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.odometry.OdometryMecanumDrive;
 import org.firstinspires.ftc.teamcode.pipelines.DuckMurderPipeline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.util.CapstoneMechanism;
+import org.firstinspires.ftc.teamcode.util.Carriage;
+import org.firstinspires.ftc.teamcode.util.Slide2;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -16,12 +20,19 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 /**
  * Duck Murder 2: Electric Boogaloo
  */
+@Config
 @Autonomous(name = "Murder Duck & Warehouse")
 public class DuckWarehouseAuton extends LinearOpMode {
+    public static int POSITION = 2;
 
     @Override
     public void runOpMode() throws InterruptedException {
         double colorMultiplier = -1; // TODO: Change to -1 for blue
+
+        OdometryMecanumDrive drive = new OdometryMecanumDrive(hardwareMap);
+        CapstoneMechanism capstoneMechanism = new CapstoneMechanism(hardwareMap);
+        Carriage carriage = new Carriage(hardwareMap);
+        Slide2 slide = new Slide2(hardwareMap);
 
         /* int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId",
                 "id", hardwareMap.appContext.getPackageName());
@@ -49,6 +60,7 @@ public class DuckWarehouseAuton extends LinearOpMode {
         }); */
 
         waitForStart();
+        capstoneMechanism.setPosition(CapstoneMechanism.getIdle());
 
         /* while (opModeIsActive())
         {
@@ -59,23 +71,47 @@ public class DuckWarehouseAuton extends LinearOpMode {
             sleep(50);
         } */
 
-        OdometryMecanumDrive drive = new OdometryMecanumDrive(hardwareMap);
-
-        TrajectorySequence sequence = drive.trajectorySequenceBuilder(new Pose2d(-36, -66 * colorMultiplier, 0))
-                .lineTo(new Vector2d(-56, -66 * colorMultiplier))
+        TrajectorySequence sequenceStart = drive.trajectorySequenceBuilder(new Pose2d(-36, -63 * colorMultiplier, Math.toRadians(-90) * colorMultiplier))
+                .back(8)
+                .lineToLinearHeading(new Pose2d(-59, -63 * colorMultiplier, 0))
                 .waitSeconds(0.5)
                 .splineToConstantHeading(new Vector2d(-40, -56 * colorMultiplier),
                         Math.toRadians(30) * colorMultiplier)
-                .splineToSplineHeading(new Pose2d(-12, -41 * colorMultiplier, Math.toRadians(-90) * colorMultiplier),
+                .splineToSplineHeading(new Pose2d(-9, -43.5 * colorMultiplier, Math.toRadians(-90) * colorMultiplier),
                         Math.toRadians(90) * colorMultiplier)
-                .waitSeconds(0.5)
-                .forward(3)
-                .turn(Math.toRadians(90) * colorMultiplier)
-                .splineToConstantHeading(new Vector2d(15, -44 * colorMultiplier), Math.toRadians(0))
                 .build();
 
-        drive.setPoseEstimate(sequence.start());
-        drive.followTrajectorySequence(sequence);
+        drive.setPoseEstimate(sequenceStart.start());
+        drive.followTrajectorySequence(sequenceStart);
 
+        do {
+            slide.runToPosition(Slide2.MIN_POSITION);
+        } while (opModeIsActive() && slide.getPower() < 0.0);
+
+        do {
+            if (position == 2) {
+                slide.runToPosition(Slide2.MAX_POSITION);
+            } else {
+                slide.runToPosition((Slide2.MIN_POSITION + Slide2.MAX_POSITION) / 2);
+            }
+        } while (opModeIsActive() && slide.getPower() > 0.0);
+
+        carriage.dump();
+        sleep(2000);
+        carriage.idle();
+        sleep(2000);
+
+        TrajectorySequence sequenceEnd = drive.trajectorySequenceBuilder(sequenceStart.end())
+                .lineTo(new Vector2d(-6, -46 * colorMultiplier))
+                .turn(Math.toRadians(90) * colorMultiplier)
+
+                .lineTo(new Vector2d(15, -46 * colorMultiplier))
+                .waitSeconds(10)
+                .strafeLeft(26)
+                .forward(36)
+                .waitSeconds(0.5)
+                .build();
+
+        drive.followTrajectorySequence(sequenceEnd);
     }
 }

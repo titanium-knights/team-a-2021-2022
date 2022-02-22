@@ -10,6 +10,9 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.teamcode.util.CapstoneMechanism;
+import org.firstinspires.ftc.teamcode.util.Carriage;
+import org.firstinspires.ftc.teamcode.util.Slide2;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -45,6 +48,11 @@ public class DuckStorageUnitAuton extends LinearOpMode{
             }
         });
 
+        OdometryMecanumDrive drive = new OdometryMecanumDrive(hardwareMap);
+        CapstoneMechanism capstoneMechanism = new CapstoneMechanism(hardwareMap);
+        Carriage carriage = new Carriage(hardwareMap);
+        Slide2 slide = new Slide2(hardwareMap);
+
         waitForStart();
 
         while (opModeIsActive())
@@ -56,7 +64,6 @@ public class DuckStorageUnitAuton extends LinearOpMode{
             sleep(50);
         }
 
-        OdometryMecanumDrive drive = new OdometryMecanumDrive(hardwareMap);
 
 
         TrajectorySequence sequence = drive.trajectorySequenceBuilder(new Pose2d(-36, -66 * colorMultiplier, 0))
