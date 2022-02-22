@@ -1,24 +1,31 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Carousel {
-    public DcMotor motor;
+    public CRServo motor;
+    public CRServo motor2;
 
     public Carousel(HardwareMap hmap){
-        motor =hmap.get(DcMotor.class,"carousel");
+        motor = hmap.get(CRServo.class,"carousel_l");
+        motor2 = hmap.get(CRServo.class, "carousel_r");
+    }
+    public void setPower(double power) {
+        motor.setPower(power);
+        motor2.setPower(-power);
     }
     public void spin(boolean fast){
-        motor.setPower(fast ? (0.75) : (0.75 / 2));
+        setPower(fast ? (0.75) : (0.75 / 2));
     }
     public void spin() {
         this.spin(false);
     }
     public void stop(){
-        motor.setPower(0);
+        setPower(0);
     }
-    public void spinReverse(boolean fast){ motor.setPower(fast ? (-0.75) : (-0.75 / 2)); }
+    public void spinReverse(boolean fast){ setPower(fast ? (-0.75) : (-0.75 / 2)); }
     public void spinReverse() {
         this.spinReverse(false);
     }

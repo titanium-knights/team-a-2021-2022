@@ -12,11 +12,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @TeleOp
 public class CarriageServoTester extends OpMode {
     Servo carriage;
-    public static double position = 0.0;
+    public static double position = 0.5;
     Telemetry dashTelemetry;
     @Override
     public void init() {
-        carriage = hardwareMap.get(Servo.class,"carriage");
+        carriage = hardwareMap.get(Servo.class,"capstone");
         dashTelemetry = FtcDashboard.getInstance().getTelemetry();
     }
 

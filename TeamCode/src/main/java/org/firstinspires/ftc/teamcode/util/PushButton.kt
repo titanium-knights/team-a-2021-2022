@@ -1,15 +1,16 @@
 package org.firstinspires.ftc.teamcode.util
 
-class PushButton(private val readState: () -> Boolean) {
-    private var previousState: Boolean = false
-    val currentState get() = readState()
+class PushButton(val readState: () -> Boolean) {
+    var previousState: Boolean = false
+    var currentState: Boolean = readState()
 
     val isPressed: Boolean get() {
         return currentState && !previousState
     }
 
     fun update() {
-        previousState = readState()
+        previousState = currentState
+        currentState = readState()
     }
 }
 

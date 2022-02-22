@@ -13,14 +13,43 @@ class Slide2TestOpMode: LinearOpMode() {
         val telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
         waitForStart()
 
+        var target: Int? = null
+
         while (opModeIsActive()) {
-            slide.setPower(when {
-                gamepad1.left_bumper -> -0.3
-                gamepad1.right_bumper -> 0.3
-                else -> 0.0
-            })
+            when {
+                gamepad1.y -> {
+                    target = Slide2.MAX_POSITION
+                }
+
+                gamepad1.x -> {
+                    target = (Slide2.MIN_POSITION + Slide2.MAX_POSITION) / 2
+                }
+
+                gamepad1.a -> {
+                    target = Slide2.MIN_POSITION
+                }
+            }
+
+            when {
+                gamepad1.left_bumper -> {
+                    target = null
+                    slide.setPower(-0.7)
+                }
+                gamepad1.right_bumper -> {
+                    target = null
+                    slide.setPower(0.7)
+                }
+                target != null -> slide.runToPosition(target)
+                else -> slide.setPower(0.0)
+            }
 
             telemetry.addData("Position", slide.currentPosition)
+            if (target == null) {
+                telemetry.addData("Mode", "Manual")
+            } else {
+                telemetry.addData("Mode", "Automatic")
+                telemetry.addData("Target", target)
+            }
             telemetry.update()
         }
     }
