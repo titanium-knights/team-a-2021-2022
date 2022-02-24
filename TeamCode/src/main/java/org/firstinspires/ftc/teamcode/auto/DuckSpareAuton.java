@@ -37,7 +37,7 @@ public class DuckSpareAuton extends LinearOpMode {
         } else if (position == 1) {
             destinationY = -43.5;
         } else {
-            destinationY = -49;
+            destinationY = -48;
         }
 
         waitForStart();

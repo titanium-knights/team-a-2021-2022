@@ -25,7 +25,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Config
 @Autonomous(name = "Murder Duck & Warehouse")
 public class DuckWarehouseAuton extends LinearOpMode {
-    public static int TEST_POSITION = 2;
+    public static int TEST_POSITION = 0;
     public static int X_POSITION = -61;
     public static int Y_POSITION = -56;
 
@@ -72,7 +72,7 @@ public class DuckWarehouseAuton extends LinearOpMode {
         } else if (position == 1) {
             destinationY = -43.5;
         } else {
-            destinationY = -47;
+            destinationY = -48;
         }
 
         waitForStart();
