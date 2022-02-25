@@ -37,7 +37,7 @@ public class DuckSpareAuton extends LinearOpMode {
         } else if (position == 1) {
             destinationY = -43.5;
         } else {
-            destinationY = -48;
+            destinationY = -46.5;
         }
 
         waitForStart();
@@ -57,8 +57,10 @@ public class DuckSpareAuton extends LinearOpMode {
         do {
             if (position == 2) {
                 slide.runToPosition(Slide2.MAX_POSITION);
-            } else {
+            } else if (position == 1) {
                 slide.runToPosition((Slide2.MIN_POSITION + Slide2.MAX_POSITION) / 2);
+            } else {
+                slide.runToPosition(760);
             }
         } while (opModeIsActive() && slide.getPower() > 0.0);
 
@@ -70,6 +72,8 @@ public class DuckSpareAuton extends LinearOpMode {
         do {
             slide.runToPosition(Slide2.MIN_POSITION);
         } while (opModeIsActive() && slide.getPower() < 0.0);
+
+        capstoneMechanism.setPosition(CapstoneMechanism.getStorage());
 
         TrajectorySequence sequenceEnd = drive.trajectorySequenceBuilder(sequenceStart.end())
                 .lineTo(new Vector2d(-6, -46 * colorMultiplier))

@@ -23,7 +23,7 @@ public class TeleOpLeagues extends OpMode {
 
     public static Pose2d startPose = new Pose2d();
 
-    public static int DELAY_MS = 300;
+    public static int DELAY_MS = 600;
 
     MecanumDrive drive;
     TubeIntake intake;
