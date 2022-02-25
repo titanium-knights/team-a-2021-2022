@@ -176,10 +176,10 @@ public class TeleOpLeagues extends OpMode {
 
         Pose2d poseEstimate = odoDrive.getPoseEstimate();
         if(matchTime.time() < 120){
-            telemetry.addData("Teleop Time Remaining",90-matchTime.time());
+            telemetry.addData("Teleop Time Remaining",(int)(90-matchTime.time()));
         }
         else{
-            telemetry.addData("Endgame Time Remaining", 120-matchTime.time());
+            telemetry.addData("Endgame Time Remaining", (int)(120-matchTime.time()));
         }
         telemetry.addData("x", poseEstimate.getX());
         telemetry.addData("y", poseEstimate.getY());
