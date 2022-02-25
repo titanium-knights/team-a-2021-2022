@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.util.*;
 @Config
 @TeleOp(name = "TeleOp Leagues", group = "TeleOp")
 public class TeleOpLeagues extends OpMode {
+    ElapsedTime matchTime;
     enum DumpState {
         IDLE,
         RETURNING_TO_IDLE,
@@ -67,9 +68,13 @@ public class TeleOpLeagues extends OpMode {
         slideMidButton = new PushButton(() -> gamepad1.x);
         carriage.setPosition(carriageInterpolation.getCurrent());
         elapsedTime = new ElapsedTime();
+        matchTime = new ElapsedTime();
         odoDrive.setPoseEstimate(startPose);
     }
-
+    @Override
+    public void start(){
+        matchTime.reset();
+    }
     @Override
     public void loop() {
         drive.teleOpRobotCentric(gamepad1, slowModeButton.isActive() ? 0.3 : 0.75);
@@ -170,6 +175,12 @@ public class TeleOpLeagues extends OpMode {
         odoDrive.update();
 
         Pose2d poseEstimate = odoDrive.getPoseEstimate();
+        if(matchTime.time() < 120){
+            telemetry.addData("Teleop Time Remaining",90-matchTime.time());
+        }
+        else{
+            telemetry.addData("Endgame Time Remaining", 120-matchTime.time());
+        }
         telemetry.addData("x", poseEstimate.getX());
         telemetry.addData("y", poseEstimate.getY());
         telemetry.addData("heading", poseEstimate.getHeading());
