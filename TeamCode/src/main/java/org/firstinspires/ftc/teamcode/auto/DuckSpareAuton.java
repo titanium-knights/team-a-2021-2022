@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.TeleOpLeagues;
 import org.firstinspires.ftc.teamcode.odometry.OdometryMecanumDrive;
 import org.firstinspires.ftc.teamcode.pipelines.DuckMurderPipeline;
@@ -15,6 +16,9 @@ import org.firstinspires.ftc.teamcode.util.CapstoneMechanism;
 import org.firstinspires.ftc.teamcode.util.Carriage;
 import org.firstinspires.ftc.teamcode.util.Slide;
 import org.firstinspires.ftc.teamcode.util.Slide2;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Config
 @Autonomous(name = "Spare Duck & Warehouse")
@@ -28,6 +32,30 @@ public class DuckSpareAuton extends LinearOpMode {
         CapstoneMechanism capstoneMechanism = new CapstoneMechanism(hardwareMap);
         Carriage carriage = new Carriage(hardwareMap);
         Slide2 slide = new Slide2(hardwareMap);
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId",
+                "id", hardwareMap.appContext.getPackageName());
+        WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+        DuckMurderPipeline pipeline = new DuckMurderPipeline(telemetry);
+
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                // Usually this is where you'll want to start streaming from the camera (see section 4)
+                camera.startStreaming(1920, 1080, OpenCvCameraRotation.UPRIGHT);
+                camera.setPipeline(pipeline);
+            }
+            @Override
+            public void onError(int errorCode)
+            {
+                /*
+                 * This will be called if the camera could not be opened
+                 */
+            }
+        });
 
         int position = TEST_POSITION;
 

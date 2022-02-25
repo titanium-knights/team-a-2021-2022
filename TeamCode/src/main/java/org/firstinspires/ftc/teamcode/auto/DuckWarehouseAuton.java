@@ -39,9 +39,9 @@ public class DuckWarehouseAuton extends LinearOpMode {
         Slide2 slide = new Slide2(hardwareMap);
         Carousel carousel = new Carousel(hardwareMap);
 
-        /* int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId",
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId",
                 "id", hardwareMap.appContext.getPackageName());
-        WebcamName webcamName = hardwareMap.get(WebcamName.class, "NAME_OF_CAMERA_IN_CONFIG_FILE");
+        WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
         DuckMurderPipeline pipeline = new DuckMurderPipeline(telemetry);
 
@@ -59,10 +59,9 @@ public class DuckWarehouseAuton extends LinearOpMode {
             {
                 /*
                  * This will be called if the camera could not be opened
-                 *//*
-
+                 */
             }
-        }); */
+        });
 
         int position = TEST_POSITION;
 
@@ -77,15 +76,6 @@ public class DuckWarehouseAuton extends LinearOpMode {
 
         waitForStart();
         capstoneMechanism.setPosition(CapstoneMechanism.getIdle());
-
-        /* while (opModeIsActive())
-        {
-            telemetry.addData("Analysis", pipeline.getAnalysis());
-            telemetry.update();
-
-            // Don't burn CPU cycles busy-looping in this sample
-            sleep(50);
-        } */
 
         TrajectorySequence sequenceStart = drive.trajectorySequenceBuilder(new Pose2d(-36, -63 * colorMultiplier, Math.toRadians(-90) * colorMultiplier))
                 .back(8)
