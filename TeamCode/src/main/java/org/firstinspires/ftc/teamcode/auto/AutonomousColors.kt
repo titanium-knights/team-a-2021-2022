@@ -4,13 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 
 @Autonomous(name = "Autonomous - Park (Red)")
-@Disabled
 class Autonomous_Park_Red: Autonomous_Park() {
     override fun isRed() = true
 }
 
 @Autonomous(name = "Autonomous - Park (Blue)")
-@Disabled
 class Autonomous_Park_Blue: Autonomous_Park() {
     override fun isRed() = false
 }
@@ -28,11 +26,13 @@ class Jan30ScoreCarouselBlue: Jan30ScoreCarousel() {
 }
 
 @Autonomous(name = "Autonomous - Jan 30 Warehouse (Red)")
+@Disabled
 class Jan30ScoreWarehouseRed: Jan30ScoreWarehouse() {
     override fun isRed() = true
 }
 
 @Autonomous(name = "Autonomous - Jan 30 Warehouse (Blue)")
+@Disabled
 class Jan30ScoreWarehouseBlue: Jan30ScoreWarehouse() {
     override fun isRed() = false
 }
