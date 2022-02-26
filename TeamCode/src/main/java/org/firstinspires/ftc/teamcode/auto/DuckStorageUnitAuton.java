@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.TeleOpLeagues;
 import org.firstinspires.ftc.teamcode.odometry.OdometryMecanumDrive;
 import org.firstinspires.ftc.teamcode.pipelines.DuckMurderPipeline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -12,22 +13,29 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.util.CapstoneMechanism;
+import org.firstinspires.ftc.teamcode.util.Carousel;
 import org.firstinspires.ftc.teamcode.util.Carriage;
 import org.firstinspires.ftc.teamcode.util.Slide2;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name = "Murder Duck & StorageUnit")
-@Disabled
-public class DuckStorageUnitAuton extends LinearOpMode{
+public abstract class DuckStorageUnitAuton extends LinearOpMode {
+    public abstract double getColorMultiplier();
+
     @Override
     public void runOpMode() throws InterruptedException {
-        double colorMultiplier = 1; // TODO: Change to -1 for blue
+        double colorMultiplier = getColorMultiplier();
+
+        OdometryMecanumDrive drive = new OdometryMecanumDrive(hardwareMap);
+        CapstoneMechanism capstoneMechanism = new CapstoneMechanism(hardwareMap);
+        Carriage carriage = new Carriage(hardwareMap);
+        Slide2 slide = new Slide2(hardwareMap);
+        Carousel carousel = new Carousel(hardwareMap);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId",
                 "id", hardwareMap.appContext.getPackageName());
-        WebcamName webcamName = hardwareMap.get(WebcamName.class, "NAME_OF_CAMERA_IN_CONFIG_FILE");
+        WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
         DuckMurderPipeline pipeline = new DuckMurderPipeline(telemetry);
 
@@ -46,40 +54,79 @@ public class DuckStorageUnitAuton extends LinearOpMode{
                 /*
                  * This will be called if the camera could not be opened
                  */
-
             }
         });
 
-        OdometryMecanumDrive drive = new OdometryMecanumDrive(hardwareMap);
-
         waitForStart();
-
-        while (opModeIsActive())
-        {
-            telemetry.addData("Analysis", pipeline.getAnalysis());
-            telemetry.update();
-
-            // Don't burn CPU cycles busy-looping in this sample
-            sleep(50);
+        int position = 2;
+        DuckMurderPipeline.CapstonePosition capstonePosition = pipeline.getAnalysis();
+        if (capstonePosition == DuckMurderPipeline.CapstonePosition.CENTER) {
+            position = 1;
+        } else if (capstonePosition == DuckMurderPipeline.CapstonePosition.LEFT) {
+            position = 0;
         }
+        double destinationY;
+        if (position == 2) {
+            destinationY = DuckSpareAuton.HIGH_POS;
+        } else if (position == 1) {
+            destinationY = DuckSpareAuton.MID_POS - 2.5;
+        } else {
+            destinationY = DuckSpareAuton.LOW_POS - 4;
+        }
+        capstoneMechanism.setPosition(0.6);
+        telemetry.addData("Position", position);
+        telemetry.update();
 
-
-
-        TrajectorySequence sequence = drive.trajectorySequenceBuilder(new Pose2d(-36, -66 * colorMultiplier, 0))
-                .lineTo(new Vector2d(-56, -66 * colorMultiplier))
-                .waitSeconds(0.5)
-                .setTangent(Math.toRadians(90) * colorMultiplier)
-                .splineToConstantHeading(new Vector2d(-54, -60 * colorMultiplier), Math.toRadians(90) * colorMultiplier)
-                .turn(Math.toRadians(90) * colorMultiplier)
-                .forward(36)
-                .splineToSplineHeading(new Pose2d(-31, -20 * colorMultiplier, Math.toRadians(180)), Math.toRadians(0))
-                .waitSeconds(0.5)
-                .setTangent(Math.toRadians(180 - colorMultiplier * 45))
-                .splineToConstantHeading(new Vector2d(-60, -35 * colorMultiplier), Math.toRadians(-90) * colorMultiplier)
+        TrajectorySequence sequenceStart = drive.trajectorySequenceBuilder(new Pose2d(-36, -63 * colorMultiplier, Math.toRadians(-90) * colorMultiplier))
+                .back(12)
+                .lineToLinearHeading(new Pose2d(DuckWarehouseAuton.X_POSITION, DuckWarehouseAuton.Y_POSITION * colorMultiplier, Math.toRadians(180)))
+                .addTemporalMarker(() -> carousel.spinReverse(false))
+                .waitSeconds(4)
+                .addTemporalMarker(carousel::stop)
+                .waitSeconds(10)
+                .setTangent(0)
+                .splineToConstantHeading(new Vector2d(-40, -56 * colorMultiplier),
+                        Math.toRadians(30) * colorMultiplier)
+                .splineToSplineHeading(new Pose2d(position == 0 ? -20.5 : -14.5, destinationY * colorMultiplier, Math.toRadians(-90) * colorMultiplier),
+                        Math.toRadians(90) * colorMultiplier)
                 .build();
 
-        drive.setPoseEstimate(sequence.start());
-        drive.followTrajectorySequence(sequence);
-    }
+        drive.setPoseEstimate(sequenceStart.start());
+        drive.followTrajectorySequence(sequenceStart);
 
+        TeleOpLeagues.startPose = drive.getPoseEstimate();
+
+        do {
+            slide.runToPosition(Slide2.MIN_POSITION);
+        } while (opModeIsActive() && slide.getPower() < 0.0);
+
+        do {
+            if (position == 2) {
+                slide.runToPosition(Slide2.MAX_POSITION);
+            } else {
+                slide.runToPosition((Slide2.MIN_POSITION + Slide2.MAX_POSITION) / 2);
+            }
+        } while (opModeIsActive() && slide.getPower() > 0.0);
+
+        carriage.dump();
+        sleep(2000);
+        carriage.idle();
+        sleep(2000);
+
+        do {
+            slide.runToPosition(Slide2.MIN_POSITION);
+        } while (opModeIsActive() && slide.getPower() < 0.0);
+
+        capstoneMechanism.setPosition(CapstoneMechanism.getStorage());
+
+        TrajectorySequence sequenceEnd = drive.trajectorySequenceBuilder(sequenceStart.end())
+                .splineToConstantHeading(new Vector2d(-36, -60 * colorMultiplier), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(-73, -45 * colorMultiplier), Math.toRadians(90) * colorMultiplier)
+                .waitSeconds(1)
+                .build();
+
+        drive.followTrajectorySequence(sequenceEnd);
+
+        TeleOpLeagues.startPose = drive.getPoseEstimate();
+    }
 }

@@ -8,10 +8,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap
     var position by servo::position
 
     companion object Presets {
-        @JvmStatic val storage = 1.0
-        @JvmStatic val idle = 0.87
+        @JvmStatic val storage = 0.8
+        @JvmStatic val idle = 0.7
         @JvmStatic val preDump = 0.67
         @JvmStatic val postDump = 0.53
-        @JvmStatic val pickup = 0.22
+        @JvmStatic val pickup = 0.06
     }
 }

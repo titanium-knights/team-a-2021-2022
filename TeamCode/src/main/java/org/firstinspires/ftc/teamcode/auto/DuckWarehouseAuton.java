@@ -23,14 +23,15 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
  * Duck Murder 2: Electric Boogaloo
  */
 @Config
-@Autonomous(name = "Murder Duck & Warehouse")
-public class DuckWarehouseAuton extends LinearOpMode {
+public abstract class DuckWarehouseAuton extends LinearOpMode {
+    public abstract double getColorMultiplier();
+
     public static int X_POSITION = -61;
     public static int Y_POSITION = -56;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        double colorMultiplier = -1; // TODO: Change to -1 for blue
+        double colorMultiplier = getColorMultiplier();
 
         OdometryMecanumDrive drive = new OdometryMecanumDrive(hardwareMap);
         CapstoneMechanism capstoneMechanism = new CapstoneMechanism(hardwareMap);
@@ -72,24 +73,26 @@ public class DuckWarehouseAuton extends LinearOpMode {
         }
         double destinationY;
         if (position == 2) {
-            destinationY = -49;
+            destinationY = DuckSpareAuton.HIGH_POS;
         } else if (position == 1) {
-            destinationY = -43.5;
+            destinationY = DuckSpareAuton.MID_POS - 2.5;
         } else {
-            destinationY = -46.5;
+            destinationY = DuckSpareAuton.LOW_POS - 2.5;
         }
-        capstoneMechanism.setPosition(CapstoneMechanism.getIdle());
+        capstoneMechanism.setPosition(0.6);
+        telemetry.addData("Position", position);
+        telemetry.update();
 
         TrajectorySequence sequenceStart = drive.trajectorySequenceBuilder(new Pose2d(-36, -63 * colorMultiplier, Math.toRadians(-90) * colorMultiplier))
-                .back(8)
+                .back(12)
                 .lineToLinearHeading(new Pose2d(X_POSITION, Y_POSITION * colorMultiplier, Math.toRadians(180)))
                 .addTemporalMarker(() -> carousel.spinReverse(false))
-                .waitSeconds(10)
+                .waitSeconds(4)
                 .addTemporalMarker(carousel::stop)
                 .setTangent(0)
                 .splineToConstantHeading(new Vector2d(-40, -56 * colorMultiplier),
                         Math.toRadians(30) * colorMultiplier)
-                .splineToSplineHeading(new Pose2d(-9, (destinationY - 3) * colorMultiplier, Math.toRadians(-90) * colorMultiplier),
+                .splineToSplineHeading(new Pose2d(position == 0 ? -21.5 : -14.5, destinationY * colorMultiplier, Math.toRadians(-90) * colorMultiplier),
                         Math.toRadians(90) * colorMultiplier)
                 .build();
 
@@ -119,12 +122,14 @@ public class DuckWarehouseAuton extends LinearOpMode {
             slide.runToPosition(Slide2.MIN_POSITION);
         } while (opModeIsActive() && slide.getPower() < 0.0);
 
+        capstoneMechanism.setPosition(CapstoneMechanism.getStorage());
+
         TrajectorySequence sequenceEnd = drive.trajectorySequenceBuilder(sequenceStart.end())
                 .lineTo(new Vector2d(-6, -52 * colorMultiplier))
                 .turn(Math.toRadians(90) * colorMultiplier)
 
                 .lineTo(new Vector2d(12, -48 * colorMultiplier))
-                .strafeLeft(26)
+                .lineTo(new Vector2d(12, -72 * colorMultiplier))
                 .forward(24)
                 .waitSeconds(0.5)
                 .build();

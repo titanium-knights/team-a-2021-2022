@@ -36,3 +36,45 @@ class Jan30ScoreWarehouseRed: Jan30ScoreWarehouse() {
 class Jan30ScoreWarehouseBlue: Jan30ScoreWarehouse() {
     override fun isRed() = false
 }
+
+@Autonomous(name = "Spare Duck (No Carousel) - Blue")
+class DuckSpareAutonBlue: DuckSpareAuton() {
+    override fun getColorMultiplier(): Double {
+        return -1.0
+    }
+}
+
+@Autonomous(name = "Spare Duck (No Carousel) - Red")
+class DuckSpareAutonRed: DuckSpareAuton() {
+    override fun getColorMultiplier(): Double {
+        return 1.0
+    }
+}
+
+@Autonomous(name = "MURDER Duck & Warehouse (Carousel) - Blue")
+class DuckWarehouseAutonBlue: DuckWarehouseAuton() {
+    override fun getColorMultiplier(): Double {
+        return -1.0
+    }
+}
+
+@Autonomous(name = "MURDER Duck & Warehouse (Carousel) - Red")
+class DuckWarehouseAutonRed: DuckWarehouseAuton() {
+    override fun getColorMultiplier(): Double {
+        return 1.0
+    }
+}
+
+@Autonomous(name = "MURDER Duck & Storage Area (Carousel) - Blue")
+class DuckStorageUnitAutonBlue: DuckStorageUnitAuton() {
+    override fun getColorMultiplier(): Double {
+        return -1.0
+    }
+}
+
+@Autonomous(name = "MURDER Duck & Storage Area (Carousel) - Red")
+class DuckStorageUnitAutonRed: DuckStorageUnitAuton() {
+    override fun getColorMultiplier(): Double {
+        return 1.0
+    }
+}

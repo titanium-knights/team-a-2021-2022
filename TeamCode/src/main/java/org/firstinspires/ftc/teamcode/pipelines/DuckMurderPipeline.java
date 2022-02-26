@@ -30,7 +30,7 @@ public class DuckMurderPipeline extends OpenCvPipeline {
     /*
      * The core values which define the location and size of the sample regions
      */
-    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(403.3333 - 20 * 1920 / 360, 35.0 * 1080 / 240);
+    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(403.3333 - 50 * 1920 / 360, 47.0 * 1080 / 240);
     static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(896.6667 - 20 * 1920 / 360, 35.0 * 1080 / 240);
     static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(1486.667 - 20 * 1920 / 360, 35.0 * 1080 / 240);
     static final int REGION_WIDTH = 40 * 1920 / 360 * 2;
@@ -85,6 +85,8 @@ public class DuckMurderPipeline extends OpenCvPipeline {
 
     // Volatile since accessed by OpMode thread w/o synchronization
     private volatile CapstonePosition position = CapstonePosition.LEFT;
+
+    public boolean updateTelemetry = true;
 
     private Telemetry telemetry;
 
@@ -240,8 +242,10 @@ public class DuckMurderPipeline extends OpenCvPipeline {
                     -1); // Negative thickness means solid fill
         }
 
-        telemetry.addData("[Pattern]", position);
-        telemetry.update();
+        if (updateTelemetry) {
+            telemetry.addData("[Pattern]", position);
+            telemetry.update();
+        }
 
         /*
          * Render the 'input' buffer to the viewport. But note this is not

@@ -21,11 +21,17 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Config
-@Autonomous(name = "Spare Duck & Warehouse")
-public class DuckSpareAuton extends LinearOpMode {
+public abstract class DuckSpareAuton extends LinearOpMode {
+    public abstract double getColorMultiplier();
+
+    public static double HIGH_POS = -50.5;
+    public static double MID_POS = -45;
+    public static double LOW_POS = -45.25;
+    public static double LOW_HORIZ_POS = -3.75;
+
     @Override
     public void runOpMode() throws InterruptedException {
-        double colorMultiplier = -1; // TODO: Change to -1 for blue
+        double colorMultiplier = getColorMultiplier(); // TODO: Change to -1 for blue
         OdometryMecanumDrive drive = new OdometryMecanumDrive(hardwareMap);
         CapstoneMechanism capstoneMechanism = new CapstoneMechanism(hardwareMap);
         Carriage carriage = new Carriage(hardwareMap);
@@ -58,25 +64,30 @@ public class DuckSpareAuton extends LinearOpMode {
         waitForStart();
         int position = 2;
         DuckMurderPipeline.CapstonePosition capstonePosition = pipeline.getAnalysis();
+
         if (capstonePosition == DuckMurderPipeline.CapstonePosition.CENTER) {
             position = 1;
         } else if (capstonePosition == DuckMurderPipeline.CapstonePosition.LEFT) {
             position = 0;
         }
+
+        telemetry.addData("position",position);
+        telemetry.update();
         double destinationY;
         if (position == 2) {
-            destinationY = -49;
+            destinationY = HIGH_POS;
         } else if (position == 1) {
-            destinationY = -43.5;
+            destinationY = MID_POS;
         } else {
-            destinationY = -46.5;
+            destinationY = LOW_POS;
         }
-        capstoneMechanism.setPosition(CapstoneMechanism.getIdle());
+        pipeline.updateTelemetry = false;
+        capstoneMechanism.setPosition(0.6);
         TrajectorySequence sequenceStart = drive.trajectorySequenceBuilder(new Pose2d(12, -63 * colorMultiplier, Math.toRadians(-90) * colorMultiplier))
                 .waitSeconds(0.5)
                 .setTangent(Math.toRadians(90) * colorMultiplier)
 
-                .splineToLinearHeading(new Pose2d(-9, destinationY * colorMultiplier, Math.toRadians(-90) * colorMultiplier), Math.toRadians(90) * colorMultiplier)
+                .splineToLinearHeading(new Pose2d(position == 0 ? LOW_HORIZ_POS : -11.5, destinationY * colorMultiplier, Math.toRadians(-90) * colorMultiplier), Math.toRadians(90) * colorMultiplier)
                 .build();
 
         drive.setPoseEstimate(sequenceStart.start());
@@ -111,7 +122,7 @@ public class DuckSpareAuton extends LinearOpMode {
 
                 .lineTo(new Vector2d(15, -46 * colorMultiplier))
                 .waitSeconds(10)
-                .strafeLeft(26)
+                .lineTo(new Vector2d(12, -72 * colorMultiplier))
                 .forward(24)
                 .waitSeconds(0.5)
                 .build();
