@@ -123,9 +123,9 @@ public class DuckWarehouseAuton extends LinearOpMode {
                 .lineTo(new Vector2d(-6, -52 * colorMultiplier))
                 .turn(Math.toRadians(90) * colorMultiplier)
 
-                .lineTo(new Vector2d(15, -46 * colorMultiplier))
+                .lineTo(new Vector2d(12, -48 * colorMultiplier))
                 .strafeLeft(26)
-                .forward(36)
+                .forward(24)
                 .waitSeconds(0.5)
                 .build();
 

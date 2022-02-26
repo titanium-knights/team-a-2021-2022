@@ -12,6 +12,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap
         @JvmStatic val idle = 0.87
         @JvmStatic val preDump = 0.67
         @JvmStatic val postDump = 0.53
-        @JvmStatic val pickup = 0.26
+        @JvmStatic val pickup = 0.22
     }
 }
