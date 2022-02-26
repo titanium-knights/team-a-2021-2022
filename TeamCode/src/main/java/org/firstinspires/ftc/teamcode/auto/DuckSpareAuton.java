@@ -23,8 +23,6 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Config
 @Autonomous(name = "Spare Duck & Warehouse")
 public class DuckSpareAuton extends LinearOpMode {
-    public static int TEST_POSITION = 0;
-
     @Override
     public void runOpMode() throws InterruptedException {
         double colorMultiplier = -1; // TODO: Change to -1 for blue
@@ -57,8 +55,14 @@ public class DuckSpareAuton extends LinearOpMode {
             }
         });
 
-        int position = TEST_POSITION;
-
+        waitForStart();
+        int position = 2;
+        DuckMurderPipeline.CapstonePosition capstonePosition = pipeline.getAnalysis();
+        if (capstonePosition == DuckMurderPipeline.CapstonePosition.CENTER) {
+            position = 1;
+        } else if (capstonePosition == DuckMurderPipeline.CapstonePosition.LEFT) {
+            position = 0;
+        }
         double destinationY;
         if (position == 2) {
             destinationY = -49;
@@ -67,8 +71,6 @@ public class DuckSpareAuton extends LinearOpMode {
         } else {
             destinationY = -46.5;
         }
-
-        waitForStart();
         capstoneMechanism.setPosition(CapstoneMechanism.getIdle());
         TrajectorySequence sequenceStart = drive.trajectorySequenceBuilder(new Pose2d(12, -63 * colorMultiplier, Math.toRadians(-90) * colorMultiplier))
                 .waitSeconds(0.5)

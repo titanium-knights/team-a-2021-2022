@@ -30,11 +30,11 @@ public class DuckMurderPipeline extends OpenCvPipeline {
     /*
      * The core values which define the location and size of the sample regions
      */
-    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(55, 35);
-    static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(125, 35);
-    static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(230, 35);
-    static final int REGION_WIDTH = 40;
-    static final int REGION_HEIGHT = 40;
+    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(403.3333 - 20 * 1920 / 360, 35.0 * 1080 / 240);
+    static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(896.6667 - 20 * 1920 / 360, 35.0 * 1080 / 240);
+    static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(1486.667 - 20 * 1920 / 360, 35.0 * 1080 / 240);
+    static final int REGION_WIDTH = 40 * 1920 / 360 * 2;
+    static final int REGION_HEIGHT = 40 * 1080 / 240;
 
     /*
      * Points which actually define the sample region rectangles, derived from above
