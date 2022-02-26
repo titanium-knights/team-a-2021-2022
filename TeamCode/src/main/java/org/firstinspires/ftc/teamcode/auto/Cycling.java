@@ -22,8 +22,8 @@ public class Cycling extends LinearOpMode {
     TubeIntake intake;
     CapstoneVision vis;
     Pose2d startPose;
-    Pose2d warehouseIntermediate = new Pose2d(12,-65.15*colorMultiplier,Math.toRadians(0));
-    Pose2d warehouse = new Pose2d(48,-65.15*colorMultiplier,Math.toRadians(0));
+    Pose2d warehouseIntermediate = new Pose2d(12,65.15*colorMultiplier,Math.toRadians(0));
+    Pose2d warehouse = new Pose2d(48,65.15*colorMultiplier,Math.toRadians(0));
     double[] destinationY = {46.6,43.5,49};
     TrajectorySequence initialCapstoneDump, cycle1,park;
     public void initializeTrajs(int pos){
