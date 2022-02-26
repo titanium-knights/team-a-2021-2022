@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.test
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 
-@TeleOp(name = "Motor Test Op Mode")
+@TeleOp(name = "Motor Test Op Mode", group = "Test")
 class MotorTestOpMode: LinearOpMode() {
     override fun runOpMode() {
         val mapping = mapOf(gamepad1::x to "fl", gamepad1::y to "fr", gamepad1::a to "bl", gamepad1::b to "br")

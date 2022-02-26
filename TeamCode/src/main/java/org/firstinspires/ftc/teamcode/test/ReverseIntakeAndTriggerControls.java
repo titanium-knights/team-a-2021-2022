@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.util.*;
 
 @TeleOp(name = "Reversed Controls", group = "Tele-Op")
+@Disabled
 public class ReverseIntakeAndTriggerControls extends OpMode {
     Slide slides;
     TubeIntake intake;

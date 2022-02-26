@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.util.Slide2
 
-@TeleOp(name = "2-Motor Slide Test Op Mode")
+@TeleOp(name = "2-Motor Slide Test Op Mode", group = "Test")
 class Slide2TestOpMode: LinearOpMode() {
     override fun runOpMode() {
         val slide = Slide2(hardwareMap)

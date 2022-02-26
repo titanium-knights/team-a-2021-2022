@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.test
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.util.PushButton
 
 @TeleOp(name = "Button Test Op Mode")
+@Disabled
 class ButtonTestOpMode: LinearOpMode() {
     override fun runOpMode() {
         val telemetry = MultipleTelemetry(FtcDashboard.getInstance().telemetry, telemetry)

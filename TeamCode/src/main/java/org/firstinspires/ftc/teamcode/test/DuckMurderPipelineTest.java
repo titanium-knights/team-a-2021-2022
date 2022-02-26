@@ -10,7 +10,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name = "Duck Murder Pipeline Test")
+@Autonomous(name = "Duck Murder Pipeline Test", group = "Test")
 public class DuckMurderPipelineTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

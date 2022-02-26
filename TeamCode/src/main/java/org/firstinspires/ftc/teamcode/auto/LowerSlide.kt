@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.auto
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.teamcode.util.Slide
 
 @Autonomous(name = "Lower Slides")
+@Disabled
 class LowerSlide: LinearOpMode() {
     override fun runOpMode() {
         val slide = Slide(hardwareMap)

@@ -2,9 +2,11 @@ package org.firstinspires.ftc.teamcode.test;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name = "LED Auton")
+@Disabled
 public class LEDAuton extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

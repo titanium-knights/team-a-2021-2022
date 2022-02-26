@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.odometry.OdometryMecanumDrive;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.util.Slide2;
 import org.firstinspires.ftc.teamcode.util.TubeIntake;
 
 @Autonomous
+@Disabled
 public class Cycling extends LinearOpMode {
     public double colorMultiplier = -1;
     OdometryMecanumDrive drive;
@@ -125,11 +127,11 @@ public class Cycling extends LinearOpMode {
     @Override
     public void runOpMode(){
         initializeObjects();
+        capstone.setPosition(CapstoneMechanism.getIdle());
 
         waitForStart();
         int position = vis.getPosition();
         initializeTrajs(position);
-        capstone.setPosition(CapstoneMechanism.getIdle());
         drive.setPoseEstimate(startPose);
         drive.followTrajectorySequence(initialCapstoneDump);
 

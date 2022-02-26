@@ -19,6 +19,7 @@ class FieldCentricTeleOpMode: TeleOpMode() {
 }
 
 @TeleOp(name = "TeleOpMode (Robot-Centric)")
+@Disabled
 class RobotCentricTeleOpMode: TeleOpMode() {
     override fun controlDrivetrain(preferredSpeed: Double) = drive.teleOpRobotCentric(gamepad1, preferredSpeed)
 }
