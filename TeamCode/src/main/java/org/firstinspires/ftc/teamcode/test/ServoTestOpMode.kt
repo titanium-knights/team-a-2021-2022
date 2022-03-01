@@ -21,8 +21,8 @@ open class ServoTestOpMode(private val servoName: String): LinearOpMode() {
         while (opModeIsActive()) {
             if (drb.isPressed) position += 0.1
             if (dlb.isPressed) position -= 0.1
-            if (xb.isPressed) position += 0.01
-            if (bb.isPressed) position -= 0.01
+            if (bb.isPressed) position += 0.01
+            if (xb.isPressed) position -= 0.01
 
             servo.position = position
 
@@ -41,5 +41,5 @@ open class ServoTestOpMode(private val servoName: String): LinearOpMode() {
     }
 }
 
-@TeleOp(name = "Carriage Test Op Mode", group = "Test")
-class ClawTestOpMode: ServoTestOpMode("carriage")
+@TeleOp(name = "Claw Test Op Mode", group = "Test")
+class ClawTestOpMode: ServoTestOpMode("claw")
