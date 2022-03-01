@@ -43,6 +43,3 @@ open class ServoTestOpMode(private val servoName: String): LinearOpMode() {
 
 @TeleOp(name = "Carriage Test Op Mode", group = "Test")
 class ClawTestOpMode: ServoTestOpMode("carriage")
-
-@TeleOp(name = "Capstone Test Op Mode", group = "Test")
-class CapstoneTestOpMode: ServoTestOpMode("capstone")
