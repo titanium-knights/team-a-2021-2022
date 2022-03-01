@@ -39,7 +39,7 @@ public class TeleOpLeagues extends OpMode {
     public static boolean DISABLE_LIMITS = false;
     DumpState dumpState = DumpState.IDLE;
     Carousel carousel;
-    CapstoneMechanism capstone;
+    CapstoneMechanism2 capstone;
     MotorInterpolation carriageInterpolation;
 
     PushButton slideHighButton;
@@ -59,8 +59,8 @@ public class TeleOpLeagues extends OpMode {
         slide2 = new Slide2(hardwareMap);
         carousel = new Carousel(hardwareMap);
         carriage = new Carriage(hardwareMap);
-        capstone = new CapstoneMechanism(hardwareMap);
-        capstone.setPosition(CapstoneMechanism.getIdle());
+        capstone = new CapstoneMechanism2(hardwareMap);
+        capstone.setPosition(CapstoneMechanism2.getIdle());
         carriageInterpolation = new MotorInterpolation(Carriage.getIdlePosition(), 0.5);
         slowModeButton = new ToggleButton(() -> gamepad1.a);
         dumpButton = new PushButton(() -> gamepad1.b);
@@ -164,11 +164,11 @@ public class TeleOpLeagues extends OpMode {
         double capstonePos = capstone.getPosition();
         if (gamepad1.dpad_up) {
             if (capstonePos <= CapstoneMechanism.getIdle()) {
-                capstone.setPosition(capstonePos + 0.005);
+                capstone.setManualPower(0.2);
             }
         } else if (gamepad1.dpad_down) {
             if (capstonePos >= CapstoneMechanism.getPickup()) {
-                capstone.setPosition(capstonePos - 0.005);
+                capstone.setManualPower(-0.2);
             }
         }
 

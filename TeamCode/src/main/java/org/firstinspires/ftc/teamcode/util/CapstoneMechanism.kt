@@ -5,7 +5,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 
 @Config class CapstoneMechanism(hardwareMap: HardwareMap) {
     val servo = hardwareMap.servo["capstone"]
-    var position by servo::position
+    var position
+        get() = servo.position
+        set(value) {
+            servo.position = value
+        }
 
     companion object Presets {
         @JvmStatic val storage = 0.8
