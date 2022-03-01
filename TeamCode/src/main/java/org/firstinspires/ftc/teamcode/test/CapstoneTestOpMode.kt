@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.firstinspires.ftc.teamcode.util.Slide2
+import org.firstinspires.ftc.teamcode.util.CapstoneMechanism2
 
 @TeleOp(name = "Capstone Test Op Mode", group = "Test")
 class CapstoneTestOpMode: LinearOpMode() {
