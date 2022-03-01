@@ -27,7 +27,7 @@ public abstract class DuckSpareAuton extends LinearOpMode {
     public static double HIGH_POS = -50.5;
     public static double MID_POS = -45;
     public static double LOW_POS = -45.25;
-    public static double LOW_HORIZ_POS = -3.75;
+    public static double LOW_HORIZ_POS = -5;
 
     @Override
     public void runOpMode() throws InterruptedException {
