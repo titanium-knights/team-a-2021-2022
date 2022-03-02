@@ -6,7 +6,7 @@
 ..idea/
 ./idea/
 !libs/*.aar
-
+.idea/
 # Files for the ART/Dalvik VM
 *.dex
 

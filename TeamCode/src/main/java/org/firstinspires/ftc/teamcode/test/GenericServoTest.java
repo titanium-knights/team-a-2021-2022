@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
 @TeleOp
-@Disabled
 public class GenericServoTest extends OpMode {
     public static String servoName = "carriage";
     public static double pos = 0.87;
