@@ -6,7 +6,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class CapstoneMechanism2 {
     DcMotor motor;
     static double power = 0.2;
-    static int idle = 0;
+    public static int idle = 0;
+    public static int pickup = 1440;
 
     public CapstoneMechanism2(HardwareMap hardwareMap){
         motor = hardwareMap.dcMotor.get("capstone");
@@ -31,4 +32,5 @@ public class CapstoneMechanism2 {
     public static int getIdle(){
         return idle;
     }
+    public static int getPickup() { return pickup; }
 }

@@ -162,10 +162,10 @@ public class TeleOpLeagues extends OpMode {
         }
 
         int capstonePos = capstone.getPosition();
-        if (gamepad1.dpad_up && capstonePos <= CapstoneMechanism.getIdle()) {
+        if (gamepad1.dpad_up && capstonePos <= CapstoneMechanism2.getIdle()) {
             capstone.setManualPower(0.2);
             carriageMoved = true;
-        } else if (gamepad1.dpad_down && capstonePos >= CapstoneMechanism.getPickup()) {
+        } else if (gamepad1.dpad_down && capstonePos >= CapstoneMechanism2.getPickup()) {
             capstone.setManualPower(-0.2);
             carriageMoved = true;
         } else if (carriageMoved) {

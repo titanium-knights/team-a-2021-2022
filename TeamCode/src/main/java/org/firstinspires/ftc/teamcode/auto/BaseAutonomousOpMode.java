@@ -31,6 +31,7 @@ public abstract class BaseAutonomousOpMode extends LinearOpMode {
     protected Carriage carriage;
     protected CapstoneMechanism2 capstone;
     protected ClawIntake claw;
+    protected Carousel carousel;
     protected OdometryRetraction retraction;
     protected CapstoneVision vision;
 
@@ -41,6 +42,7 @@ public abstract class BaseAutonomousOpMode extends LinearOpMode {
         carriage = new Carriage(hardwareMap);
         capstone = new CapstoneMechanism2(hardwareMap);
         claw = new ClawIntake(hardwareMap);
+        carousel = new Carousel(hardwareMap);
         retraction = new OdometryRetraction(hardwareMap);
         retraction.extend();
         vision = new CapstoneVision(hardwareMap, telemetry);
