@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 /**
  * The slide of our new robot's outtake.
  */
-@Config class Slide(hardwareMap: HardwareMap): Stoppable {
+@Deprecated("Use Slide2 instead") @Config class Slide(hardwareMap: HardwareMap): Stoppable {
     val motor: DcMotor = hardwareMap.dcMotor["slide"]
 
     init {

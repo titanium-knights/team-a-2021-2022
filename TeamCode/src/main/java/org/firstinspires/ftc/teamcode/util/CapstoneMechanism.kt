@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.util
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.hardware.HardwareMap
 
-@Config class CapstoneMechanism(hardwareMap: HardwareMap) {
+@Deprecated("Use CapstoneMechanism2 instead") @Config class CapstoneMechanism(hardwareMap: HardwareMap) {
     val servo = hardwareMap.servo["capstone"]
     var position
         get() = servo.position
