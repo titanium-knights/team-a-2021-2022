@@ -10,6 +10,7 @@ public class CapstoneMechanism2 {
 
     public CapstoneMechanism2(HardwareMap hardwareMap){
         motor = hardwareMap.dcMotor.get("capstone");
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
     public void setPosition(int pos){
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);

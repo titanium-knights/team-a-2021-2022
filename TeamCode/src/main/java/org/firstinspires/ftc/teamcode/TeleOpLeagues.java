@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.util.*;
 @Config
 @TeleOp(name = "TeleOp Leagues", group = "TeleOp")
 public class TeleOpLeagues extends OpMode {
-    ElapsedTime matchTime;
     enum DumpState {
         IDLE,
         RETURNING_TO_IDLE,
@@ -39,8 +38,9 @@ public class TeleOpLeagues extends OpMode {
     public static boolean DISABLE_LIMITS = false;
     DumpState dumpState = DumpState.IDLE;
     Carousel carousel;
-//    CapstoneMechanism2 capstone;
+    CapstoneMechanism2 capstone;
     MotorInterpolation carriageInterpolation;
+    boolean carriageMoved = false;
 
     PushButton slideHighButton;
     PushButton slideMidButton;
@@ -59,21 +59,20 @@ public class TeleOpLeagues extends OpMode {
         slide2 = new Slide2(hardwareMap);
         carousel = new Carousel(hardwareMap);
         carriage = new Carriage(hardwareMap);
-//        capstone = new CapstoneMechanism2(hardwareMap);
-//        capstone.setPosition(CapstoneMechanism2.getIdle());
+        capstone = new CapstoneMechanism2(hardwareMap);
         carriageInterpolation = new MotorInterpolation(Carriage.getIdlePosition(), 0.5);
         slowModeButton = new ToggleButton(() -> gamepad1.a);
         dumpButton = new PushButton(() -> gamepad1.b);
         slideHighButton = new PushButton(() -> gamepad1.y);
         slideMidButton = new PushButton(() -> gamepad1.x);
-//        carriage.setPosition(carriageInterpolation.getCurrent());
+        carriage.setPosition(carriageInterpolation.getCurrent());
         elapsedTime = new ElapsedTime();
-        matchTime = new ElapsedTime();
         odoDrive.setPoseEstimate(startPose);
     }
     @Override
     public void start(){
-        matchTime.reset();
+        elapsedTime.reset();
+        capstone.setPosition(CapstoneMechanism2.getIdle());
     }
     @Override
     public void loop() {
@@ -161,25 +160,25 @@ public class TeleOpLeagues extends OpMode {
             slideStatus = "Moving to " + targetPos;
         }
 
-//        double capstonePos = capstone.getPosition();
-//        if (gamepad1.dpad_up) {
-//            if (capstonePos <= CapstoneMechanism.getIdle()) {
-//                capstone.setManualPower(0.2);
-//            }
-//        } else if (gamepad1.dpad_down) {
-//            if (capstonePos >= CapstoneMechanism.getPickup()) {
-//                capstone.setManualPower(-0.2);
-//            }
-//        }
+        double capstonePos = capstone.getPosition();
+        if (gamepad1.dpad_up && capstonePos <= CapstoneMechanism.getIdle()) {
+            capstone.setManualPower(0.2);
+            carriageMoved = true;
+        } else if (gamepad1.dpad_down && capstonePos >= CapstoneMechanism.getPickup()) {
+            capstone.setManualPower(-0.2);
+            carriageMoved = true;
+        } else if (carriageMoved) {
+            capstone.setManualPower(0);
+        }
 
         odoDrive.update();
 
         Pose2d poseEstimate = odoDrive.getPoseEstimate();
-        if(matchTime.time() < 120){
-            telemetry.addData("Teleop Time Remaining",(int)(90-matchTime.time()));
+        if(elapsedTime.time() < 120){
+            telemetry.addData("Teleop Time Remaining",(int)(90-elapsedTime.time()));
         }
         else{
-            telemetry.addData("Endgame Time Remaining", (int)(120-matchTime.time()));
+            telemetry.addData("Endgame Time Remaining", (int)(120-elapsedTime.time()));
         }
         telemetry.addData("x", poseEstimate.getX());
         telemetry.addData("y", poseEstimate.getY());
