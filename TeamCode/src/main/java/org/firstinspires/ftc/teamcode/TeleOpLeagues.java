@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -21,13 +23,10 @@ public class TeleOpLeagues extends OpMode {
         POST_DUMPING
     }
 
-    public static Pose2d startPose = new Pose2d();
-
     public static int DELAY_MS = 600;
 
     MecanumDrive drive;
     TubeIntake intake;
-    OdometryMecanumDrive odoDrive;
     Carriage carriage;
     Slide2 slide2;
     int targetPos = -1;
@@ -40,6 +39,7 @@ public class TeleOpLeagues extends OpMode {
     Carousel carousel;
     CapstoneMechanism2 capstone;
     MotorInterpolation carriageInterpolation;
+    OdometryRetraction odometryRetraction;
     boolean carriageMoved = false;
 
     PushButton slideHighButton;
@@ -53,9 +53,9 @@ public class TeleOpLeagues extends OpMode {
 
     @Override
     public void init() {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         intake = new TubeIntake(hardwareMap);
         drive = new MecanumDrive(hardwareMap);
-        odoDrive = new OdometryMecanumDrive(hardwareMap);
         slide2 = new Slide2(hardwareMap);
         carousel = new Carousel(hardwareMap);
         carriage = new Carriage(hardwareMap);
@@ -66,8 +66,9 @@ public class TeleOpLeagues extends OpMode {
         slideHighButton = new PushButton(() -> gamepad1.y);
         slideMidButton = new PushButton(() -> gamepad1.x);
         carriage.setPosition(carriageInterpolation.getCurrent());
+        odometryRetraction = new OdometryRetraction(hardwareMap);
+        odometryRetraction.retract();
         elapsedTime = new ElapsedTime();
-        odoDrive.setPoseEstimate(startPose);
     }
     @Override
     public void start(){
@@ -160,7 +161,7 @@ public class TeleOpLeagues extends OpMode {
             slideStatus = "Moving to " + targetPos;
         }
 
-        double capstonePos = capstone.getPosition();
+        int capstonePos = capstone.getPosition();
         if (gamepad1.dpad_up && capstonePos <= CapstoneMechanism.getIdle()) {
             capstone.setManualPower(0.2);
             carriageMoved = true;
@@ -171,18 +172,12 @@ public class TeleOpLeagues extends OpMode {
             capstone.setManualPower(0);
         }
 
-        odoDrive.update();
-
-        Pose2d poseEstimate = odoDrive.getPoseEstimate();
         if(elapsedTime.time() < 120){
             telemetry.addData("Teleop Time Remaining",(int)(90-elapsedTime.time()));
         }
         else{
             telemetry.addData("Endgame Time Remaining", (int)(120-elapsedTime.time()));
         }
-        telemetry.addData("x", poseEstimate.getX());
-        telemetry.addData("y", poseEstimate.getY());
-        telemetry.addData("heading", poseEstimate.getHeading());
         telemetry.addData("speed", slowModeButton.isActive() ? "slow" : "fast");
         telemetry.addData("slide pos", slide2.getCurrentPosition());
         telemetry.addData("slide status", slideStatus);

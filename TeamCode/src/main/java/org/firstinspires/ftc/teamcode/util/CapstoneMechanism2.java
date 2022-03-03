@@ -24,7 +24,7 @@ public class CapstoneMechanism2 {
         motor.setPower(pow);
     }
 
-    public double getPosition(){
+    public int getPosition(){
         return motor.getCurrentPosition();
     }
 

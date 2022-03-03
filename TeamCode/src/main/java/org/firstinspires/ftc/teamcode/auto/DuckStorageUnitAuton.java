@@ -12,10 +12,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import org.firstinspires.ftc.teamcode.util.CapstoneMechanism;
-import org.firstinspires.ftc.teamcode.util.Carousel;
-import org.firstinspires.ftc.teamcode.util.Carriage;
-import org.firstinspires.ftc.teamcode.util.Slide2;
+import org.firstinspires.ftc.teamcode.util.*;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -32,6 +29,8 @@ public abstract class DuckStorageUnitAuton extends LinearOpMode {
         Carriage carriage = new Carriage(hardwareMap);
         Slide2 slide = new Slide2(hardwareMap);
         Carousel carousel = new Carousel(hardwareMap);
+        OdometryRetraction odometryRetraction = new OdometryRetraction(hardwareMap);
+        odometryRetraction.extend();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId",
                 "id", hardwareMap.appContext.getPackageName());
@@ -94,8 +93,6 @@ public abstract class DuckStorageUnitAuton extends LinearOpMode {
         drive.setPoseEstimate(sequenceStart.start());
         drive.followTrajectorySequence(sequenceStart);
 
-        TeleOpLeagues.startPose = drive.getPoseEstimate();
-
         do {
             slide.runToPosition(Slide2.MIN_POSITION);
         } while (opModeIsActive() && slide.getPower() < 0.0);
@@ -127,6 +124,6 @@ public abstract class DuckStorageUnitAuton extends LinearOpMode {
 
         drive.followTrajectorySequence(sequenceEnd);
 
-        TeleOpLeagues.startPose = drive.getPoseEstimate();
+        odometryRetraction.retract();
     }
 }

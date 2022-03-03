@@ -43,3 +43,9 @@ open class ServoTestOpMode(private val servoName: String): LinearOpMode() {
 
 @TeleOp(name = "Claw Test Op Mode", group = "Test")
 class ClawTestOpMode: ServoTestOpMode("claw")
+
+@TeleOp(name = "Odometry Servo 1 Test Op Mode", group = "Test")
+class OdometryServo1TestOpMode: ServoTestOpMode("odometry1")
+
+@TeleOp(name = "Odometry Servo 2 Test Op Mode", group = "Test")
+class OdometryServo2TestOpMode: ServoTestOpMode("odometry2")
