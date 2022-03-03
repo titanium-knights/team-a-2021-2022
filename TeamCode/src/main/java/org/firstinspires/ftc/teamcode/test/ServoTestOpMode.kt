@@ -17,7 +17,7 @@ open class ServoTestOpMode(private val servoName: String): LinearOpMode() {
         val servo = hardwareMap.servo[servoName]
         waitForStart()
 
-        var position = 0.5
+        var position = 0.0
         while (opModeIsActive()) {
             if (drb.isPressed) position += 0.1
             if (dlb.isPressed) position -= 0.1
