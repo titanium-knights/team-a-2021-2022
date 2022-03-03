@@ -39,7 +39,7 @@ public class TeleOpLeagues extends OpMode {
     public static boolean DISABLE_LIMITS = false;
     DumpState dumpState = DumpState.IDLE;
     Carousel carousel;
-    CapstoneMechanism2 capstone;
+//    CapstoneMechanism2 capstone;
     MotorInterpolation carriageInterpolation;
 
     PushButton slideHighButton;
@@ -59,14 +59,14 @@ public class TeleOpLeagues extends OpMode {
         slide2 = new Slide2(hardwareMap);
         carousel = new Carousel(hardwareMap);
         carriage = new Carriage(hardwareMap);
-        capstone = new CapstoneMechanism2(hardwareMap);
-        capstone.setPosition(CapstoneMechanism2.getIdle());
+//        capstone = new CapstoneMechanism2(hardwareMap);
+//        capstone.setPosition(CapstoneMechanism2.getIdle());
         carriageInterpolation = new MotorInterpolation(Carriage.getIdlePosition(), 0.5);
         slowModeButton = new ToggleButton(() -> gamepad1.a);
         dumpButton = new PushButton(() -> gamepad1.b);
         slideHighButton = new PushButton(() -> gamepad1.y);
         slideMidButton = new PushButton(() -> gamepad1.x);
-        carriage.setPosition(carriageInterpolation.getCurrent());
+//        carriage.setPosition(carriageInterpolation.getCurrent());
         elapsedTime = new ElapsedTime();
         matchTime = new ElapsedTime();
         odoDrive.setPoseEstimate(startPose);
@@ -161,16 +161,16 @@ public class TeleOpLeagues extends OpMode {
             slideStatus = "Moving to " + targetPos;
         }
 
-        double capstonePos = capstone.getPosition();
-        if (gamepad1.dpad_up) {
-            if (capstonePos <= CapstoneMechanism.getIdle()) {
-                capstone.setManualPower(0.2);
-            }
-        } else if (gamepad1.dpad_down) {
-            if (capstonePos >= CapstoneMechanism.getPickup()) {
-                capstone.setManualPower(-0.2);
-            }
-        }
+//        double capstonePos = capstone.getPosition();
+//        if (gamepad1.dpad_up) {
+//            if (capstonePos <= CapstoneMechanism.getIdle()) {
+//                capstone.setManualPower(0.2);
+//            }
+//        } else if (gamepad1.dpad_down) {
+//            if (capstonePos >= CapstoneMechanism.getPickup()) {
+//                capstone.setManualPower(-0.2);
+//            }
+//        }
 
         odoDrive.update();
 
