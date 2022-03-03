@@ -39,16 +39,12 @@ class Jan30ScoreWarehouseBlue: Jan30ScoreWarehouse() {
 
 @Autonomous(name = "Spare Duck (No Carousel) - Blue")
 class DuckSpareAutonBlue: DuckSpareAuton() {
-    override fun getColorMultiplier(): Double {
-        return -1.0
-    }
+    override fun getColor() = Color.BLUE
 }
 
 @Autonomous(name = "Spare Duck (No Carousel) - Red")
 class DuckSpareAutonRed: DuckSpareAuton() {
-    override fun getColorMultiplier(): Double {
-        return 1.0
-    }
+    override fun getColor() = Color.RED
 }
 
 @Autonomous(name = "MURDER Duck & Warehouse (Carousel) - Blue")

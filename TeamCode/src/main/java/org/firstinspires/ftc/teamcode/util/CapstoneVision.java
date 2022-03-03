@@ -13,7 +13,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 public class CapstoneVision {
     OpenCvCamera camera;
-    DuckMurderPipeline pipeline;
+    public DuckMurderPipeline pipeline;
     public CapstoneVision(HardwareMap hmap, Telemetry telemetry) {
         int cameraMonitorViewId = hmap.appContext.getResources().getIdentifier("cameraMonitorViewId",
                 "id", hmap.appContext.getPackageName());

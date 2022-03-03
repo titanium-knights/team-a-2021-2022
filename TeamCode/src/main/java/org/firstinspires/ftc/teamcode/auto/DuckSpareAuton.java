@@ -18,84 +18,42 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Config
-public abstract class DuckSpareAuton extends LinearOpMode {
-    public abstract double getColorMultiplier();
-
+public abstract class DuckSpareAuton extends BaseAutonomousOpMode {
     public static double HIGH_POS = -50.5;
     public static double MID_POS = -45;
     public static double LOW_POS = -45.25;
     public static double LOW_HORIZ_POS = -5;
 
     @Override
-    public void runOpMode() throws InterruptedException {
-        double colorMultiplier = getColorMultiplier(); // TODO: Change to -1 for blue
-        OdometryMecanumDrive drive = new OdometryMecanumDrive(hardwareMap);
-        CapstoneMechanism capstoneMechanism = new CapstoneMechanism(hardwareMap);
-        Carriage carriage = new Carriage(hardwareMap);
-        Slide2 slide = new Slide2(hardwareMap);
-        OdometryRetraction odometryRetraction = new OdometryRetraction(hardwareMap);
-        odometryRetraction.extend();
+    public void run() {
+        double colorMultiplier = getColorMultiplier();
+        ShippingHubLevel level = performAnalysis();
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId",
-                "id", hardwareMap.appContext.getPackageName());
-        WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
-        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
-        DuckMurderPipeline pipeline = new DuckMurderPipeline(telemetry);
-
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                // Usually this is where you'll want to start streaming from the camera (see section 4)
-                camera.startStreaming(1920, 1080, OpenCvCameraRotation.UPRIGHT);
-                camera.setPipeline(pipeline);
-            }
-            @Override
-            public void onError(int errorCode)
-            {
-                /*
-                 * This will be called if the camera could not be opened
-                 */
-            }
-        });
-
-        waitForStart();
-        int position = 2;
-        DuckMurderPipeline.CapstonePosition capstonePosition = pipeline.getAnalysis();
-
-        if (capstonePosition == DuckMurderPipeline.CapstonePosition.CENTER) {
-            position = 1;
-        } else if (capstonePosition == DuckMurderPipeline.CapstonePosition.LEFT) {
-            position = 0;
-        }
-
-        telemetry.addData("position",position);
+        telemetry.addData("position",level);
         telemetry.update();
         double destinationY;
-        if (position == 2) {
+        if (level == ShippingHubLevel.HIGH) {
             destinationY = HIGH_POS;
-        } else if (position == 1) {
+        } else if (level == ShippingHubLevel.MID) {
             destinationY = MID_POS;
         } else {
             destinationY = LOW_POS;
         }
-        pipeline.updateTelemetry = false;
-        capstoneMechanism.setPosition(0.6);
+        capstone.setPosition(CapstoneMechanism2.getIdle());
         TrajectorySequence sequenceStart = drive.trajectorySequenceBuilder(new Pose2d(12, -63 * colorMultiplier, Math.toRadians(-90) * colorMultiplier))
                 .waitSeconds(0.5)
                 .setTangent(Math.toRadians(90) * colorMultiplier)
 
-                .splineToLinearHeading(new Pose2d(position == 0 ? LOW_HORIZ_POS : -11.5, destinationY * colorMultiplier, Math.toRadians(-90) * colorMultiplier), Math.toRadians(90) * colorMultiplier)
+                .splineToLinearHeading(new Pose2d(level == ShippingHubLevel.LOW ? LOW_HORIZ_POS : -11.5, destinationY * colorMultiplier, Math.toRadians(-90) * colorMultiplier), Math.toRadians(90) * colorMultiplier)
                 .build();
 
         drive.setPoseEstimate(sequenceStart.start());
         drive.followTrajectorySequence(sequenceStart);
 
         do {
-            if (position == 2) {
+            if (level == ShippingHubLevel.HIGH) {
                 slide.runToPosition(Slide2.MAX_POSITION);
-            } else if (position == 1) {
+            } else if (level == ShippingHubLevel.MID) {
                 slide.runToPosition((Slide2.MIN_POSITION + Slide2.MAX_POSITION) / 2);
             } else {
                 slide.runToPosition(760);
@@ -111,7 +69,7 @@ public abstract class DuckSpareAuton extends LinearOpMode {
             slide.runToPosition(Slide2.MIN_POSITION);
         } while (opModeIsActive() && slide.getPower() < 0.0);
 
-        capstoneMechanism.setPosition(CapstoneMechanism.getStorage());
+        capstone.setPosition(CapstoneMechanism2.getIdle());
 
         TrajectorySequence sequenceEnd = drive.trajectorySequenceBuilder(sequenceStart.end())
                 .lineTo(new Vector2d(-6, -46 * colorMultiplier))
@@ -125,7 +83,5 @@ public abstract class DuckSpareAuton extends LinearOpMode {
                 .build();
 
         drive.followTrajectorySequence(sequenceEnd);
-
-        odometryRetraction.retract();
     }
 }
