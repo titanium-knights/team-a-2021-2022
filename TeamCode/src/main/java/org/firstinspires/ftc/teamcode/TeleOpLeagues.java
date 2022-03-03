@@ -50,7 +50,7 @@ public class TeleOpLeagues extends OpMode {
 
     double dumpCompleteSeconds;
     ElapsedTime elapsedTime;
-
+    boolean endGameStatus = false;
     @Override
     public void init() {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -177,6 +177,10 @@ public class TeleOpLeagues extends OpMode {
         }
         else{
             telemetry.addData("Endgame Time Remaining", (int)(120-elapsedTime.time()));
+            if(!endGameStatus){
+                gamepad1.rumble(1000);
+            }
+            endGameStatus=true;
         }
         telemetry.addData("speed", slowModeButton.isActive() ? "slow" : "fast");
         telemetry.addData("slide pos", slide2.getCurrentPosition());
