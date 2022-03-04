@@ -36,6 +36,7 @@ public class TeleOpLeagues extends OpMode {
     CapstoneMechanism2 capstone;
     MotorInterpolation carriageInterpolation;
     OdometryRetraction odometryRetraction;
+    ClawIntake claw;
     boolean capstoneMoved = false;
 
     PushButton slideHighButton;
@@ -43,6 +44,7 @@ public class TeleOpLeagues extends OpMode {
 
     PushButton dumpButton;
     ToggleButton slowModeButton;
+    ToggleButton clawButton;
 
     double dumpCompleteSeconds;
     ElapsedTime elapsedTime;
@@ -56,11 +58,13 @@ public class TeleOpLeagues extends OpMode {
         carousel = new Carousel(hardwareMap);
         carriage = new Carriage(hardwareMap);
         capstone = new CapstoneMechanism2(hardwareMap);
+        claw = new ClawIntake(hardwareMap);
         carriageInterpolation = new MotorInterpolation(Carriage.getIdlePosition(), 0.5);
         slowModeButton = new ToggleButton(() -> gamepad1.a);
         dumpButton = new PushButton(() -> gamepad1.b);
         slideHighButton = new PushButton(() -> gamepad1.y);
         slideMidButton = new PushButton(() -> gamepad1.x);
+        clawButton = new ToggleButton(() -> gamepad1.a);
         carriage.setPosition(carriageInterpolation.getCurrent());
         odometryRetraction = new OdometryRetraction(hardwareMap);
         odometryRetraction.retract();
@@ -157,6 +161,13 @@ public class TeleOpLeagues extends OpMode {
             slideStatus = "Moving to " + targetPos;
         }
 
+        if(clawButton.isActive()){
+            claw.grab();
+        }
+        else{
+            claw.release();
+        }
+
         int capstonePos = capstone.getPosition();
         if (gamepad1.dpad_up) {
             if (capstonePos <= CapstoneMechanism2.getIdle()) {
@@ -199,5 +210,6 @@ public class TeleOpLeagues extends OpMode {
         slowModeButton.update();
         slideHighButton.update();
         slideMidButton.update();
+        clawButton.update();
     }
 }
