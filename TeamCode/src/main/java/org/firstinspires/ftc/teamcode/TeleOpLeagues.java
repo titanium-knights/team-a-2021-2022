@@ -191,7 +191,7 @@ public class TeleOpLeagues extends OpMode {
             capstone.setManualPower(0);
         }
 
-        if(elapsedTime.time() < 120){
+        if(elapsedTime.time() < 90){
             telemetry.addData("Teleop Time Remaining",(int)(90-elapsedTime.time()));
         }
         else{
