@@ -44,7 +44,7 @@ public abstract class DuckStorageUnitAuton extends BaseAutonomousOpMode {
                 .setTangent(0)
                 .splineToConstantHeading(new Vector2d(-40, -56 * colorMultiplier),
                         Math.toRadians(30) * colorMultiplier)
-                .splineToSplineHeading(new Pose2d(position == ShippingHubLevel.LOW ? -20.5 : -14.5, destinationY * colorMultiplier, Math.toRadians(-90) * colorMultiplier),
+                .splineToSplineHeading(new Pose2d(position == ShippingHubLevel.LOW ? -20.5 : -14.5, destinationY * colorMultiplier, Math.toRadians(90) * colorMultiplier),
                         Math.toRadians(90) * colorMultiplier)
                 .build();
 

@@ -15,7 +15,7 @@ public class CyclingTest {
         Pose2d carousel = new Pose2d(-55, -60,Math.toRadians(-90*multiplier));
         MeepMeep meepMeep = new MeepMeep(500);
         Pose2d startingPosition = new Pose2d(6,-60*multiplier, Math.toRadians(-90*multiplier));
-        Pose2d rightOfRedHub = new Pose2d(-12,-48*multiplier,Math.toRadians(-90*multiplier));
+        Pose2d rightOfRedHub = new Pose2d(-12,-48*multiplier,Math.toRadians(90*multiplier));
 
         Pose2d redWarehouseIntermediate = new Pose2d(12,-65.15*multiplier,Math.toRadians(0));
         Vector2d redWarehouseIntermediateVec = new Vector2d(redWarehouseIntermediate.getX(),redWarehouseIntermediate.getY());

@@ -3,17 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.odometry.OdometryMecanumDrive;
-import org.firstinspires.ftc.teamcode.odometry.StandardTrackingWheelLocalizer;
 import org.firstinspires.ftc.teamcode.util.*;
 
 @Config
@@ -27,8 +20,7 @@ public class TeleOpLeagues extends OpMode {
     }
 
     public static int DELAY_MS = 600;
-    boolean freightInside = false;
-    DistanceSensor ds;
+
     MecanumDrive drive;
     TubeIntake intake;
     Carriage carriage;
@@ -44,13 +36,15 @@ public class TeleOpLeagues extends OpMode {
     CapstoneMechanism2 capstone;
     MotorInterpolation carriageInterpolation;
     OdometryRetraction odometryRetraction;
-    boolean carriageMoved = false;
+    ClawIntake claw;
+    boolean capstoneMoved = false;
 
     PushButton slideHighButton;
     PushButton slideMidButton;
 
     PushButton dumpButton;
     ToggleButton slowModeButton;
+    ToggleButton clawButton;
 
     double dumpCompleteSeconds;
     ElapsedTime elapsedTime;
@@ -64,16 +58,17 @@ public class TeleOpLeagues extends OpMode {
         carousel = new Carousel(hardwareMap);
         carriage = new Carriage(hardwareMap);
         capstone = new CapstoneMechanism2(hardwareMap);
+        claw = new ClawIntake(hardwareMap);
         carriageInterpolation = new MotorInterpolation(Carriage.getIdlePosition(), 0.5);
-        slowModeButton = new ToggleButton(() -> gamepad1.a);
+        slowModeButton = new ToggleButton(() -> gamepad1.left_stick_button && gamepad1.right_stick_button);
         dumpButton = new PushButton(() -> gamepad1.b);
         slideHighButton = new PushButton(() -> gamepad1.y);
         slideMidButton = new PushButton(() -> gamepad1.x);
+        clawButton = new ToggleButton(() -> gamepad1.a);
         carriage.setPosition(carriageInterpolation.getCurrent());
         odometryRetraction = new OdometryRetraction(hardwareMap);
         odometryRetraction.retract();
         elapsedTime = new ElapsedTime();
-        ds = hardwareMap.get(DistanceSensor.class, "carriagedist");
     }
     @Override
     public void start(){
@@ -111,7 +106,6 @@ public class TeleOpLeagues extends OpMode {
 
         if (dumpButton.isPressed() && slide2.getCurrentPosition() >= SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD) {
             dumpState = DumpState.DUMPING;
-            freightInside=false;
         }
         switch (dumpState) {
             case DUMPING:
@@ -167,14 +161,33 @@ public class TeleOpLeagues extends OpMode {
             slideStatus = "Moving to " + targetPos;
         }
 
+        if(clawButton.isActive()){
+            claw.grab();
+        }
+        else{
+            claw.release();
+        }
+
         int capstonePos = capstone.getPosition();
-        if (gamepad1.dpad_up && capstonePos <= CapstoneMechanism2.getIdle()) {
-            capstone.setManualPower(0.2);
-            carriageMoved = true;
-        } else if (gamepad1.dpad_down && capstonePos >= CapstoneMechanism2.getPickup()) {
-            capstone.setManualPower(-0.2);
-            carriageMoved = true;
-        } else if (carriageMoved) {
+        if (gamepad1.dpad_up) {
+            if (capstonePos <= CapstoneMechanism2.getIdle()) {
+                capstone.setManualPower(0.2);
+                capstoneMoved = true;
+            } else {
+                capstone.setManualPower(0);
+                capstoneMoved = true;
+                gamepad1.rumble(50);
+            }
+        } else if (gamepad1.dpad_down) {
+            if (capstonePos >= CapstoneMechanism2.getPickup()) {
+                capstone.setManualPower(-0.2);
+                capstoneMoved = true;
+            } else {
+                capstone.setManualPower(0);
+                capstoneMoved = true;
+                gamepad1.rumble(50);
+            }
+        } else if (capstoneMoved) {
             capstone.setManualPower(0);
         }
 
@@ -188,20 +201,15 @@ public class TeleOpLeagues extends OpMode {
             }
             endGameStatus=true;
         }
-        if(ds.getDistance(DistanceUnit.MM)<80 &&!freightInside){
-            gamepad1.rumble(500);
-            freightInside = true;
-        }
         telemetry.addData("speed", slowModeButton.isActive() ? "slow" : "fast");
         telemetry.addData("slide pos", slide2.getCurrentPosition());
         telemetry.addData("slide status", slideStatus);
-        telemetry.addData("freightInside", freightInside);
-        telemetry.addData("Distance Sensor", ds.getDistance(DistanceUnit.MM));
         telemetry.update();
 
         dumpButton.update();
         slowModeButton.update();
         slideHighButton.update();
         slideMidButton.update();
+        clawButton.update();
     }
 }
