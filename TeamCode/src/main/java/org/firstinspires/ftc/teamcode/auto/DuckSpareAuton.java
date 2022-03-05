@@ -44,7 +44,7 @@ public abstract class DuckSpareAuton extends BaseAutonomousOpMode {
                 .waitSeconds(0.5)
                 .setTangent(Math.toRadians(90) * colorMultiplier)
 
-                .splineToLinearHeading(new Pose2d(level == ShippingHubLevel.LOW ? LOW_HORIZ_POS : -11.5, destinationY * colorMultiplier, Math.toRadians(-90) * colorMultiplier), Math.toRadians(90) * colorMultiplier)
+                .splineToLinearHeading(new Pose2d(level == ShippingHubLevel.LOW ? LOW_HORIZ_POS : -11.5, destinationY * colorMultiplier, Math.toRadians(90) * colorMultiplier), Math.toRadians(90) * colorMultiplier)
                 .build();
 
         drive.setPoseEstimate(sequenceStart.start());
@@ -73,7 +73,7 @@ public abstract class DuckSpareAuton extends BaseAutonomousOpMode {
 
         TrajectorySequence sequenceEnd = drive.trajectorySequenceBuilder(sequenceStart.end())
                 .lineTo(new Vector2d(-6, -46 * colorMultiplier))
-                .turn(Math.toRadians(90) * colorMultiplier)
+                .turn(Math.toRadians(-90) * colorMultiplier)
 
                 .lineTo(new Vector2d(15, -46 * colorMultiplier))
                 .waitSeconds(10)
