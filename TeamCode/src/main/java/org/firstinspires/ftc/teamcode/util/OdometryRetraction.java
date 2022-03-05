@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
     public static double SERVO1_EXTENDED_POS = 0.3;
     public static double SERVO2_EXTENDED_POS = 0.4;
     public static double SERVO1_RETRACTED_POS = 0.9;
-    public static double SERVO2_RETRACTED_POS = 0.85;
+    public static double SERVO2_RETRACTED_POS = 0.95;
 
     public Servo getServo1() {
         return servo1;

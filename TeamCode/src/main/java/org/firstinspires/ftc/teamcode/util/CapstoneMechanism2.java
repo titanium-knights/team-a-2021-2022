@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config public class CapstoneMechanism2 {
     DcMotor motor;
-    public static double power = 0.5;
+    public static double power = 0.8;
     public static int idle = -490;
     public static int pickup = -2480;
 

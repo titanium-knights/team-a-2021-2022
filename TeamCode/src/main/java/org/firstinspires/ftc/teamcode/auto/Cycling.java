@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.odometry.OdometryMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.util.CapstoneMechanism;
+import org.firstinspires.ftc.teamcode.util.CapstoneMechanism2;
 import org.firstinspires.ftc.teamcode.util.CapstoneVision;
 import org.firstinspires.ftc.teamcode.util.Carriage;
 import org.firstinspires.ftc.teamcode.util.Slide2;
@@ -18,7 +19,7 @@ import org.firstinspires.ftc.teamcode.util.TubeIntake;
 public class Cycling extends LinearOpMode {
     public double colorMultiplier = -1;
     OdometryMecanumDrive drive;
-    CapstoneMechanism capstone;
+    CapstoneMechanism2 capstone;
     Carriage carriage;
     Slide2 slide;
     TubeIntake intake;
@@ -89,7 +90,7 @@ public class Cycling extends LinearOpMode {
 
     public void initializeObjects(){
         drive = new OdometryMecanumDrive(hardwareMap);
-        capstone = new CapstoneMechanism(hardwareMap);
+        capstone = new CapstoneMechanism2(hardwareMap);
         carriage = new Carriage(hardwareMap);
         slide = new Slide2(hardwareMap);
         intake = new TubeIntake(hardwareMap);
@@ -127,7 +128,7 @@ public class Cycling extends LinearOpMode {
     @Override
     public void runOpMode(){
         initializeObjects();
-        capstone.setPosition(CapstoneMechanism.getIdle());
+        capstone.setPosition(CapstoneMechanism2.getIdle());
 
         waitForStart();
         int position = vis.getPosition();
