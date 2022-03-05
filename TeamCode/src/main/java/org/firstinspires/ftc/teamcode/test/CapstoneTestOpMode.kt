@@ -16,10 +16,10 @@ class CapstoneTestOpMode: LinearOpMode() {
         while (opModeIsActive()) {
             when {
                 gamepad1.left_bumper -> {
-                    capstone.setManualPower(-0.15)
+                    capstone.setManualPower(-CapstoneMechanism2.power)
                 }
                 gamepad1.right_bumper -> {
-                    capstone.setManualPower(0.15)
+                    capstone.setManualPower(CapstoneMechanism2.power)
                 }
                 else -> capstone.setManualPower(0.0)
             }

@@ -38,6 +38,6 @@ import com.qualcomm.robotcore.hardware.Servo
 
     companion object {
         @JvmStatic var idlePosition = 1.0
-        @JvmStatic var dumpPosition = 0.55
+        @JvmStatic var dumpPosition = 0.5
     }
 }

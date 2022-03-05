@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class CapstoneMechanism2 {
+@Config public class CapstoneMechanism2 {
     DcMotor motor;
-    public static double power = 0.4;
+    public static double power = 0.5;
     public static int idle = -490;
     public static int pickup = -2480;
 

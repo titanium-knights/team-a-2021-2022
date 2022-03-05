@@ -14,9 +14,9 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 public class CapstoneVision {
     OpenCvCamera camera;
     public DuckMurderPipeline pipeline;
-    public CapstoneVision(HardwareMap hmap, Telemetry telemetry) {
-        int cameraMonitorViewId = hmap.appContext.getResources().getIdentifier("cameraMonitorViewId",
-                "id", hmap.appContext.getPackageName());
+    public CapstoneVision(HardwareMap hardwareMap, Telemetry telemetry) {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId",
+                "id", hardwareMap.appContext.getPackageName());
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
          camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
         pipeline = new DuckMurderPipeline(telemetry);

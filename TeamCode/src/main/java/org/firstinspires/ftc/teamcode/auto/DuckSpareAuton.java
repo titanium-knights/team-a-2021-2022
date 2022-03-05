@@ -19,10 +19,10 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Config
 public abstract class DuckSpareAuton extends BaseAutonomousOpMode {
-    public static double HIGH_POS = -50.5;
-    public static double MID_POS = -45;
-    public static double LOW_POS = -45.25;
-    public static double LOW_HORIZ_POS = -5;
+    @Override
+    protected boolean grabsOnInit() {
+        return true;
+    }
 
     @Override
     public void run() {
@@ -31,57 +31,29 @@ public abstract class DuckSpareAuton extends BaseAutonomousOpMode {
 
         telemetry.addData("position",level);
         telemetry.update();
-        double destinationY;
-        if (level == ShippingHubLevel.HIGH) {
-            destinationY = HIGH_POS;
-        } else if (level == ShippingHubLevel.MID) {
-            destinationY = MID_POS;
-        } else {
-            destinationY = LOW_POS;
-        }
-        capstone.setPosition(CapstoneMechanism2.getIdle());
-        TrajectorySequence sequenceStart = drive.trajectorySequenceBuilder(new Pose2d(12, -63 * colorMultiplier, Math.toRadians(-90) * colorMultiplier))
+
+        TrajectorySequence sequence = drive.trajectorySequenceBuilder(new Pose2d(12, -63 * colorMultiplier, Math.toRadians(-90) * colorMultiplier))
                 .waitSeconds(0.5)
-                .setTangent(Math.toRadians(90) * colorMultiplier)
-
-                .splineToLinearHeading(new Pose2d(level == ShippingHubLevel.LOW ? LOW_HORIZ_POS : -11.5, destinationY * colorMultiplier, Math.toRadians(90) * colorMultiplier), Math.toRadians(90) * colorMultiplier)
-                .build();
-
-        drive.setPoseEstimate(sequenceStart.start());
-        drive.followTrajectorySequence(sequenceStart);
-
-        do {
-            if (level == ShippingHubLevel.HIGH) {
-                slide.runToPosition(Slide2.MAX_POSITION);
-            } else if (level == ShippingHubLevel.MID) {
-                slide.runToPosition((Slide2.MIN_POSITION + Slide2.MAX_POSITION) / 2);
-            } else {
-                slide.runToPosition(760);
-            }
-        } while (opModeIsActive() && slide.getPower() > 0.0);
-
-        carriage.dump();
-        sleep(2000);
-        carriage.idle();
-        sleep(2000);
-
-        do {
-            slide.runToPosition(Slide2.MIN_POSITION);
-        } while (opModeIsActive() && slide.getPower() < 0.0);
-
-        capstone.setPosition(CapstoneMechanism2.getIdle());
-
-        TrajectorySequence sequenceEnd = drive.trajectorySequenceBuilder(sequenceStart.end())
+                .back(24)
+                .addTemporalMarker(() -> moveCapstoneMechanismForDumping(level))
+                .turn(Math.toRadians(180) * colorMultiplier)
+                .setTangent(Math.toRadians(-90) * colorMultiplier)
+                .splineToLinearHeading(poseForDumping(-18, level), Math.toRadians(90) * colorMultiplier)
+                .addTemporalMarker(() -> claw.release())
+                .waitSeconds(1)
                 .lineTo(new Vector2d(-6, -46 * colorMultiplier))
                 .turn(Math.toRadians(-90) * colorMultiplier)
-
+                .addTemporalMarker(() -> capstone.setPosition(CapstoneMechanism2.getIdle()))
                 .lineTo(new Vector2d(15, -46 * colorMultiplier))
                 .waitSeconds(10)
                 .lineTo(new Vector2d(12, -72 * colorMultiplier))
                 .forward(24)
                 .waitSeconds(0.5)
+                .addTemporalMarker(() -> retraction.retract()) // DO NOT move the robot after this line
+                .waitSeconds(0.5)
                 .build();
 
-        drive.followTrajectorySequence(sequenceEnd);
+        drive.setPoseEstimate(sequence.start());
+        drive.followTrajectorySequence(sequence);
     }
 }
