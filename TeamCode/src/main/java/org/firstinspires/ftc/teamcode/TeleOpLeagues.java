@@ -57,7 +57,7 @@ public class TeleOpLeagues extends OpMode {
         slide2 = new Slide2(hardwareMap);
         carousel = new Carousel(hardwareMap);
         carriage = new Carriage(hardwareMap);
-        capstone = new CapstoneMechanism2(hardwareMap, false);
+        capstone = new CapstoneMechanism2(hardwareMap, true);
         claw = new ClawIntake(hardwareMap);
         carriageInterpolation = new MotorInterpolation(Carriage.getIdlePosition(), 0.5);
         slowModeButton = new ToggleButton(() -> gamepad1.left_stick_button && gamepad1.right_stick_button);
@@ -140,11 +140,11 @@ public class TeleOpLeagues extends OpMode {
             carousel.setPower(0);
         }
 
-        if (gamepad1.right_bumper && (slide2.getCurrentPosition() < Slide2.MAX_POSITION || DISABLE_LIMITS)) {
+        if (gamepad1.dpad_up && (slide2.getCurrentPosition() < Slide2.MAX_POSITION || DISABLE_LIMITS)) {
             slide2.setPower(0.75);
             targetPos = -1;
             dumpState = DumpState.IDLE;
-        } else if (gamepad1.left_bumper && (slide2.getCurrentPosition() > Slide2.MIN_POSITION || DISABLE_LIMITS)) {
+        } else if (gamepad1.dpad_down && (slide2.getCurrentPosition() > Slide2.MIN_POSITION || DISABLE_LIMITS)) {
             slide2.setPower(-0.75);
             targetPos = -1;
             dumpState = DumpState.IDLE;
@@ -169,18 +169,29 @@ public class TeleOpLeagues extends OpMode {
         }
 
         int capstonePos = capstone.getPosition();
-        if (gamepad1.dpad_up) {
+        if (gamepad1.right_bumper) {
             if (capstonePos <= CapstoneMechanism2.getIdle()) {
-                capstone.setManualPower(CapstoneMechanism2.power);
+                if(slowModeButton.isActive()){
+                    capstone.setManualPower((CapstoneMechanism2.power/2));
+                }
+                else{
+                    capstone.setManualPower(CapstoneMechanism2.power);
+                }
                 capstoneMoved = true;
             } else {
                 capstone.setManualPower(0);
                 capstoneMoved = true;
                 gamepad1.rumble(50);
             }
-        } else if (gamepad1.dpad_down) {
+        } else if (gamepad1.left_bumper) {
             if (capstonePos >= CapstoneMechanism2.getPickup()) {
-                capstone.setManualPower(-CapstoneMechanism2.power);
+                if(slowModeButton.isActive()){
+                    capstone.setManualPower(-(CapstoneMechanism2.power)/2);
+                }
+                else{
+                    capstone.setManualPower(-CapstoneMechanism2.power);
+                }
+
                 capstoneMoved = true;
             } else {
                 capstone.setManualPower(0);
