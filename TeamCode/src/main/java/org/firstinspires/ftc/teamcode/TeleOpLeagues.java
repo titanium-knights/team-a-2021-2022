@@ -55,7 +55,7 @@ public class TeleOpLeagues extends OpMode {
         slide2 = new Slide2(hardwareMap);
         carousel = new Carousel(hardwareMap);
         carriage = new Carriage(hardwareMap);
-        capstone = new CapstoneMechanism2(hardwareMap);
+        capstone = new CapstoneMechanism2(hardwareMap, false);
         carriageInterpolation = new MotorInterpolation(Carriage.getIdlePosition(), 0.5);
         slowModeButton = new ToggleButton(() -> gamepad1.left_stick_button && gamepad1.right_stick_button);
         dumpButton = new PushButton(() -> gamepad1.b);

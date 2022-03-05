@@ -17,7 +17,7 @@ open class ServoTestOpMode(private val servoName: String): LinearOpMode() {
         val servo = hardwareMap.servo[servoName]
         waitForStart()
 
-        var position = 0.0
+        var position = 0.5
         while (opModeIsActive()) {
             if (drb.isPressed) position += 0.1
             if (dlb.isPressed) position -= 0.1
@@ -40,12 +40,3 @@ open class ServoTestOpMode(private val servoName: String): LinearOpMode() {
         }
     }
 }
-
-@TeleOp(name = "Claw Test Op Mode", group = "Test")
-class ClawTestOpMode: ServoTestOpMode("claw")
-
-@TeleOp(name = "Odometry Servo 1 Test Op Mode", group = "Test")
-class OdometryServo1TestOpMode: ServoTestOpMode("odometry1")
-
-@TeleOp(name = "Odometry Servo 2 Test Op Mode", group = "Test")
-class OdometryServo2TestOpMode: ServoTestOpMode("odometry2")

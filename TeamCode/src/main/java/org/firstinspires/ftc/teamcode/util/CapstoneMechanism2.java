@@ -9,10 +9,15 @@ public class CapstoneMechanism2 {
     public static int idle = -490;
     public static int pickup = -2480;
 
-    public CapstoneMechanism2(HardwareMap hardwareMap){
+    public CapstoneMechanism2(HardwareMap hardwareMap, boolean resetEncoders){
         motor = hardwareMap.dcMotor.get("capstone");
-        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if (resetEncoders) motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
+
+    public CapstoneMechanism2(HardwareMap hardwareMap) {
+        this(hardwareMap, true);
+    }
+
     public void setPosition(int pos){
         motor.setTargetPosition(pos);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
