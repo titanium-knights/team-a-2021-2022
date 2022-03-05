@@ -27,9 +27,9 @@ public class TeleOpLeagues extends OpMode {
     Slide2 slide2;
     int targetPos = -1;
     public static int HIGH = Slide2.MAX_POSITION;
-    public static int MID = (Slide2.MIN_POSITION + Slide2.MAX_POSITION) / 2;
+    public static int MID = 1260;
     public static int LOW = Slide2.MIN_POSITION;
-    public static int SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = 500;
+    public static int SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = 1150;
     public static boolean DISABLE_LIMITS = false;
     DumpState dumpState = DumpState.IDLE;
     Carousel carousel;
@@ -171,7 +171,7 @@ public class TeleOpLeagues extends OpMode {
         int capstonePos = capstone.getPosition();
         if (gamepad1.dpad_up) {
             if (capstonePos <= CapstoneMechanism2.getIdle()) {
-                capstone.setManualPower(0.2);
+                capstone.setManualPower(CapstoneMechanism2.power);
                 capstoneMoved = true;
             } else {
                 capstone.setManualPower(0);
@@ -180,7 +180,7 @@ public class TeleOpLeagues extends OpMode {
             }
         } else if (gamepad1.dpad_down) {
             if (capstonePos >= CapstoneMechanism2.getPickup()) {
-                capstone.setManualPower(-0.2);
+                capstone.setManualPower(-CapstoneMechanism2.power);
                 capstoneMoved = true;
             } else {
                 capstone.setManualPower(0);
