@@ -6,12 +6,16 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.util.*;
 
 @Config
 @TeleOp(name = "TeleOp Leagues", group = "TeleOp")
 public class TeleOpLeagues extends OpMode {
+    DistanceSensor ds;
     enum DumpState {
         IDLE,
         RETURNING_TO_IDLE,
@@ -45,7 +49,7 @@ public class TeleOpLeagues extends OpMode {
     PushButton dumpButton;
     ToggleButton slowModeButton;
     ToggleButton clawButton;
-
+    boolean freightInCarriage = false;
     double dumpCompleteSeconds;
     ElapsedTime elapsedTime;
     boolean endGameStatus = false;
@@ -56,6 +60,7 @@ public class TeleOpLeagues extends OpMode {
         drive = new MecanumDrive(hardwareMap);
         slide2 = new Slide2(hardwareMap);
         carousel = new Carousel(hardwareMap);
+        ds = hardwareMap.get(DistanceSensor.class, "carriagedist");
         carriage = new Carriage(hardwareMap);
         capstone = new CapstoneMechanism2(hardwareMap);
         claw = new ClawIntake(hardwareMap);
@@ -106,6 +111,7 @@ public class TeleOpLeagues extends OpMode {
 
         if (dumpButton.isPressed() && slide2.getCurrentPosition() >= SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD) {
             dumpState = DumpState.DUMPING;
+            freightInCarriage = false;
         }
         switch (dumpState) {
             case DUMPING:
@@ -200,6 +206,10 @@ public class TeleOpLeagues extends OpMode {
                 gamepad1.rumble(1000);
             }
             endGameStatus=true;
+        }
+        if(ds.getDistance(DistanceUnit.MM)<80 && !freightInCarriage){
+            gamepad1.rumble(500);
+            freightInCarriage = true;
         }
         telemetry.addData("speed", slowModeButton.isActive() ? "slow" : "fast");
         telemetry.addData("slide pos", slide2.getCurrentPosition());
