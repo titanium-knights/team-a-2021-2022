@@ -14,7 +14,7 @@ public abstract class DuckStorageUnitAuton extends BaseAutonomousOpMode {
     @Override
     public void run() {
         double colorMultiplier = getColorMultiplier();
-        ShippingHubLevel level = ShippingHubLevel.HIGH; // performAnalysis();
+        ShippingHubLevel level = performAnalysis();
 
         telemetry.addData("Position", level);
         telemetry.update();

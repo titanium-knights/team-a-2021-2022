@@ -84,6 +84,9 @@ import org.firstinspires.ftc.teamcode.util.*;
     public static int MID_CAPSTONE_POS = -1860;
     public static int LOW_CAPSTONE_POS = -2200;
 
+    public static double SPARE_SHIPPING_HUB_X = -21;
+    public static double DUCK_SHIPPING_HUB_X = -8;
+
     protected void moveCapstoneMechanismForDumping(ShippingHubLevel level) {
         if (level == ShippingHubLevel.HIGH) {
             capstone.setPosition(HIGH_CAPSTONE_POS);
@@ -106,6 +109,19 @@ import org.firstinspires.ftc.teamcode.util.*;
         return new Pose2d(x, destinationY * getColorMultiplier(), Math.toRadians(90) * getColorMultiplier());
     }
 
+    protected TrajectorySequenceBuilder spareDuckSequence(ShippingHubLevel level) {
+        double colorMultiplier = getColorMultiplier();
+        return drive.trajectorySequenceBuilder(new Pose2d(12, -63 * colorMultiplier, Math.toRadians(-90) * colorMultiplier))
+                .waitSeconds(0.5)
+                .back(24)
+                .addTemporalMarker(() -> moveCapstoneMechanismForDumping(level))
+                .turn(Math.toRadians(180) * colorMultiplier)
+                .setTangent(Math.toRadians(-90) * colorMultiplier)
+                .splineToLinearHeading(poseForDumping(SPARE_SHIPPING_HUB_X, level), Math.toRadians(90) * colorMultiplier)
+                .addTemporalMarker(() -> claw.release())
+                .waitSeconds(1);
+    }
+
     protected TrajectorySequenceBuilder duckDeliverySequence(ShippingHubLevel level) {
         double colorMultiplier = getColorMultiplier();
         return drive.trajectorySequenceBuilder(new Pose2d(-36, -63 * colorMultiplier, Math.toRadians(-90) * colorMultiplier))
@@ -119,7 +135,7 @@ import org.firstinspires.ftc.teamcode.util.*;
                 .splineToConstantHeading(new Vector2d(-40, -56 * colorMultiplier),
                         Math.toRadians(30) * colorMultiplier)
                 .addTemporalMarker(() -> moveCapstoneMechanismForDumping(level))
-                .splineToConstantHeading(poseForDumping(-8, level).vec(), 0)
+                .splineToConstantHeading(poseForDumping(DUCK_SHIPPING_HUB_X, level).vec(), 0)
                 .waitSeconds(2)
                 .turn(Math.toRadians(-90) * colorMultiplier)
                 .addTemporalMarker(() -> claw.release())

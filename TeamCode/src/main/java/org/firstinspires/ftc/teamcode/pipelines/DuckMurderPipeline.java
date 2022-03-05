@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.pipelines;
 
 // Adapted from EasyOpenCV-Sim capstoneDetectionPipeline
 
+import com.acmerobotics.dashboard.config.Config;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -11,7 +12,7 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-public class DuckMurderPipeline extends OpenCvPipeline {
+@Config public class DuckMurderPipeline extends OpenCvPipeline {
     /*
      * An enum to define the capstone position
      */
@@ -27,12 +28,17 @@ public class DuckMurderPipeline extends OpenCvPipeline {
     public final Scalar BLUE = new Scalar(0, 0, 255);
     public final Scalar GREEN = new Scalar(0, 255, 0);
 
+    public static double X_POSITION_LEFT = 403.3333 - 50 * 1920 / 360;
+    public static double X_POSITION_CENTER = 896.6667 - 20 * 1920 / 360;
+    public static double X_POSITION_RIGHT = 1486.667 - 20 * 1920 / 360;
+    public static double Y_POSITION = 35.0 * 1080 / 240;
+
     /*
      * The core values which define the location and size of the sample regions
      */
-    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(403.3333 - 50 * 1920 / 360, 47.0 * 1080 / 240);
-    static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(896.6667 - 20 * 1920 / 360, 35.0 * 1080 / 240);
-    static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(1486.667 - 20 * 1920 / 360, 35.0 * 1080 / 240);
+    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(X_POSITION_LEFT, Y_POSITION);
+    static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(X_POSITION_CENTER, Y_POSITION);
+    static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(X_POSITION_RIGHT, Y_POSITION);
     static final int REGION_WIDTH = 40 * 1920 / 360 * 2;
     static final int REGION_HEIGHT = 40 * 1080 / 240;
 

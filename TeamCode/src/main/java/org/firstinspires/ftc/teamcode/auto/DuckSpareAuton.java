@@ -32,15 +32,7 @@ public abstract class DuckSpareAuton extends BaseAutonomousOpMode {
         telemetry.addData("position",level);
         telemetry.update();
 
-        TrajectorySequence sequence = drive.trajectorySequenceBuilder(new Pose2d(12, -63 * colorMultiplier, Math.toRadians(-90) * colorMultiplier))
-                .waitSeconds(0.5)
-                .back(24)
-                .addTemporalMarker(() -> moveCapstoneMechanismForDumping(level))
-                .turn(Math.toRadians(180) * colorMultiplier)
-                .setTangent(Math.toRadians(-90) * colorMultiplier)
-                .splineToLinearHeading(poseForDumping(-18, level), Math.toRadians(90) * colorMultiplier)
-                .addTemporalMarker(() -> claw.release())
-                .waitSeconds(1)
+        TrajectorySequence sequence = spareDuckSequence(level)
                 .lineTo(new Vector2d(-6, -46 * colorMultiplier))
                 .turn(Math.toRadians(-90) * colorMultiplier)
                 .addTemporalMarker(() -> capstone.setPosition(CapstoneMechanism2.getIdle()))
