@@ -8,7 +8,10 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.odometry.OdometryMecanumDrive;
 import org.firstinspires.ftc.teamcode.odometry.StandardTrackingWheelLocalizer;
 import org.firstinspires.ftc.teamcode.util.*;
@@ -24,7 +27,8 @@ public class TeleOpLeagues extends OpMode {
     }
 
     public static int DELAY_MS = 600;
-
+    boolean freightInside = false;
+    DistanceSensor ds;
     MecanumDrive drive;
     TubeIntake intake;
     Carriage carriage;
@@ -69,6 +73,7 @@ public class TeleOpLeagues extends OpMode {
         odometryRetraction = new OdometryRetraction(hardwareMap);
         odometryRetraction.retract();
         elapsedTime = new ElapsedTime();
+        ds = hardwareMap.get(DistanceSensor.class, "carriagedist");
     }
     @Override
     public void start(){
@@ -106,6 +111,7 @@ public class TeleOpLeagues extends OpMode {
 
         if (dumpButton.isPressed() && slide2.getCurrentPosition() >= SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD) {
             dumpState = DumpState.DUMPING;
+            freightInside=false;
         }
         switch (dumpState) {
             case DUMPING:
@@ -182,9 +188,15 @@ public class TeleOpLeagues extends OpMode {
             }
             endGameStatus=true;
         }
+        if(ds.getDistance(DistanceUnit.MM)<80 &&!freightInside){
+            gamepad1.rumble(500);
+            freightInside = true;
+        }
         telemetry.addData("speed", slowModeButton.isActive() ? "slow" : "fast");
         telemetry.addData("slide pos", slide2.getCurrentPosition());
         telemetry.addData("slide status", slideStatus);
+        telemetry.addData("freightInside", freightInside);
+        telemetry.addData("Distance Sensor", ds.getDistance(DistanceUnit.MM));
         telemetry.update();
 
         dumpButton.update();
