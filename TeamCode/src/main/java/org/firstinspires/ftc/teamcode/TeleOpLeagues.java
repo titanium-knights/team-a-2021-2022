@@ -6,7 +6,10 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.util.*;
 
 @Config
@@ -25,6 +28,7 @@ public class TeleOpLeagues extends OpMode {
     TubeIntake intake;
     Carriage carriage;
     Slide2 slide2;
+    DistanceSensor ds;
     int targetPos = -1;
     public static int HIGH = Slide2.MAX_POSITION;
     public static int MID = 1260;
@@ -38,7 +42,7 @@ public class TeleOpLeagues extends OpMode {
     OdometryRetraction odometryRetraction;
     ClawIntake claw;
     boolean capstoneMoved = false;
-
+    boolean freightInCarriage = false;
     PushButton slideHighButton;
     PushButton slideMidButton;
 
@@ -56,6 +60,7 @@ public class TeleOpLeagues extends OpMode {
         drive = new MecanumDrive(hardwareMap);
         slide2 = new Slide2(hardwareMap);
         carousel = new Carousel(hardwareMap);
+        ds = hardwareMap.get(DistanceSensor.class, "carriagedist");
         carriage = new Carriage(hardwareMap);
         capstone = new CapstoneMechanism2(hardwareMap, true);
         claw = new ClawIntake(hardwareMap);
@@ -106,6 +111,7 @@ public class TeleOpLeagues extends OpMode {
 
         if (dumpButton.isPressed() && slide2.getCurrentPosition() >= SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD) {
             dumpState = DumpState.DUMPING;
+            freightInCarriage = false;
         }
         switch (dumpState) {
             case DUMPING:
@@ -208,13 +214,19 @@ public class TeleOpLeagues extends OpMode {
         else{
             telemetry.addData("Endgame Time Remaining", (int)(120-elapsedTime.time()));
             if(!endGameStatus){
-                gamepad1.rumble(1000);
+                gamepad1.rumble(3000);
             }
             endGameStatus=true;
+        }
+        if(ds.getDistance(DistanceUnit.MM) <80 && !freightInCarriage){
+            freightInCarriage = true;
+            gamepad1.rumble(100);
+
         }
         telemetry.addData("speed", slowModeButton.isActive() ? "slow" : "fast");
         telemetry.addData("slide pos", slide2.getCurrentPosition());
         telemetry.addData("slide status", slideStatus);
+        telemetry.addData("Carriage Distance",ds.getDistance(DistanceUnit.MM));
         telemetry.update();
 
         dumpButton.update();
