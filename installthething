@@ -6,5 +6,5 @@ say -i "Installing now"
 if ./gradlew installDebug; then
     say -i "Installation complete"
 else
-    say -i "Oepsie woepsie de install es stukkie wukkie"
+    afplay -v 2 innovation.m4a
 fi
