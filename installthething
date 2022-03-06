@@ -3,6 +3,8 @@
 say -i "Installing in 3, 2, 1"
 say -i "Installing now"
 
-./gradlew installDebug
-
-say -i "Installation complete"
+if ./gradlew installDebug; then
+    say -i "Installation complete"
+else
+    say -i "Oepsie woepsie install failed beep beep beep error error error"
+fi

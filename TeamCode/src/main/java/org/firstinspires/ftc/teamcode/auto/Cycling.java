@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicReference;
                 .splineToLinearHeading(warehouseIntermediate, Math.toRadians(0))
                 .addTemporalMarker(() -> capstone.setPosition(CapstoneMechanism2.getIdle()))
                 .addTemporalMarker(() -> claw.grab())
-                .strafeLeft(STRAFE_DIST*getColorMultiplier())
+                .strafeRight(STRAFE_DIST*getColorMultiplier())
                 .build();
         drive.followTrajectorySequence(first);
 
@@ -66,7 +66,7 @@ import java.util.concurrent.atomic.AtomicReference;
                 .splineToLinearHeading(warehouseIntermediate, Math.toRadians(0))
                 .addTemporalMarker(() -> capstone.setPosition(CapstoneMechanism2.getIdle()))
                 .addTemporalMarker(() -> claw.grab())
-                .strafeLeft(STRAFE_DIST*getColorMultiplier())
+                .strafeRight(STRAFE_DIST*getColorMultiplier())
                 .build();
         drive.followTrajectorySequence(first);
 
