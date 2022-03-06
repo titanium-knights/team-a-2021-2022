@@ -41,6 +41,7 @@ public class TeleOpLeagues extends OpMode {
     MotorInterpolation carriageInterpolation;
     OdometryRetraction odometryRetraction;
     ClawIntake claw;
+    double capstoneMechanismTimeout;
     boolean capstoneMoved = false;
     boolean freightInCarriage = false;
     PushButton slideHighButton;
@@ -79,6 +80,7 @@ public class TeleOpLeagues extends OpMode {
     public void start(){
         elapsedTime.reset();
         capstone.setPosition(CapstoneMechanism2.getIdle());
+        capstoneMechanismTimeout = elapsedTime.seconds() + 5;
     }
     @Override
     public void loop() {
@@ -172,6 +174,10 @@ public class TeleOpLeagues extends OpMode {
         }
         else{
             claw.release();
+        }
+
+        if (elapsedTime.seconds() > capstoneMechanismTimeout) {
+            capstoneMoved = true;
         }
 
         int capstonePos = capstone.getPosition();

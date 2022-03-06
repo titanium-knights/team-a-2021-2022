@@ -28,10 +28,10 @@ import org.openftc.easyopencv.OpenCvPipeline;
     public final Scalar BLUE = new Scalar(0, 0, 255);
     public final Scalar GREEN = new Scalar(0, 255, 0);
 
-    public static double X_POSITION_LEFT = 403.3333 - 50 * 1920 / 360;
-    public static double X_POSITION_CENTER = 896.6667 - 20 * 1920 / 360;
-    public static double X_POSITION_RIGHT = 1486.667 - 20 * 1920 / 360;
-    public static double Y_POSITION = 35.0 * 1080 / 240;
+    public static double X_POSITION_LEFT = 400;
+    public static double X_POSITION_CENTER = 860;
+    public static double X_POSITION_RIGHT = 1380;
+    public static double Y_POSITION = 600;
 
     /*
      * The core values which define the location and size of the sample regions
@@ -61,23 +61,23 @@ import org.openftc.easyopencv.OpenCvPipeline;
      *
      */
     Point region1_pointA = new Point(
-            REGION1_TOPLEFT_ANCHOR_POINT.x,
-            REGION1_TOPLEFT_ANCHOR_POINT.y);
+            X_POSITION_LEFT,
+            Y_POSITION);
     Point region1_pointB = new Point(
-            REGION1_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
-            REGION1_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+            X_POSITION_LEFT + REGION_WIDTH,
+            Y_POSITION + REGION_HEIGHT);
     Point region2_pointA = new Point(
-            REGION2_TOPLEFT_ANCHOR_POINT.x,
-            REGION2_TOPLEFT_ANCHOR_POINT.y);
+            X_POSITION_CENTER,
+            Y_POSITION);
     Point region2_pointB = new Point(
-            REGION2_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
-            REGION2_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+            X_POSITION_CENTER + REGION_WIDTH,
+            Y_POSITION + REGION_HEIGHT);
     Point region3_pointA = new Point(
-            REGION3_TOPLEFT_ANCHOR_POINT.x,
-            REGION3_TOPLEFT_ANCHOR_POINT.y);
+            X_POSITION_RIGHT,
+            Y_POSITION);
     Point region3_pointB = new Point(
-            REGION3_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
-            REGION3_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+            X_POSITION_RIGHT + REGION_WIDTH,
+            Y_POSITION + REGION_HEIGHT);
 
     /*
      * Working variables

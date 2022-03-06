@@ -1,121 +1,89 @@
 package org.firstinspires.ftc.teamcode.auto;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.odometry.OdometryMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.util.CapstoneMechanism;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.util.CapstoneMechanism2;
-import org.firstinspires.ftc.teamcode.util.CapstoneVision;
-import org.firstinspires.ftc.teamcode.util.Carriage;
+import org.firstinspires.ftc.teamcode.util.MecanumDrive;
 import org.firstinspires.ftc.teamcode.util.Slide2;
-import org.firstinspires.ftc.teamcode.util.TubeIntake;
 
-@Autonomous
-@Disabled
-public class Cycling extends LinearOpMode {
-    public double colorMultiplier = -1;
-    OdometryMecanumDrive drive;
-    CapstoneMechanism2 capstone;
-    Carriage carriage;
-    Slide2 slide;
-    TubeIntake intake;
-    CapstoneVision vis;
-    Pose2d startPose;
-    Pose2d warehouseIntermediate = new Pose2d(12,65.15*colorMultiplier,Math.toRadians(0));
-    Pose2d warehouse = new Pose2d(48,65.15*colorMultiplier,Math.toRadians(0));
-    double[] destinationY = {46.6,43.5,49};
-    TrajectorySequence initialCapstoneDump, cycle1,park;
-    public void initializeTrajs(int pos){
-        TrajectorySequence sequenceStartLow = drive.trajectorySequenceBuilder(startPose)
-                .setReversed(true)
-                .waitSeconds(0.5)
-                .setTangent(Math.toRadians(90) * colorMultiplier)
+import java.util.concurrent.atomic.AtomicReference;
 
-                .splineToLinearHeading(new Pose2d(-9, destinationY[0] * colorMultiplier, Math.toRadians(-90) * colorMultiplier), Math.toRadians(90) * colorMultiplier)
-                .build();
-        TrajectorySequence sequenceStartMid = drive.trajectorySequenceBuilder(startPose)
-                .setReversed(true)
-                .waitSeconds(0.5)
-                .setTangent(Math.toRadians(90) * colorMultiplier)
+@Config public abstract class Cycling extends BaseAutonomousOpMode {
+    Pose2d warehouseIntermediate = new Pose2d(6,-65.15*getColorMultiplier(),Math.toRadians(0));
+    Pose2d warehouse = new Pose2d(WAREHOUSE_X,-65.15*getColorMultiplier(),Math.toRadians(0));
 
-                .splineToLinearHeading(new Pose2d(-9, destinationY[1] * colorMultiplier, Math.toRadians(-90) * colorMultiplier), Math.toRadians(90) * colorMultiplier)
-                .build();
-        TrajectorySequence sequenceStartHigh = drive.trajectorySequenceBuilder(startPose)
-                .setReversed(true)
-                .waitSeconds(0.5)
-                .setTangent(Math.toRadians(90) * colorMultiplier)
+    public static double DUMP_X = -12;
+    public static double DUMP_Y = -52.5;
+    public static double WAREHOUSE_X = 48;
+    public static long PARK_TIME = 1000;
+    public static double STRAFE_DIST = 5;
 
-                .splineToLinearHeading(new Pose2d(-9, destinationY[2] * colorMultiplier, Math.toRadians(-90) * colorMultiplier), Math.toRadians(90) * colorMultiplier)
-                .build();
-        if(pos==0){
-            initialCapstoneDump = sequenceStartLow;
-        }
-        else if(pos==1){
-            initialCapstoneDump = sequenceStartMid;
-        }
-        else{
-            initialCapstoneDump = sequenceStartHigh;
-        }
-        cycle1 = drive.trajectorySequenceBuilder(initialCapstoneDump.end())
+    @Override
+    protected boolean grabsOnInit() {
+        return true;
+    }
+
+    private Pose2d performCycle(Pose2d start) {
+        TrajectorySequence first = drive.trajectorySequenceBuilder(start)
                 .setReversed(false)
+                .setTangent(Math.toRadians(-90) * getColorMultiplier())
                 .splineToLinearHeading(warehouseIntermediate, Math.toRadians(0))
-                .waitSeconds(.25)
-                .addTemporalMarker(() ->{
-                    intake.setPower(0.7);
-                })
-                .waitSeconds(.25)
+                .addTemporalMarker(() -> capstone.setPosition(CapstoneMechanism2.getIdle()))
+                .addTemporalMarker(() -> claw.grab())
+                .strafeLeft(STRAFE_DIST)
+                .build();
+        drive.followTrajectorySequence(first);
+
+        Pose2d current = new Pose2d(drive.getPoseEstimate().getX(), warehouseIntermediate.getY(), 0);
+        drive.setPoseEstimate(current);
+        intake.setPower(-1.0);
+
+        TrajectorySequence second = drive.trajectorySequenceBuilder(current)
                 .splineToLinearHeading(warehouse,0)
                 .setReversed(true)
-                .waitSeconds(3)
+                .waitSeconds(1)
                 .addTemporalMarker(()->{
-                    intake.setPower(-0.7);
+                    intake.setPower(1.0);
                 })
                 .splineToLinearHeading(warehouseIntermediate,0)
                 .addTemporalMarker(()->{
                     intake.stop();
                 })
-                .splineToLinearHeading(new Pose2d(-9, destinationY[2] * colorMultiplier, Math.toRadians(-90) * colorMultiplier), Math.toRadians(90) * colorMultiplier)
+                .splineToSplineHeading(new Pose2d(DUMP_X, DUMP_Y * getColorMultiplier(), Math.toRadians(-90) * getColorMultiplier()), Math.toRadians(90) * getColorMultiplier())
                 .build();
-        park = drive.trajectorySequenceBuilder(cycle1.end())
-                .setReversed(false)
-                .splineToLinearHeading(warehouseIntermediate, Math.toRadians(0))
-                .waitSeconds(.25)
-                .splineToLinearHeading(warehouse,0)
-                .build();
-        }
+        drive.followTrajectorySequence(second);
 
-    public void initializeObjects(){
-        drive = new OdometryMecanumDrive(hardwareMap);
-        capstone = new CapstoneMechanism2(hardwareMap);
-        carriage = new Carriage(hardwareMap);
-        slide = new Slide2(hardwareMap);
-        intake = new TubeIntake(hardwareMap);
-        vis = new CapstoneVision(hardwareMap,telemetry);
-        startPose = new Pose2d(12, -63 * colorMultiplier, Math.toRadians(-90) * colorMultiplier);
+        return second.end();
     }
+
+    void park(Pose2d start) {
+        TrajectorySequence first = drive.trajectorySequenceBuilder(start)
+                .setReversed(false)
+                .setTangent(Math.toRadians(-90) * getColorMultiplier())
+                .splineToLinearHeading(warehouseIntermediate, Math.toRadians(0))
+                .addTemporalMarker(() -> capstone.setPosition(CapstoneMechanism2.getIdle()))
+                .addTemporalMarker(() -> claw.grab())
+                .strafeLeft(STRAFE_DIST)
+                .build();
+        drive.followTrajectorySequence(first);
+
+        retraction.retract();
+
+        MecanumDrive mecanumDrive = new MecanumDrive(hardwareMap);
+        mecanumDrive.driveForwardsWithPower(1.0);
+        sleep(PARK_TIME);
+        mecanumDrive.stop();
+    }
+
     public void dumpHigh(){
         do{
             slide.runToPosition(Slide2.MAX_POSITION);
         }
-        while(opModeIsActive()&&slide.getPower()>0.0);
-    }
-    public void dumpMidLow(int position){
-        if(position == 1){
-            do{
-                slide.runToPosition((Slide2.MIN_POSITION + Slide2.MAX_POSITION) / 2);
-            }
-            while(opModeIsActive()&&slide.getPower()>0.0);
-        }
-        else{
-            do{
-                slide.runToPosition(760);
-            }
-            while(opModeIsActive()&&slide.getPower()>0.0);
-        }
+        while(opModeIsActive() && slide.getPower()>0.0);
+
         carriage.dump();
         sleep(2000);
         carriage.idle();
@@ -125,31 +93,24 @@ public class Cycling extends LinearOpMode {
             slide.runToPosition(Slide2.MIN_POSITION);
         } while (opModeIsActive() && slide.getPower() < 0.0);
     }
+
     @Override
-    public void runOpMode(){
-        initializeObjects();
-        capstone.setPosition(CapstoneMechanism2.getIdle());
+    public void run(){
+        ShippingHubLevel level = performAnalysis();
 
-        waitForStart();
-        int position = vis.getPosition();
-        initializeTrajs(position);
-        drive.setPoseEstimate(startPose);
-        drive.followTrajectorySequence(initialCapstoneDump);
+        TrajectorySequence sequenceStart = spareDuckSequence(level)
+                .back(3)
+                .build();
 
-        if (position == 2) {
+        drive.setPoseEstimate(sequenceStart.start());
+        drive.followTrajectorySequence(sequenceStart);
+
+        Pose2d start = sequenceStart.end();
+        for (int i = 0; i < 1; i++) {
+            start = performCycle(start);
             dumpHigh();
         }
-        else{
-            dumpMidLow(position);
-        }
 
-
-        drive.followTrajectorySequence(cycle1);
-        dumpHigh();
-
-        drive.followTrajectorySequence(park);
-
-
-
+        park(start);
     }
 }

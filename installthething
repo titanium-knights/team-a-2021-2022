@@ -1,0 +1,8 @@
+#! /bin/zsh
+
+say -i "Installing in 3, 2, 1"
+say -i "Installing now"
+
+./gradlew installDebug
+
+say -i "Installation complete"

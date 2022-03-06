@@ -76,16 +76,19 @@ import org.firstinspires.ftc.teamcode.util.*;
         return getColor() == Color.BLUE ? -1 : 1;
     }
 
-    public static double HIGH_POS = -46.5;
-    public static double MID_POS = -53;
-    public static double LOW_POS = -53;
+    public static double HIGH_POS = -57;
+    public static double MID_POS = -64;
+    public static double LOW_POS = -57;
 
-    public static int HIGH_CAPSTONE_POS = -1240;
-    public static int MID_CAPSTONE_POS = -1860;
-    public static int LOW_CAPSTONE_POS = -2200;
+    public static int HIGH_CAPSTONE_POS = -1400;
+    public static int MID_CAPSTONE_POS = -1840;
+    public static int LOW_CAPSTONE_POS = -2150;
 
-    public static double SPARE_SHIPPING_HUB_X = -21;
-    public static double DUCK_SHIPPING_HUB_X = -8;
+    public static double SPARE_SHIPPING_HUB_X = -18;
+    public static double DUCK_SHIPPING_HUB_X = -10;
+    public static double SPARE_Y_OFFSET = 8;
+
+    public static double RED_OFFSET = 6;
 
     protected void moveCapstoneMechanismForDumping(ShippingHubLevel level) {
         if (level == ShippingHubLevel.HIGH) {
@@ -97,7 +100,7 @@ import org.firstinspires.ftc.teamcode.util.*;
         }
     }
 
-    protected Pose2d poseForDumping(double x, ShippingHubLevel level) {
+    protected Pose2d poseForDumping(double x, ShippingHubLevel level, double yOffset) {
         double destinationY;
         if (level == ShippingHubLevel.HIGH) {
             destinationY = HIGH_POS;
@@ -106,7 +109,7 @@ import org.firstinspires.ftc.teamcode.util.*;
         } else {
             destinationY = LOW_POS;
         }
-        return new Pose2d(x, destinationY * getColorMultiplier(), Math.toRadians(90) * getColorMultiplier());
+        return new Pose2d((x - (getColor() == Color.RED ? RED_OFFSET : 0)), (destinationY + yOffset) * getColorMultiplier(), Math.toRadians(90) * getColorMultiplier());
     }
 
     protected TrajectorySequenceBuilder spareDuckSequence(ShippingHubLevel level) {
@@ -117,7 +120,7 @@ import org.firstinspires.ftc.teamcode.util.*;
                 .addTemporalMarker(() -> moveCapstoneMechanismForDumping(level))
                 .turn(Math.toRadians(180) * colorMultiplier)
                 .setTangent(Math.toRadians(-90) * colorMultiplier)
-                .splineToLinearHeading(poseForDumping(SPARE_SHIPPING_HUB_X, level), Math.toRadians(90) * colorMultiplier)
+                .splineToLinearHeading(poseForDumping(SPARE_SHIPPING_HUB_X, level, SPARE_Y_OFFSET), Math.toRadians(90) * colorMultiplier)
                 .addTemporalMarker(() -> claw.release())
                 .waitSeconds(1);
     }
@@ -135,10 +138,10 @@ import org.firstinspires.ftc.teamcode.util.*;
                 .splineToConstantHeading(new Vector2d(-40, -56 * colorMultiplier),
                         Math.toRadians(30) * colorMultiplier)
                 .addTemporalMarker(() -> moveCapstoneMechanismForDumping(level))
-                .splineToConstantHeading(poseForDumping(DUCK_SHIPPING_HUB_X, level).vec(), 0)
-                .waitSeconds(2)
+                .splineToConstantHeading(poseForDumping(DUCK_SHIPPING_HUB_X, level, 0).vec(), 0)
+                .waitSeconds(1)
                 .turn(Math.toRadians(-90) * colorMultiplier)
                 .addTemporalMarker(() -> claw.release())
-                .waitSeconds(1);
+                .waitSeconds(0.5);
     }
 }

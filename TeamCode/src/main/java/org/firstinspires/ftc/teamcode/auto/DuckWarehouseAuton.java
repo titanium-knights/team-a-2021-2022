@@ -38,6 +38,7 @@ public abstract class DuckWarehouseAuton extends BaseAutonomousOpMode {
                 .lineTo(new Vector2d(12, -72 * colorMultiplier))
                 .forward(24)
                 .waitSeconds(0.5)
+                .addTemporalMarker(() -> claw.grab())
                 .addTemporalMarker(() -> retraction.retract())
                 .waitSeconds(0.5)
                 .build();

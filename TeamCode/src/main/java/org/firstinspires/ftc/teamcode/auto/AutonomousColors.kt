@@ -42,3 +42,13 @@ class DuckStorageUnitAutonBlue: DuckStorageUnitAuton() {
 class DuckStorageUnitAutonRed: DuckStorageUnitAuton() {
     override fun getColor() = Color.RED
 }
+
+@Autonomous(name = "Cycling - Red")
+class CyclingRed: Cycling() {
+    override fun getColor() = Color.RED
+}
+
+@Autonomous(name = "Cycling - Blue")
+class CyclingBlue: Cycling() {
+    override fun getColor() = Color.BLUE
+}

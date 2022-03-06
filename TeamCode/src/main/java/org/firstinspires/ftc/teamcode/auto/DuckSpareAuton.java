@@ -24,6 +24,8 @@ public abstract class DuckSpareAuton extends BaseAutonomousOpMode {
         return true;
     }
 
+    public static double GO_BACK_INCHES = 8;
+
     @Override
     public void run() {
         double colorMultiplier = getColorMultiplier();
@@ -33,14 +35,14 @@ public abstract class DuckSpareAuton extends BaseAutonomousOpMode {
         telemetry.update();
 
         TrajectorySequence sequence = spareDuckSequence(level)
-                .lineTo(new Vector2d(-6, -46 * colorMultiplier))
+                .back(level == ShippingHubLevel.MID ? 3 : GO_BACK_INCHES)
                 .turn(Math.toRadians(-90) * colorMultiplier)
                 .addTemporalMarker(() -> capstone.setPosition(CapstoneMechanism2.getIdle()))
                 .lineTo(new Vector2d(15, -46 * colorMultiplier))
-                .waitSeconds(10)
-                .lineTo(new Vector2d(12, -72 * colorMultiplier))
-                .forward(24)
+                .lineTo(new Vector2d(12, -69 * colorMultiplier))
+                .forward(36)
                 .waitSeconds(0.5)
+                .addTemporalMarker(() -> claw.grab())
                 .addTemporalMarker(() -> retraction.retract()) // DO NOT move the robot after this line
                 .waitSeconds(0.5)
                 .build();

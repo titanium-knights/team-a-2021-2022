@@ -25,6 +25,7 @@ public abstract class DuckStorageUnitAuton extends BaseAutonomousOpMode {
                 .addTemporalMarker(() -> capstone.setPosition(CapstoneMechanism2.getIdle()))
                 .splineToConstantHeading(new Vector2d(-63, -35 * colorMultiplier), Math.toRadians(90) * colorMultiplier)
                 .waitSeconds(0.5)
+                .addTemporalMarker(() -> claw.grab())
                 .addTemporalMarker(() -> retraction.retract())
                 .waitSeconds(0.5)
                 .build();
