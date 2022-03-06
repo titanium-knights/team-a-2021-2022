@@ -84,11 +84,12 @@ import org.firstinspires.ftc.teamcode.util.*;
     public static int MID_CAPSTONE_POS = -1840;
     public static int LOW_CAPSTONE_POS = -2150;
 
-    public static double SPARE_SHIPPING_HUB_X = -18;
+    public static double SPARE_SHIPPING_HUB_X = -20;
     public static double DUCK_SHIPPING_HUB_X = -10;
     public static double SPARE_Y_OFFSET = 8;
 
-    public static double RED_OFFSET = 6;
+    public static double RED_OFFSET = -6;
+    public static double RED_OFFSET_Y =2;
 
     protected void moveCapstoneMechanismForDumping(ShippingHubLevel level) {
         if (level == ShippingHubLevel.HIGH) {
@@ -109,8 +110,9 @@ import org.firstinspires.ftc.teamcode.util.*;
         } else {
             destinationY = LOW_POS;
         }
-        return new Pose2d((x - (getColor() == Color.RED ? RED_OFFSET : 0)), (destinationY + yOffset) * getColorMultiplier(), Math.toRadians(90) * getColorMultiplier());
-    }
+        double y = ((destinationY + yOffset) * getColorMultiplier());
+        return new Pose2d((x - (getColor() == Color.RED ? RED_OFFSET : 0)), (y - (getColor() == Color.RED ? RED_OFFSET_Y : 0)), Math.toRadians(90) * getColorMultiplier());
+    };
 
     protected TrajectorySequenceBuilder spareDuckSequence(ShippingHubLevel level) {
         double colorMultiplier = getColorMultiplier();
