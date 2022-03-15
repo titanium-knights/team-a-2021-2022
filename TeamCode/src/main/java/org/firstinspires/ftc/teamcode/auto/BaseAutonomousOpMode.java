@@ -77,15 +77,15 @@ import org.firstinspires.ftc.teamcode.util.*;
     }
 
     public static double HIGH_POS = -57;
-    public static double MID_POS = -64;
+    public static double MID_POS = -60;
     public static double LOW_POS = -57;
 
-    public static int HIGH_CAPSTONE_POS = -1400;
+    public static int HIGH_CAPSTONE_POS = -1380;
     public static int MID_CAPSTONE_POS = -1840;
-    public static int LOW_CAPSTONE_POS = -2150;
+    public static int LOW_CAPSTONE_POS = -2100;
 
     public static double SPARE_SHIPPING_HUB_X = -20;
-    public static double DUCK_SHIPPING_HUB_X = -10;
+    public static double DUCK_SHIPPING_HUB_X = -12;
     public static double SPARE_Y_OFFSET = 8;
 
     public static double RED_OFFSET = -6;
@@ -130,14 +130,15 @@ import org.firstinspires.ftc.teamcode.util.*;
     protected TrajectorySequenceBuilder duckDeliverySequence(ShippingHubLevel level) {
         double colorMultiplier = getColorMultiplier();
         return drive.trajectorySequenceBuilder(new Pose2d(-36, -63 * colorMultiplier, Math.toRadians(-90) * colorMultiplier))
+                .addTemporalMarker(() -> capstone.setPosition(CapstoneMechanism2.getIdle()))
                 .back(12)
-                .lineToLinearHeading(new Pose2d(-61, -56 * colorMultiplier, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-61, -56 * colorMultiplier, Math.toRadians(180) - Math.toRadians(15) * colorMultiplier))
                 .addTemporalMarker(() -> carousel.spinReverse(false))
-                .waitSeconds(4)
-                .addTemporalMarker(carousel::stop)
                 .waitSeconds(8)
+                .addTemporalMarker(carousel::stop)
+                .waitSeconds(4)
                 .setTangent(0)
-                .splineToConstantHeading(new Vector2d(-40, -56 * colorMultiplier),
+                .splineToLinearHeading(new Pose2d(-40, -56 * colorMultiplier, Math.toRadians(180) * colorMultiplier),
                         Math.toRadians(30) * colorMultiplier)
                 .addTemporalMarker(() -> moveCapstoneMechanismForDumping(level))
                 .splineToConstantHeading(poseForDumping(DUCK_SHIPPING_HUB_X, level, 0).vec(), 0)

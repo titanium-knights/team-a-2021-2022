@@ -1,7 +1,6 @@
 #! /bin/zsh
 
 say -i "Installing in 3, 2, 1"
-say -i "Installing now"
 
 if ./gradlew installDebug; then
     say -i "Installation complete"

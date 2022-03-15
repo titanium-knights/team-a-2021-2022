@@ -16,10 +16,12 @@ import java.util.concurrent.atomic.AtomicReference;
     Pose2d warehouse = new Pose2d(WAREHOUSE_X,-65.15*getColorMultiplier(),Math.toRadians(0));
 
     public static double DUMP_X = -12;
-    public static double DUMP_Y = -52.5;
+    public static double DUMP_RED_X = -12;
+    public static double DUMP_Y = 55.5;
+    public static double DUMP_RED_Y = -48;
     public static double WAREHOUSE_X = 48;
     public static long PARK_TIME = 1000;
-    public static double STRAFE_DIST = 5;
+    public static double STRAFE_DIST = 7;
 
     @Override
     protected boolean grabsOnInit() {
@@ -52,7 +54,7 @@ import java.util.concurrent.atomic.AtomicReference;
                 .addTemporalMarker(()->{
                     intake.stop();
                 })
-                .splineToSplineHeading(new Pose2d(DUMP_X, DUMP_Y * getColorMultiplier(), Math.toRadians(-90) * getColorMultiplier()), Math.toRadians(90) * getColorMultiplier())
+                .splineToLinearHeading(new Pose2d(getColor() == Color.RED ? DUMP_RED_X : DUMP_X, getColor() == Color.RED ? DUMP_RED_Y : DUMP_Y, Math.toRadians(-90) * getColorMultiplier()), Math.toRadians(90) * getColorMultiplier())
                 .build();
         drive.followTrajectorySequence(second);
 
@@ -90,7 +92,7 @@ import java.util.concurrent.atomic.AtomicReference;
         sleep(2000);
 
         do {
-            slide.runToPosition(Slide2.MIN_POSITION);
+            slide.runToPosition(Slide2.MIN_POSITION + 200);
         } while (opModeIsActive() && slide.getPower() < 0.0);
     }
 
@@ -99,11 +101,15 @@ import java.util.concurrent.atomic.AtomicReference;
         ShippingHubLevel level = performAnalysis();
 
         TrajectorySequence sequenceStart = spareDuckSequence(level)
-                .back(3)
+                .back(7.5)
                 .build();
 
         drive.setPoseEstimate(sequenceStart.start());
         drive.followTrajectorySequence(sequenceStart);
+
+        do {
+            slide.runToPosition(Slide2.MIN_POSITION + 200);
+        } while (opModeIsActive() && slide.getPower() > 0.0);
 
         Pose2d start = sequenceStart.end();
         for (int i = 0; i < 1; i++) {
@@ -112,5 +118,9 @@ import java.util.concurrent.atomic.AtomicReference;
         }
 
         park(start);
+
+        do {
+            slide.runToPosition(Slide2.MIN_POSITION);
+        } while (opModeIsActive() && slide.getPower() < 0.0);
     }
 }

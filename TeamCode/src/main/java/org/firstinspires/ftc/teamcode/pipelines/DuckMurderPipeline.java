@@ -28,10 +28,10 @@ import org.openftc.easyopencv.OpenCvPipeline;
     public final Scalar BLUE = new Scalar(0, 0, 255);
     public final Scalar GREEN = new Scalar(0, 255, 0);
 
-    public static double X_POSITION_LEFT = 400;
+    public static double X_POSITION_LEFT = 200;
     public static double X_POSITION_CENTER = 860;
     public static double X_POSITION_RIGHT = 1380;
-    public static double Y_POSITION = 600;
+    public static double Y_POSITION = 300;
 
     /*
      * The core values which define the location and size of the sample regions

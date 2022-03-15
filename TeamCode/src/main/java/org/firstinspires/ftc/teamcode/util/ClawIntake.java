@@ -11,7 +11,7 @@ public class ClawIntake {
     public Servo claw;
     public static double releasePos = 1.0;
     public static double ballPos = 0.8;
-    public static double grabPos = 0.71;
+    public static double grabPos = 0.75;
     public static double armMultiplier = -0.5;
     public ClawIntake(HardwareMap hardwareMap) {
 
