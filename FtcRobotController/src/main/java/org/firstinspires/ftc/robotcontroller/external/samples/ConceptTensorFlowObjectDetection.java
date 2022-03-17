@@ -61,7 +61,7 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
    *
    *  Two additional model assets are available which only contain a subset of the objects:
    *  FreightFrenzy_BC.tflite  0: Ball,  1: Cube
-   *  FreightFrenzy_DM.tflite  0: Duck,  1: Marker
+   *  FreightFrenzy_DM.tflite  0: Duck,  1: Marker3
    */
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
     private static final String[] LABELS = {

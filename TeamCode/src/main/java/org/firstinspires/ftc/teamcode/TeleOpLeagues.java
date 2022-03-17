@@ -84,7 +84,7 @@ public class TeleOpLeagues extends OpMode {
     }
     @Override
     public void loop() {
-        drive.teleOpRobotCentric(gamepad1, slowModeButton.isActive() ? 0.3 : 0.75);
+        drive.teleOpRobotCentric(gamepad1, slowModeButton.isActive() ? 0.3 : 1);
         if (gamepad1.right_trigger > 0.3) {
             intake.setPower(-gamepad1.right_trigger * 0.85);
         } else if (gamepad1.left_trigger > 0.3) {
