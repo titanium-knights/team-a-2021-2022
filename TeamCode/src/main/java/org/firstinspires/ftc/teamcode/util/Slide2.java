@@ -17,7 +17,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
         motor = hardwareMap.dcMotor.get("slide_r");
         motor2 = hardwareMap.dcMotor.get("slide_l");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -26,7 +26,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
     public void setPower(double pow){
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setPower(pow);
         motor2.setPower(-pow);
     }
