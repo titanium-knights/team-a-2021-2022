@@ -13,11 +13,14 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
     public static int MIN_POSITION = 0;
     public static int MAX_POSITION = 2000;
 
+    public static double IDLE_POWER = 0.01;
+    public static boolean USE_ENCODER = false;
+
     public Slide2(HardwareMap hardwareMap){
         motor = hardwareMap.dcMotor.get("slide_r");
         motor2 = hardwareMap.dcMotor.get("slide_l");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor2.setMode(USE_ENCODER ? DcMotor.RunMode.RUN_USING_ENCODER : DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -26,7 +29,12 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
     public void setPower(double pow){
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setMode(USE_ENCODER ? DcMotor.RunMode.RUN_USING_ENCODER : DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        if (pow == 0) {
+            pow = IDLE_POWER;
+        }
+
         motor.setPower(pow);
         motor2.setPower(-pow);
     }

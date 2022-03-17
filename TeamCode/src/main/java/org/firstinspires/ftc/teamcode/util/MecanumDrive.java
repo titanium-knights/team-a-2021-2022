@@ -5,7 +5,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.teleop.BasicPassdionComponent;
+import org.firstinspires.ftc.teamcode.teleop.PassdionComponent;
+import org.firstinspires.ftc.teamcode.teleop.PassdionOpMode;
 import org.firstinspires.ftc.teamcode.util.IMU;
+import org.jetbrains.annotations.NotNull;
 
 import static java.lang.Math.abs;
 
@@ -84,6 +88,42 @@ public class MecanumDrive {
     }
     public void stop(){
         move(0,0,0);
+    }
+
+    public class RobotCentricComponent extends BasicPassdionComponent {
+        double multiplier = 1.0;
+
+        @Override
+        public void init(@NotNull PassdionOpMode opMode) {}
+
+        @Override
+        public void update(@NotNull PassdionOpMode opMode) {
+            teleOpRobotCentric(opMode.gamepad1, multiplier);
+        }
+    }
+
+    public class FieldCentricComponent extends BasicPassdionComponent {
+        public double multiplier = 1.0;
+        public IMU imu;
+
+        @Override
+        public void init(@NotNull PassdionOpMode opMode) {
+            imu = new IMU(opMode.hardwareMap);
+            imu.initializeIMU();
+        }
+
+        @Override
+        public void update(@NotNull PassdionOpMode opMode) {
+            teleOpFieldCentric(opMode.gamepad1, imu, multiplier);
+        }
+    }
+
+    public RobotCentricComponent robotCentricComponent() {
+        return new RobotCentricComponent();
+    }
+
+    public FieldCentricComponent fieldCentricComponent() {
+        return new FieldCentricComponent();
     }
 
 }

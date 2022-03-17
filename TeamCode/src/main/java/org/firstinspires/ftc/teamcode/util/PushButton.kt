@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.util
 
-class PushButton(val readState: () -> Boolean) {
+import org.firstinspires.ftc.teamcode.teleop.PassdionComponent
+import org.firstinspires.ftc.teamcode.teleop.PassdionOpMode
+
+class PushButton(val readState: () -> Boolean): PassdionComponent {
     var previousState: Boolean = false
     var currentState: Boolean = readState()
 
@@ -12,9 +15,17 @@ class PushButton(val readState: () -> Boolean) {
         previousState = currentState
         currentState = readState()
     }
+
+    override fun init(opMode: PassdionOpMode) {}
+    override fun initLoop(opMode: PassdionOpMode) {}
+    override fun start(opMode: PassdionOpMode) {}
+    override fun update(opMode: PassdionOpMode) {
+        update()
+    }
+    override fun cleanup(opMode: PassdionOpMode) {}
 }
 
-class ToggleButton(readState: () -> Boolean) {
+class ToggleButton(readState: () -> Boolean): PassdionComponent {
     val pushButton = PushButton(readState)
 
     var isActive = false
@@ -25,4 +36,12 @@ class ToggleButton(readState: () -> Boolean) {
         }
         pushButton.update()
     }
+
+    override fun init(opMode: PassdionOpMode) {}
+    override fun initLoop(opMode: PassdionOpMode) {}
+    override fun start(opMode: PassdionOpMode) {}
+    override fun update(opMode: PassdionOpMode) {
+        update()
+    }
+    override fun cleanup(opMode: PassdionOpMode) {}
 }
