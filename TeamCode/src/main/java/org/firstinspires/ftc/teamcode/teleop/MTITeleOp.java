@@ -120,6 +120,7 @@ public class MTITeleOp extends PassdionOpMode {
                         }
                     }
                 });
+                addTelemetryData("Carriage Distance", () -> ds.getDistance(DistanceUnit.MM));
             }
         }
 
