@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.odometry.OdometryMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.util.CapstoneMechanism2;
 import org.firstinspires.ftc.teamcode.util.CapstoneVision;
 import org.firstinspires.ftc.teamcode.util.Carousel;
@@ -36,7 +37,9 @@ public class MurderCycleAuton extends LinearOpMode {
         Pose2d redWarehouseIntermediate = new Pose2d(12,-65.15,Math.toRadians(0));
         double timeAtHub = 3;
 
-        TrajectorySequence sequence = drive.trajectorySequenceBuilder(new Pose2d(-36, -60 , Math.toRadians(-90) ))
+        int cycles = 1;
+
+        TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(new Pose2d(-36, -60 , Math.toRadians(-90) ))
                 .back(12)
                 .lineToLinearHeading(new Pose2d(-61, -56, Math.toRadians(180) - Math.toRadians(15)))
                 .addTemporalMarker(() -> carousel.spinReverse(false))
@@ -45,18 +48,22 @@ public class MurderCycleAuton extends LinearOpMode {
                 .waitSeconds(4)
                 .setTangent(0)
                 .lineToSplineHeading(rightOfRedHub)
-                .waitSeconds(timeAtHub)
-                .setReversed(false)
+                .waitSeconds(timeAtHub);
+
+                for(int i = 0; i < cycles; i++){
+                    builder = builder.setReversed(false)
+                            .splineToLinearHeading(redWarehouseIntermediate, Math.toRadians(0))
+                            .splineToLinearHeading(redWarehouse,0)
+                            .setReversed(true)
+                            .splineToLinearHeading(redWarehouseIntermediate,0)
+                            .waitSeconds(0.5)
+                            .splineToLinearHeading(rightOfRedHub, Math.toRadians(180))
+                            .waitSeconds(timeAtHub);
+                }
+
+                builder = builder.setTangent(0)
                 .splineToLinearHeading(redWarehouseIntermediate, Math.toRadians(0))
-                .splineToLinearHeading(redWarehouse,0)
-                .setReversed(true)
-                .splineToLinearHeading(redWarehouseIntermediate,0)
-                .waitSeconds(0.5)
-                .splineToLinearHeading(rightOfRedHub, Math.toRadians(180))
-                .waitSeconds(timeAtHub)
-                .setTangent(0)
-                .splineToLinearHeading(redWarehouseIntermediate, Math.toRadians(0))
-                .splineToLinearHeading(redWarehouse,0)
-                .build();
+                .splineToLinearHeading(redWarehouse,0);
+        TrajectorySequence sequence = builder.build();
     }
 }
