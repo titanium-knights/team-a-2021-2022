@@ -14,7 +14,7 @@ public class MTITeleOp extends PassdionOpMode {
     public static boolean ENABLE_DRIVING = true;
     public static boolean ENABLE_FIELD_CENTRIC = true;
     public static boolean ENABLE_INTAKE = true;
-    public static boolean ENABLE_CAROUSEL = false;
+    public static boolean ENABLE_CAROUSEL = true;
     public static boolean ENABLE_CAPSTONE = false;
     public static boolean ENABLE_OUTTAKE = false;
     public static boolean ENABLE_DISTANCE_SENSOR = false;
