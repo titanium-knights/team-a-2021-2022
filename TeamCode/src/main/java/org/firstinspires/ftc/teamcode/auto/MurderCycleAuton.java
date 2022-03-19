@@ -31,6 +31,11 @@ public class MurderCycleAuton extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        Pose2d rightOfRedHub = new Pose2d(0,-45,Math.toRadians(-75));
+        Pose2d redWarehouse = new Pose2d(48,-65.15,Math.toRadians(0));
+        Pose2d redWarehouseIntermediate = new Pose2d(12,-65.15,Math.toRadians(0));
+        double timeAtHub = 3;
+
         TrajectorySequence sequence = drive.trajectorySequenceBuilder(new Pose2d(-36, -60 , Math.toRadians(-90) ))
                 .back(12)
                 .lineToLinearHeading(new Pose2d(-61, -56, Math.toRadians(180) - Math.toRadians(15)))
@@ -39,9 +44,19 @@ public class MurderCycleAuton extends LinearOpMode {
                 .addTemporalMarker(carousel::stop)
                 .waitSeconds(4)
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(-40, -56, Math.toRadians(-135)),
-                        Math.toRadians(30))
+                .lineToSplineHeading(rightOfRedHub)
+                .waitSeconds(timeAtHub)
+                .setReversed(false)
+                .splineToLinearHeading(redWarehouseIntermediate, Math.toRadians(0))
+                .splineToLinearHeading(redWarehouse,0)
+                .setReversed(true)
+                .splineToLinearHeading(redWarehouseIntermediate,0)
                 .waitSeconds(0.5)
+                .splineToLinearHeading(rightOfRedHub, Math.toRadians(180))
+                .waitSeconds(timeAtHub)
+                .setTangent(0)
+                .splineToLinearHeading(redWarehouseIntermediate, Math.toRadians(0))
+                .splineToLinearHeading(redWarehouse,0)
                 .build();
     }
 }

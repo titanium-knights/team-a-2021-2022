@@ -16,7 +16,7 @@ public class MurderCycleTest {
         Pose2d carousel = new Pose2d(-55, -60,Math.toRadians(-90));
         MeepMeep meepMeep = new MeepMeep(500);
         Pose2d startingPosition = new Pose2d(-36,-60, Math.toRadians(-90));
-        Pose2d rightOfRedHub = new Pose2d(-46,-56,Math.toRadians(-135));
+        Pose2d rightOfRedHub = new Pose2d(0,-45,Math.toRadians(-75));
 
         Pose2d redWarehouseIntermediate = new Pose2d(12,-65.15,Math.toRadians(0));
         Vector2d redWarehouseIntermediateVec = new Vector2d(redWarehouseIntermediate.getX(),redWarehouseIntermediate.getY());
@@ -34,6 +34,7 @@ public class MurderCycleTest {
                                 })
                                 .setReversed(true)
                                 .lineToSplineHeading(carousel)
+                                .waitSeconds(3)
                                 .lineToSplineHeading(rightOfRedHub)
                                 .waitSeconds(timeAtHub)
                                 .UNSTABLE_addTemporalMarkerOffset((-timeAtHub) + 1, () -> {
@@ -74,6 +75,9 @@ public class MurderCycleTest {
                                 .UNSTABLE_addTemporalMarkerOffset((-timeAtHub) + 2, () -> {
                                     telemetry.addData("Lift", "Retracting");
                                 })
+                                .setTangent(0)
+                                .splineToLinearHeading(redWarehouseIntermediate, Math.toRadians(0))
+                                .splineToLinearHeading(redWarehouse,0)
                                 //end cycle 1
 
 
