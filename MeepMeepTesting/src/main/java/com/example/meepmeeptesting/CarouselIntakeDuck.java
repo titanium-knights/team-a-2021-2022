@@ -34,16 +34,16 @@ public class CarouselIntakeDuck {
     public static double HIGH_POS = -57;
     public static double MID_POS = -64;
     public static double LOW_POS = -57;
-    static Pose2d poseForDumping(double x, ShippingHubLevel level, double yOffset) {
-        double destinationY;
-        if (level == ShippingHubLevel.HIGH) {
-            destinationY = HIGH_POS;
-        } else if (level == ShippingHubLevel.MID) {
-            destinationY = MID_POS;
-        } else {
-            destinationY = LOW_POS;
-        }
-        double y = ((destinationY + yOffset) * colorMultiplier);
-        return new Pose2d((x - (getColor() == Color.RED ? RED_OFFSET : 0)), (y - (getColor() == Color.RED ? RED_OFFSET_Y : 0)), Math.toRadians(90) * getColorMultiplier());
-    };
+//    static Pose2d poseForDumping(double x, ShippingHubLevel level, double yOffset) {
+//        double destinationY;
+//        if (level == ShippingHubLevel.HIGH) {
+//            destinationY = HIGH_POS;
+//        } else if (level == ShippingHubLevel.MID) {
+//            destinationY = MID_POS;
+//        } else {
+//            destinationY = LOW_POS;
+//        }
+//        double y = ((destinationY + yOffset) * colorMultiplier);
+//        return new Pose2d((x - (getColor() == Color.RED ? RED_OFFSET : 0)), (y - (getColor() == Color.RED ? RED_OFFSET_Y : 0)), Math.toRadians(90) * getColorMultiplier());
+//    };
 }
