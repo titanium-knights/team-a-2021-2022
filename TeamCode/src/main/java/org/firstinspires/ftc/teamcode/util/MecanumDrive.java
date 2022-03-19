@@ -91,7 +91,7 @@ public class MecanumDrive {
     }
 
     public class RobotCentricComponent extends BasicPassdionComponent {
-        double multiplier = 1.0;
+        public double multiplier = 1.0;
 
         @Override
         public void init(@NotNull PassdionOpMode opMode) {}

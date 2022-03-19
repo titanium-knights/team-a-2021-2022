@@ -2,7 +2,11 @@ package org.firstinspires.ftc.teamcode.util;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.teamcode.teleop.BasicPassdionComponent;
+import org.firstinspires.ftc.teamcode.teleop.PassdionOpMode;
+import org.jetbrains.annotations.NotNull;
 
 public class Carousel {
     public CRServo motor;
@@ -28,5 +32,27 @@ public class Carousel {
     public void spinReverse(boolean fast){ setPower(fast ? (-0.75) : (-0.75 / 3)); }
     public void spinReverse() {
         this.spinReverse(false);
+    }
+
+    public class Controller extends BasicPassdionComponent {
+        private Gamepad gamepad;
+
+        public Controller(Gamepad gamepad) {
+            this.gamepad = gamepad;
+        }
+
+        @Override
+        public void init(@NotNull PassdionOpMode opMode) {}
+
+        @Override
+        public void update(@NotNull PassdionOpMode opMode) {
+            if (gamepad.dpad_right) {
+                setPower(0.75);
+            } else if (gamepad.dpad_left) {
+                setPower(-0.75);
+            } else {
+                setPower(0);
+            }
+        }
     }
 }

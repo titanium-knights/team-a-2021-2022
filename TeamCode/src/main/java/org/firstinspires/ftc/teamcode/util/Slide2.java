@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.util;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
@@ -61,5 +62,12 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 
     public int getCurrentPosition() {
         return motor.getCurrentPosition();
+    }
+
+    public class Controller {
+        private Gamepad gamepad;
+        public Controller(Gamepad gamepad) {
+            this.gamepad = gamepad;
+        }
     }
 }

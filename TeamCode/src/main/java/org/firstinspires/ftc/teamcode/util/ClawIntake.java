@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.util;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.*;
+import org.firstinspires.ftc.teamcode.teleop.BasicPassdionComponent;
+import org.firstinspires.ftc.teamcode.teleop.PassdionOpMode;
+import org.jetbrains.annotations.NotNull;
 
 @Config
 public class ClawIntake {
@@ -37,6 +37,28 @@ public class ClawIntake {
         if (amount < 0 && position <= Math.min(releasePos, grabPos)) return;
 
         claw.setPosition(position + amount);
+    }
+
+    public class Controller extends BasicPassdionComponent {
+        private ToggleButton clawButton;
+
+        public Controller(Gamepad gamepad) {
+            clawButton = new ToggleButton(() -> gamepad.a);
+        }
+
+        @Override
+        public void init(@NotNull PassdionOpMode opMode) {
+            opMode.register(clawButton);
+        }
+
+        @Override
+        public void update(@NotNull PassdionOpMode opMode) {
+            if (clawButton.isActive()) {
+                grab();
+            } else {
+                release();
+            }
+        }
     }
 
 }

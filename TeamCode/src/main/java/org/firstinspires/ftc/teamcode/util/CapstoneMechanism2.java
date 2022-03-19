@@ -2,7 +2,11 @@ package org.firstinspires.ftc.teamcode.util;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.teamcode.teleop.BasicPassdionComponent;
+import org.firstinspires.ftc.teamcode.teleop.PassdionOpMode;
+import org.jetbrains.annotations.NotNull;
 
 @Config public class CapstoneMechanism2 {
     DcMotor motor;
@@ -38,4 +42,50 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
         return idle;
     }
     public static int getPickup() { return pickup; }
+
+    public class Controller extends BasicPassdionComponent {
+        private Gamepad gamepad;
+        private boolean movedManually = false;
+
+        public double multiplier = 1.0;
+
+        public Controller(Gamepad gamepad) {
+            this.gamepad = gamepad;
+        }
+
+        @Override
+        public void init(@NotNull PassdionOpMode opMode) {
+            movedManually = false;
+        }
+
+        @Override
+        public void start(@NotNull PassdionOpMode opMode) {
+            super.start(opMode);
+            setPosition(getIdle());
+        }
+
+        @Override
+        public void update(@NotNull PassdionOpMode opMode) {
+            int pos = getPosition();
+            if (gamepad.right_bumper) {
+                if (pos <= CapstoneMechanism2.getIdle()) {
+                    setManualPower(CapstoneMechanism2.power * multiplier);
+                } else {
+                    setManualPower(0);
+                    gamepad.rumble(50);
+                }
+                movedManually = true;
+            } else if (gamepad.left_bumper) {
+                if (pos >= CapstoneMechanism2.getPickup()) {
+                    setManualPower(-CapstoneMechanism2.power * multiplier);
+                } else {
+                    setManualPower(0);
+                    gamepad.rumble(50);
+                }
+                movedManually = true;
+            } else if (movedManually) {
+                setManualPower(0);
+            }
+        }
+    }
 }
