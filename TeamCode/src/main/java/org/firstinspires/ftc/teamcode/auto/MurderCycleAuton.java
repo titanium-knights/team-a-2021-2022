@@ -28,6 +28,23 @@ public class MurderCycleAuton extends LinearOpMode {
         slide = new Slide2(hardwareMap);
         carriage = new Carriage(hardwareMap);
         carousel = new Carousel(hardwareMap);
+        intake = new TubeIntake(hardwareMap);
+    }
+
+    public void dumpHigh(){
+        do{
+            slide.runToPosition(Slide2.MAX_POSITION);
+        }
+        while(opModeIsActive() && slide.getPower()>0.0);
+
+        carriage.dump();
+        sleep(2000);
+        carriage.idle();
+        sleep(2000);
+
+        do {
+            slide.runToPosition(Slide2.MIN_POSITION + 200);
+        } while (opModeIsActive() && slide.getPower() < 0.0);
     }
 
     @Override
@@ -45,25 +62,52 @@ public class MurderCycleAuton extends LinearOpMode {
                 .addTemporalMarker(() -> carousel.spinReverse(false))
                 .waitSeconds(8)
                 .addTemporalMarker(carousel::stop)
-                .waitSeconds(4)
                 .setTangent(0)
                 .lineToSplineHeading(rightOfRedHub)
-                .waitSeconds(timeAtHub);
+                .waitSeconds(timeAtHub)
+                .addTemporalMarker(()->{
+                    dumpHigh();
+                });
 
                 for(int i = 0; i < cycles; i++){
                     builder = builder.setReversed(false)
+                            .setTangent(0)
                             .splineToLinearHeading(redWarehouseIntermediate, Math.toRadians(0))
                             .splineToLinearHeading(redWarehouse,0)
+                            .addTemporalMarker(()->{
+                                intake.setPower(1.0);
+                            })
+                            .waitSeconds(1)
+                            .addTemporalMarker(()->{
+                                intake.setPower(-1.0);
+                            })
                             .setReversed(true)
                             .splineToLinearHeading(redWarehouseIntermediate,0)
+                            .addTemporalMarker(()->{
+                                intake.stop();
+                            })
                             .waitSeconds(0.5)
                             .splineToLinearHeading(rightOfRedHub, Math.toRadians(180))
-                            .waitSeconds(timeAtHub);
+                            .waitSeconds(timeAtHub)
+                            .addTemporalMarker(()->{
+                                dumpHigh();
+                            });
                 }
 
                 builder = builder.setTangent(0)
                 .splineToLinearHeading(redWarehouseIntermediate, Math.toRadians(0))
                 .splineToLinearHeading(redWarehouse,0);
         TrajectorySequence sequence = builder.build();
+
+        drive.setPoseEstimate(sequence.start());
+        drive.followTrajectorySequence(sequence);
+
+        do {
+            slide.runToPosition(Slide2.MIN_POSITION + 200);
+        } while (opModeIsActive() && slide.getPower() > 0.0);
+
+        do {
+            slide.runToPosition(Slide2.MIN_POSITION);
+        } while (opModeIsActive() && slide.getPower() < 0.0);
     }
 }
