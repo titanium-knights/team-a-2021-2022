@@ -76,7 +76,7 @@ public class MTITeleOp extends PassdionOpMode {
 
         if (ENABLE_CAPSTONE) {
             TapeMeasureMechanism capstoneMechanism = new TapeMeasureMechanism(hardwareMap);
-            TapeMeasureMechanism.Controller capstoneController = capstoneMechanism.new Controller(gamepad1);
+            TapeMeasureMechanism.Controller capstoneController = capstoneMechanism.new Controller(gamepad2);
             register(capstoneController);
             onLoop(() -> {
                 if (slowMode.isActive()) {
