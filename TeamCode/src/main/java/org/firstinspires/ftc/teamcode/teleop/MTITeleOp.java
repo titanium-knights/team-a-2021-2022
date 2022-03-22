@@ -75,8 +75,8 @@ public class MTITeleOp extends PassdionOpMode {
         }
 
         if (ENABLE_CAPSTONE) {
-            CapstoneMechanism2 capstoneMechanism = new CapstoneMechanism2(hardwareMap);
-            CapstoneMechanism2.Controller capstoneController = capstoneMechanism.new Controller(gamepad1);
+            TapeMeasureMechanism capstoneMechanism = new TapeMeasureMechanism(hardwareMap);
+            TapeMeasureMechanism.Controller capstoneController = capstoneMechanism.new Controller(gamepad1);
             register(capstoneController);
             onLoop(() -> {
                 if (slowMode.isActive()) {
@@ -85,9 +85,6 @@ public class MTITeleOp extends PassdionOpMode {
                     capstoneController.multiplier = 1.0;
                 }
             });
-
-            ClawIntake claw = new ClawIntake(hardwareMap);
-            register(claw.new Controller(gamepad1));
         }
 
         if (ENABLE_OUTTAKE) {

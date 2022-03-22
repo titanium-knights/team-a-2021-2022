@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.teleop.BasicPassdionComponent;
 import org.firstinspires.ftc.teamcode.teleop.PassdionOpMode;
 import org.jetbrains.annotations.NotNull;
 
-@Config public class CapstoneMechanism2 {
+@Config @Deprecated public class CapstoneMechanism2 {
     DcMotor motor;
     public static double power = 0.8;
     public static int idle = -490;
