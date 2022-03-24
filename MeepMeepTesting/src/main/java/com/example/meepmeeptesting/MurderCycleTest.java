@@ -49,22 +49,21 @@ public class MurderCycleTest {
 
                                 //start cycle 1
                                 .setReversed(false)
-                                .splineToLinearHeading(redWarehouseIntermediate, Math.toRadians(0))
+                                .splineToSplineHeading(redWarehouseIntermediate, Math.toRadians(0))
                                 .addTemporalMarker(() -> {
                                     telemetry.addData("Intake ", "On");
                                 })
-                                .splineToLinearHeading(redWarehouse,0)
+                                .splineToSplineHeading(redWarehouse,0)
                                 .setReversed(true)
-                                .splineToLinearHeading(redWarehouseIntermediate,0)
+                                .splineToLinearHeading(redWarehouseIntermediate,Math.toRadians(180))
                                 .addTemporalMarker(() -> {
                                     telemetry.addData("Intake ", "reverse");
                                 })
-                                .waitSeconds(0.5)
                                 .addTemporalMarker(()->{
                                     telemetry.addData("Intake", "Off");
                                     telemetry.addData("Lift", "Extending");
                                 })
-                                .splineToLinearHeading(rightOfRedHub, Math.toRadians(180))
+                                .splineToSplineHeading(rightOfRedHub, -rightOfRedHub.getHeading())
                                 .waitSeconds(timeAtHub)
                                 .UNSTABLE_addTemporalMarkerOffset((-timeAtHub) + 1, () -> {
                                     telemetry.addData("Claw", "Dump");
@@ -75,9 +74,10 @@ public class MurderCycleTest {
                                 .UNSTABLE_addTemporalMarkerOffset((-timeAtHub) + 2, () -> {
                                     telemetry.addData("Lift", "Retracting");
                                 })
-                                .setTangent(0)
-                                .splineToLinearHeading(redWarehouseIntermediate, Math.toRadians(0))
-                                .splineToLinearHeading(redWarehouse,0)
+                                .setReversed(false)
+                                .splineToSplineHeading(redWarehouseIntermediate, Math.toRadians(0))
+                                .splineToSplineHeading(redWarehouse,0)
+                                .setReversed(true)
                                 //end cycle 1
 
 
