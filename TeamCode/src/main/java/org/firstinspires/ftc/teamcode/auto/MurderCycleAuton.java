@@ -52,19 +52,19 @@ public class MurderCycleAuton extends LinearOpMode {
         Pose2d rightOfRedHub = new Pose2d(0,-45,Math.toRadians(-75));
         Pose2d redWarehouse = new Pose2d(48,-65.15,Math.toRadians(0));
         Pose2d redWarehouseIntermediate = new Pose2d(12,-65.15,Math.toRadians(0));
-        double timeAtHub = 3;
+        Pose2d carouselPos = new Pose2d(-55, -60,Math.toRadians(-90));
+        Pose2d startingPosition = new Pose2d(-36,-60, Math.toRadians(-90));
 
         int cycles = 1;
 
-        TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(new Pose2d(-36, -60 , Math.toRadians(-90) ))
-                .back(12)
-                .lineToLinearHeading(new Pose2d(-61, -56, Math.toRadians(180) - Math.toRadians(15)))
+        TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(startingPosition)
+                .lineToLinearHeading(carouselPos)
                 .addTemporalMarker(() -> carousel.spinReverse(false))
                 .waitSeconds(8)
                 .addTemporalMarker(carousel::stop)
                 .setTangent(0)
                 .lineToSplineHeading(rightOfRedHub)
-                .waitSeconds(timeAtHub)
+                //.waitSeconds(timeAtHub)
                 .addTemporalMarker(()->{
                     dumpHigh();
                 });
@@ -72,8 +72,8 @@ public class MurderCycleAuton extends LinearOpMode {
                 for(int i = 0; i < cycles; i++){
                     builder = builder.setReversed(false)
                             .setTangent(0)
-                            .splineToLinearHeading(redWarehouseIntermediate, Math.toRadians(0))
-                            .splineToLinearHeading(redWarehouse,0)
+                            .splineToSplineHeading(redWarehouseIntermediate, Math.toRadians(0))
+                            .splineToSplineHeading(redWarehouse,0)
                             .addTemporalMarker(()->{
                                 intake.setPower(1.0);
                             })
@@ -82,21 +82,20 @@ public class MurderCycleAuton extends LinearOpMode {
                                 intake.setPower(-1.0);
                             })
                             .setReversed(true)
-                            .splineToLinearHeading(redWarehouseIntermediate,0)
+                            .splineToLinearHeading(redWarehouseIntermediate,Math.toRadians(180))
                             .addTemporalMarker(()->{
                                 intake.stop();
                             })
-                            .waitSeconds(0.5)
-                            .splineToLinearHeading(rightOfRedHub, Math.toRadians(180))
-                            .waitSeconds(timeAtHub)
+                            .splineToSplineHeading(rightOfRedHub, -rightOfRedHub.getHeading())
                             .addTemporalMarker(()->{
                                 dumpHigh();
                             });
                 }
 
-                builder = builder.setTangent(0)
-                .splineToLinearHeading(redWarehouseIntermediate, Math.toRadians(0))
-                .splineToLinearHeading(redWarehouse,0);
+                builder = builder.setReversed(false)
+                        .splineToSplineHeading(redWarehouseIntermediate, Math.toRadians(0))
+                        .splineToSplineHeading(redWarehouse,0)
+                        .setReversed(true);
         TrajectorySequence sequence = builder.build();
 
         drive.setPoseEstimate(sequence.start());
