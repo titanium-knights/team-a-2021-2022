@@ -25,6 +25,12 @@ public class TapeMeasureMechanism {
     public static double EXTEND_POWER = 1.0;
     public static double ANGLE_ADJUSTMENT = 0.02;
 
+    public static double MIN_PITCH = 0.0;
+    public static double MAX_PITCH = 1.0;
+
+    public static double MIN_YAW = 0.0;
+    public static double MAX_YAW = 1.0;
+
     public double getPitch() {
         return pitchServo.getPosition();
     }
@@ -75,16 +81,16 @@ public class TapeMeasureMechanism {
         @Override
         public void update(@NotNull PassdionOpMode opMode) {
             double pitch = getPitch();
-            if (gamepad.dpad_up) {
+            if (gamepad.dpad_up && pitch <= MAX_PITCH) {
                 setPitch(pitch + ANGLE_ADJUSTMENT * multiplier);
-            } else if (gamepad.dpad_down) {
+            } else if (gamepad.dpad_down && pitch >= MIN_PITCH) {
                 setPitch(pitch - ANGLE_ADJUSTMENT * multiplier);
             }
 
             double yaw = getYaw();
-            if (gamepad.dpad_left) {
+            if (gamepad.dpad_left && yaw >= MIN_YAW) {
                 setYaw(yaw - ANGLE_ADJUSTMENT * multiplier);
-            } else if (gamepad.dpad_right) {
+            } else if (gamepad.dpad_right && yaw <= MAX_YAW) {
                 setYaw(yaw + ANGLE_ADJUSTMENT * multiplier);
             }
 
