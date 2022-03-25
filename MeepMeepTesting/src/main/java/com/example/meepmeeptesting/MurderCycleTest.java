@@ -13,14 +13,13 @@ import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequence;
 public class MurderCycleTest {
     public static void main(String[] args) {
         int multiplier = -1;
-        Pose2d carousel = new Pose2d(-55, -60,Math.toRadians(-90));
+        Pose2d carousel = new Pose2d(-55, 60,Math.toRadians(90));
         MeepMeep meepMeep = new MeepMeep(500);
-        Pose2d startingPosition = new Pose2d(-36,-60, Math.toRadians(-90));
-        Pose2d rightOfRedHub = new Pose2d(0,-45,Math.toRadians(-75));
+        Pose2d startingPosition = new Pose2d(-36,60, Math.toRadians(90));
+        Pose2d rightOfBlueHub = new Pose2d(0,45,Math.toRadians(75));
 
-        Pose2d redWarehouseIntermediate = new Pose2d(12,-65.15,Math.toRadians(0));
-        Vector2d redWarehouseIntermediateVec = new Vector2d(redWarehouseIntermediate.getX(),redWarehouseIntermediate.getY());
-        Pose2d redWarehouse = new Pose2d(48,-65.15,Math.toRadians(0));
+        Pose2d blueWarehouseIntermediate = new Pose2d(12,65.15,Math.toRadians(0));
+        Pose2d blueWarehouse = new Pose2d(48,65.15,Math.toRadians(0));
         Telemetry telemetry = new Telemetry();
         double timeAtHub = 3;
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
@@ -35,7 +34,7 @@ public class MurderCycleTest {
                                 .setReversed(true)
                                 .lineToSplineHeading(carousel)
                                 .waitSeconds(3)
-                                .lineToSplineHeading(rightOfRedHub)
+                                .lineToSplineHeading(rightOfBlueHub)
                                 .waitSeconds(timeAtHub)
                                 .UNSTABLE_addTemporalMarkerOffset((-timeAtHub) + 1, () -> {
                                     telemetry.addData("Claw", "Dump");
@@ -49,13 +48,13 @@ public class MurderCycleTest {
 
                                 //start cycle 1
                                 .setReversed(false)
-                                .splineToSplineHeading(redWarehouseIntermediate, Math.toRadians(0))
+                                .splineToSplineHeading(blueWarehouseIntermediate, Math.toRadians(0))
                                 .addTemporalMarker(() -> {
                                     telemetry.addData("Intake ", "On");
                                 })
-                                .splineToSplineHeading(redWarehouse,0)
+                                .splineToSplineHeading(blueWarehouse,0)
                                 .setReversed(true)
-                                .splineToLinearHeading(redWarehouseIntermediate,Math.toRadians(180))
+                                .splineToLinearHeading(blueWarehouseIntermediate,Math.toRadians(180))
                                 .addTemporalMarker(() -> {
                                     telemetry.addData("Intake ", "reverse");
                                 })
@@ -63,7 +62,7 @@ public class MurderCycleTest {
                                     telemetry.addData("Intake", "Off");
                                     telemetry.addData("Lift", "Extending");
                                 })
-                                .splineToSplineHeading(rightOfRedHub, -rightOfRedHub.getHeading())
+                                .splineToSplineHeading(rightOfBlueHub, -rightOfBlueHub.getHeading())
                                 .waitSeconds(timeAtHub)
                                 .UNSTABLE_addTemporalMarkerOffset((-timeAtHub) + 1, () -> {
                                     telemetry.addData("Claw", "Dump");
@@ -75,8 +74,8 @@ public class MurderCycleTest {
                                     telemetry.addData("Lift", "Retracting");
                                 })
                                 .setReversed(false)
-                                .splineToSplineHeading(redWarehouseIntermediate, Math.toRadians(0))
-                                .splineToSplineHeading(redWarehouse,0)
+                                .splineToSplineHeading(blueWarehouseIntermediate, Math.toRadians(0))
+                                .splineToSplineHeading(blueWarehouse,0)
                                 .setReversed(true)
                                 //end cycle 1
 
