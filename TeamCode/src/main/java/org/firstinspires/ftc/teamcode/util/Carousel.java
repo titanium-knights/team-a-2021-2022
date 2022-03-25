@@ -9,15 +9,15 @@ import org.firstinspires.ftc.teamcode.teleop.PassdionOpMode;
 import org.jetbrains.annotations.NotNull;
 
 public class Carousel {
-    public CRServo motor;
+//    public CRServo motor;
     public CRServo motor2;
 
     public Carousel(HardwareMap hmap){
-        motor = hmap.get(CRServo.class,"carousel_l");
+//        motor = hmap.get(CRServo.class,"carousel_l");
         motor2 = hmap.get(CRServo.class, "carousel_r");
     }
     public void setPower(double power) {
-        motor.setPower(power);
+//        motor.setPower(power);
         motor2.setPower(-power);
     }
     public void spin(boolean fast){

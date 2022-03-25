@@ -11,13 +11,13 @@ import org.jetbrains.annotations.NotNull;
 
 @Config
 public class TapeMeasureMechanism {
-    public Servo pitchServo;
-    public Servo yawServo;
+    public CRServo pitchServo;
+    public CRServo yawServo;
     public CRServo tapeServo;
 
     public TapeMeasureMechanism(HardwareMap hardwareMap) {
-        pitchServo = hardwareMap.servo.get("tapepitch");
-        yawServo = hardwareMap.servo.get("tapeyaw");
+        pitchServo = hardwareMap.crservo.get("tapepitch");
+        yawServo = hardwareMap.crservo.get("tapeyaw");
         tapeServo = hardwareMap.crservo.get("tape");
     }
 
@@ -31,41 +31,29 @@ public class TapeMeasureMechanism {
     public static double MIN_YAW = 0.0;
     public static double MAX_YAW = 1.0;
 
-    public double getPitch() {
-        return pitchServo.getPosition();
+
+    public void setPitchPower(double pwr){
+        pitchServo.setPower(pwr);
     }
 
-    public void setPitch(double pitch) {
-        pitchServo.setPosition(pitch);
+    public void setYawPower(double pwr){
+        yawServo.setPower(pwr);
     }
 
-    public double getYaw() {
-        return yawServo.getPosition();
+    public void setEjection(double pwr){
+        tapeServo.setPower(pwr);
     }
 
-    public void setYaw(double yaw) {
-        yawServo.setPosition(yaw);
+    public void stopYaw(){
+        yawServo.setPower(0);
     }
-
-    public void retract(double multiplier) {
-        tapeServo.setPower(RETRACT_POWER * multiplier);
+    public void stopPitch(){
+        pitchServo.setPower(0);
     }
-
-    public void retract() {
-        retract(1);
-    }
-
-    public void extend(double multiplier) {
-        tapeServo.setPower(EXTEND_POWER * multiplier);
-    }
-
-    public void extend() {
-        extend(1);
-    }
-
-    public void stopTape() {
+    public void stopEjection(){
         tapeServo.setPower(0);
     }
+
 
     public class Controller extends BasicPassdionComponent {
         private Gamepad gamepad;
@@ -80,27 +68,33 @@ public class TapeMeasureMechanism {
 
         @Override
         public void update(@NotNull PassdionOpMode opMode) {
-            double pitch = getPitch();
-            if (gamepad.dpad_up && pitch <= MAX_PITCH) {
-                setPitch(pitch + ANGLE_ADJUSTMENT * multiplier);
-            } else if (gamepad.dpad_down && pitch >= MIN_PITCH) {
-                setPitch(pitch - ANGLE_ADJUSTMENT * multiplier);
+            if(Math.abs(gamepad.left_stick_y)>0.2){
+                setPitchPower(-gamepad.left_stick_y);
+            }
+            else{
+                setPitchPower(0);
             }
 
-            double yaw = getYaw();
-            if (gamepad.dpad_left && yaw >= MIN_YAW) {
-                setYaw(yaw - ANGLE_ADJUSTMENT * multiplier);
-            } else if (gamepad.dpad_right && yaw <= MAX_YAW) {
-                setYaw(yaw + ANGLE_ADJUSTMENT * multiplier);
+
+            if(Math.abs(gamepad.right_stick_x)>0.2){
+                setYawPower(gamepad.right_stick_x);
+            }
+            else{
+                setYawPower(0);
             }
 
-            if (gamepad.left_bumper) {
-                retract(multiplier);
-            } else if (gamepad.right_bumper) {
-                extend(multiplier);
-            } else {
-                stopTape();
+
+            if(Math.abs(gamepad.right_trigger)>0.2){
+                setEjection(gamepad.right_trigger);
             }
+            else if(Math.abs(gamepad.left_trigger)>0.2){
+                setEjection(-gamepad.left_trigger);
+            }
+            else{
+                setEjection(0);
+            }
+
+
         }
     }
 }

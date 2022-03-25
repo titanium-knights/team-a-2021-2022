@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.Servo;
     private final Servo servo1;
     private final Servo servo2;
 
-    public static String SERVO1_NAME = "odometry1";
-    public static String SERVO2_NAME = "odometry2";
+    public static String SERVO1_NAME = "back_odo";
+    public static String SERVO2_NAME = "front_odo";
 
     public static double SERVO1_EXTENDED_POS = 0.3;
     public static double SERVO2_EXTENDED_POS = 0.4;

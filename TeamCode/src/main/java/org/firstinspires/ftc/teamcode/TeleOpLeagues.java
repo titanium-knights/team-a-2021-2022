@@ -229,6 +229,7 @@ public class TeleOpLeagues extends OpMode {
             gamepad1.rumble(100);
 
         }
+
         telemetry.addData("speed", slowModeButton.isActive() ? "slow" : "fast");
         telemetry.addData("slide pos", slide2.getCurrentPosition());
         telemetry.addData("slide status", slideStatus);
