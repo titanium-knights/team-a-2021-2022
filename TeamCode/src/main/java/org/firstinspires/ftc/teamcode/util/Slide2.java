@@ -12,9 +12,10 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
     DcMotor motor2;
 
     public static int MIN_POSITION = 0;
-    public static int MAX_POSITION = 2000;
+    public static int MAX_POSITION = 591;
 
     public static double IDLE_POWER = 0.01;
+    public static double IDLE_POWER_RTP = 0.14;
     public static boolean USE_ENCODER = false;
 
     public Slide2(HardwareMap hardwareMap){
@@ -54,20 +55,14 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
         else if(pos - currentPos < -100){
             setPower(-0.7 * multiplier);
         }
-        else
-        {
+        else if (pos == 0) {
             setPower(0);
+        } else {
+            setPower(IDLE_POWER_RTP);
         }
     }
 
     public int getCurrentPosition() {
         return motor.getCurrentPosition();
-    }
-
-    public class Controller {
-        private Gamepad gamepad;
-        public Controller(Gamepad gamepad) {
-            this.gamepad = gamepad;
-        }
     }
 }

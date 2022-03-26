@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import android.annotation.SuppressLint;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -10,19 +11,20 @@ import org.firstinspires.ftc.teamcode.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @TeleOp(name = "MTI Tele-Op", group = "MTI")
+@Config
 public class MTITeleOp extends PassdionOpMode {
     public static boolean ENABLE_DRIVING = true;
-    public static boolean ENABLE_FIELD_CENTRIC = true;
+    public static boolean ENABLE_FIELD_CENTRIC = false;
     public static boolean ENABLE_INTAKE = true;
     public static boolean ENABLE_CAROUSEL = true;
-    public static boolean ENABLE_CAPSTONE = false;
-    public static boolean ENABLE_OUTTAKE = false;
+    public static boolean ENABLE_CAPSTONE = true;
+    public static boolean ENABLE_OUTTAKE = true;
     public static boolean ENABLE_DISTANCE_SENSOR = false;
 
     @SuppressLint("DefaultLocale")
     @Override
     protected void registerComponents() {
-        ToggleButton slowMode = new ToggleButton(() -> gamepad1.dpad_up);
+        ToggleButton slowMode = new ToggleButton(() -> (gamepad1.left_stick_button && gamepad1.right_stick_button) || (gamepad2.left_stick_button && gamepad2.right_stick_button));
         register(slowMode);
         addTelemetryData("Speed", () -> {
             if (slowMode.isActive()) {
@@ -80,11 +82,13 @@ public class MTITeleOp extends PassdionOpMode {
             register(capstoneController);
             onLoop(() -> {
                 if (slowMode.isActive()) {
-                    capstoneController.multiplier = 0.5;
+                    capstoneController.multiplier = 0.2;
                 } else {
-                    capstoneController.multiplier = 1.0;
+                    capstoneController.multiplier = 0.4;
                 }
             });
+
+            addTelemetryData("Pitch Pos", () -> capstoneMechanism.pitchServo.getPosition());
         }
 
         if (ENABLE_OUTTAKE) {

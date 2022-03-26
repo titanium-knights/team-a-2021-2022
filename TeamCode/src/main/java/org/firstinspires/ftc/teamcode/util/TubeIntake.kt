@@ -52,8 +52,8 @@ import org.firstinspires.ftc.teamcode.teleop.PassdionOpMode
     }
 
     companion object {
-        var intakePower = 0.8
-        var outtakePower = -0.8
+        var intakePower = -0.8
+        var outtakePower = 0.8
     }
 
     inner class Controller(private val gamepad: Gamepad): BasicPassdionComponent() {
@@ -61,8 +61,8 @@ import org.firstinspires.ftc.teamcode.teleop.PassdionOpMode
 
         override fun update(opMode: PassdionOpMode) {
             power = when {
-                gamepad.right_trigger > 0.3 -> -gamepad.right_trigger * 0.85
-                gamepad.left_trigger > 0.3 -> gamepad.left_trigger * 0.85
+                gamepad.right_trigger > 0.3 -> gamepad.right_trigger * 0.85
+                gamepad.left_trigger > 0.3 -> -gamepad.left_trigger * 0.85
                 else -> 0.0
             }
         }

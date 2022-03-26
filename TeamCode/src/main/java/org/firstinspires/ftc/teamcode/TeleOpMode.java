@@ -121,7 +121,7 @@ public abstract class TeleOpMode extends OpMode {
         else{
             carouselInterpolation.setImmediate(0);
         }
-        carousel.motor.setPower(carouselInterpolation.getCurrent());
+        // carousel.motor.setPower(carouselInterpolation.getCurrent());
 
         telemetry.addData("SLOW MODE",speed);
         telemetry.addData("Left Stick X", gamepad1.left_stick_x);

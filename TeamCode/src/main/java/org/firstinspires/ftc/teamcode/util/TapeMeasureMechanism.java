@@ -9,19 +9,28 @@ import org.firstinspires.ftc.teamcode.teleop.BasicPassdionComponent;
 import org.firstinspires.ftc.teamcode.teleop.PassdionOpMode;
 import org.jetbrains.annotations.NotNull;
 
-public class TapeMeasureMechanism {
-    public CRServo pitchServo;
+@Config public class TapeMeasureMechanism {
+    public Servo pitchServo;
     public CRServo yawServo;
     public CRServo tapeServo;
 
     public TapeMeasureMechanism(HardwareMap hardwareMap) {
-        pitchServo = hardwareMap.crservo.get("tapepitch");
+        pitchServo = hardwareMap.servo.get("tapepitch");
         yawServo = hardwareMap.crservo.get("tapeyaw");
         tapeServo = hardwareMap.crservo.get("tape");
     }
 
-    public void setPitchPower(double pwr){
-        pitchServo.setPower(pwr);
+    public static double ANGLE_ADJUSTMENT = 0.01;
+    public static double MIN_PITCH = 0.0;
+    public static double MAX_PITCH = 0.5;
+
+    public boolean setPitchPosition(double position, boolean useLimits){
+        if (!useLimits || (MIN_PITCH <= position && position <= MAX_PITCH)) {
+            pitchServo.setPosition(position);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void setYawPower(double pwr){
@@ -34,9 +43,6 @@ public class TapeMeasureMechanism {
 
     public void stopYaw(){
         yawServo.setPower(0);
-    }
-    public void stopPitch(){
-        pitchServo.setPower(0);
     }
     public void stopEjection(){
         tapeServo.setPower(0);
@@ -51,25 +57,28 @@ public class TapeMeasureMechanism {
         }
 
         @Override
-        public void init(@NotNull PassdionOpMode opMode) {}
+        public void init(@NotNull PassdionOpMode opMode) {
+            pitchServo.setPosition(MIN_PITCH);
+        }
 
         @Override
         public void update(@NotNull PassdionOpMode opMode) {
             if(Math.abs(gamepad.left_stick_y)>0.2){
-                setPitchPower(-gamepad.left_stick_y);
+                double amount = -gamepad.left_stick_y * ANGLE_ADJUSTMENT * multiplier;
+                double newPosition = pitchServo.getPosition() + amount;
+                if ((amount > 0 && newPosition <= MAX_PITCH) || (amount < 0 && newPosition >= MIN_PITCH)) {
+                    setPitchPosition(newPosition, false);
+                } else {
+                    gamepad.rumble(50);
+                }
             }
-            else{
-                setPitchPower(0);
-            }
-
 
             if(Math.abs(gamepad.right_stick_x)>0.2){
-                setYawPower(gamepad.right_stick_x);
+                setYawPower(gamepad.right_stick_x * multiplier);
             }
             else{
                 setYawPower(0);
             }
-
 
             if(Math.abs(gamepad.right_trigger)>0.2){
                 setEjection(gamepad.right_trigger);

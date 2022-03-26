@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.util.Slide2
         RETRACTING
     }
 
-    private val interpolation = MotorInterpolation(Carriage.idlePosition, 0.5)
+    private val interpolation = MotorInterpolation(Carriage.idlePosition, 1.6)
     private val dumpButton = PushButton { gamepad.b }
     private val highButton = PushButton { gamepad.y }
     private val midButton = PushButton { gamepad.x }
@@ -113,8 +113,8 @@ import org.firstinspires.ftc.teamcode.util.Slide2
     companion object {
         @JvmStatic var DELAY_MS = 600
         @JvmStatic var HIGH = Slide2.MAX_POSITION
-        @JvmStatic var MID = 1260
-        @JvmStatic var LOW = Slide2.MIN_POSITION
-        @JvmStatic var SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = 1150;
+        @JvmStatic var MID = 250
+        @JvmStatic var LOW = Slide2.MIN_POSITION - 40
+        @JvmStatic var SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = 200;
     }
 }

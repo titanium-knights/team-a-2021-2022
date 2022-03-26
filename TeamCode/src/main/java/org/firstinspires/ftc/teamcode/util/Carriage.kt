@@ -9,17 +9,15 @@ import com.qualcomm.robotcore.hardware.Servo
  * Carriage that holds freight on our new robot's outtake.
  */
 @Config class Carriage(hardwareMap: HardwareMap) {
-    val servo1: Servo = hardwareMap.servo["carriage1"]
-    val servo2: Servo = hardwareMap.servo["carriage2"]
+    val servo: Servo = hardwareMap.servo["carriage"]
 
     /**
      * Position of the carriage.
      */
     var position
-        get() = servo1.position
+        get() = servo.position
         set(value) {
-            servo1.position = value
-            servo2.position = 1-value
+            servo.position = value
         }
 
     /**
@@ -38,6 +36,6 @@ import com.qualcomm.robotcore.hardware.Servo
 
     companion object {
         @JvmStatic var idlePosition = 1.0
-        @JvmStatic var dumpPosition = 0.5
+        @JvmStatic var dumpPosition = 0.0
     }
 }
