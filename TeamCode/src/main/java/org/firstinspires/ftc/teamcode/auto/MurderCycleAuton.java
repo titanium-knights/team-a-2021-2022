@@ -34,7 +34,7 @@ public class MurderCycleAuton extends LinearOpMode {
     }
 
     public void dumpHigh(){
-        do{
+        /* do{
             slide.runToPosition(Slide2.MAX_POSITION);
         }
         while(opModeIsActive() && slide.getPower()>0.0);
@@ -46,7 +46,7 @@ public class MurderCycleAuton extends LinearOpMode {
 
         do {
             slide.runToPosition(Slide2.MIN_POSITION + 200);
-        } while (opModeIsActive() && slide.getPower() < 0.0);
+        } while (opModeIsActive() && slide.getPower() < 0.0); */
     }
 
     @Override
@@ -54,13 +54,15 @@ public class MurderCycleAuton extends LinearOpMode {
         Pose2d rightOfBlueHub = new Pose2d(0,45,Math.toRadians(75));
         Pose2d blueWarehouse = new Pose2d(48,63,Math.toRadians(0));
         Pose2d blueWarehouseIntermediate = new Pose2d(12,63,Math.toRadians(0));
-        Pose2d carouselPos = new Pose2d(-55, 63,Math.toRadians(90));
+        Pose2d carouselPos = new Pose2d(-55, 63,Math.toRadians(180));
         Pose2d startingPosition = new Pose2d(-36,63, Math.toRadians(90));
 
         int cycles = 1;
 
         TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(startingPosition)
-                .lineToLinearHeading(carouselPos)
+                .setReversed(true)
+                .back(6)
+                .splineTo(carouselPos.vec(), carouselPos.getHeading())
                 .addTemporalMarker(() -> carousel.spinReverse(false))
                 .waitSeconds(8)
                 .addTemporalMarker(carousel::stop)

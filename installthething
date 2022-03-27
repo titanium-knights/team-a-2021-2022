@@ -1,9 +1,32 @@
 #! /bin/zsh
 
-say -i "Installing in 3, 2, 1"
+echo "Installing in 3." | shortcuts run "Siri say"
+echo "2." | shortcuts run "Siri say"
+echo "1." | shortcuts run "Siri say"
+
+if ping -c 1 -t 1 192.168.43.1; then
+
+if adb devices | grep offline; then
+
+killall adb
+
+fi
+
+if adb connect 192.168.43.1 | grep failed; then
+
+echo "Failed to connect" | shortcuts run "Siri say"
+exit 1
+
+fi
 
 if ./gradlew installDebug; then
-    say -i "Installation complete"
+    echo "Installation complete!" | shortcuts run "Siri say"
 else
     afplay -v 2 innovation.m4a
+fi
+
+else
+
+echo "Control hub is disconnected." | shortcuts run "Siri say"
+
 fi

@@ -13,7 +13,7 @@ import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequence;
 public class MurderCycleTest {
     public static void main(String[] args) {
         int multiplier = -1;
-        Pose2d carousel = new Pose2d(-55, 60,Math.toRadians(90));
+        Pose2d carousel = new Pose2d(-55, 60,Math.toRadians(180));
         MeepMeep meepMeep = new MeepMeep(500);
         Pose2d startingPosition = new Pose2d(-36,60, Math.toRadians(90));
         Pose2d rightOfBlueHub = new Pose2d(0,45,Math.toRadians(75));
@@ -32,7 +32,8 @@ public class MurderCycleTest {
                                     telemetry.addData("Lift", "Extending");
                                 })
                                 .setReversed(true)
-                                .lineToSplineHeading(carousel)
+                                .back(6)
+                                .splineTo(carousel.vec(), carousel.getHeading())
                                 .waitSeconds(3)
                                 .lineToSplineHeading(rightOfBlueHub)
                                 .waitSeconds(timeAtHub)
