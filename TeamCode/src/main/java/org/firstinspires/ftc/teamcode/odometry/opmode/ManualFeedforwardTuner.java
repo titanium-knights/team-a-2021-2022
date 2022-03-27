@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.odometry.OdometryMecanumDrive;
+import org.firstinspires.ftc.teamcode.odometry.SampleMecanumDrive;
 
 import java.util.Objects;
 
@@ -42,13 +43,13 @@ import static org.firstinspires.ftc.teamcode.odometry.DriveConstants.kV;
  */
 @Config
 @Autonomous(group = "drive")
-@Disabled
+//@Disabled
 public class ManualFeedforwardTuner extends LinearOpMode {
-    public static double DISTANCE = 72; // in
+    public static double DISTANCE = 96; // in
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
 
-    private OdometryMecanumDrive drive;
+    private SampleMecanumDrive drive;
 
     enum Mode {
         DRIVER_MODE,
@@ -72,7 +73,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
-        drive = new OdometryMecanumDrive(hardwareMap);
+        drive = new SampleMecanumDrive(hardwareMap);
 
         mode = Mode.TUNING_MODE;
 

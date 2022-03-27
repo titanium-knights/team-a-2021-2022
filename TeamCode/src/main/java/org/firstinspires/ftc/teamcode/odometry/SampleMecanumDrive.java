@@ -19,15 +19,17 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAcceleration
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceRunner;
-import org.firstinspires.ftc.teamcode.util.AxesSigns;
-import org.firstinspires.ftc.teamcode.util.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 
 import java.util.ArrayList;
@@ -50,7 +52,7 @@ import static org.firstinspires.ftc.teamcode.odometry.DriveConstants.kV;
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
-public class OdometryMecanumDrive extends MecanumDrive {
+public class SampleMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
@@ -70,9 +72,10 @@ public class OdometryMecanumDrive extends MecanumDrive {
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
 
+    private BNO055IMU imu;
     private VoltageSensor batteryVoltageSensor;
 
-    public OdometryMecanumDrive(HardwareMap hardwareMap) {
+    public SampleMecanumDrive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
@@ -85,6 +88,34 @@ public class OdometryMecanumDrive extends MecanumDrive {
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
+
+        // TODO: adjust the names of the following hardware devices to match your configuration
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        imu.initialize(parameters);
+
+        // TODO: If the hub containing the IMU you are using is mounted so that the "REV" logo does
+        // not face up, remap the IMU axes so that the z-axis points upward (normal to the floor.)
+        //
+        //             | +Z axis
+        //             |
+        //             |
+        //             |
+        //      _______|_____________     +Y axis
+        //     /       |_____________/|__________
+        //    /   REV / EXPANSION   //
+        //   /       / HUB         //
+        //  /_______/_____________//
+        // |_______/_____________|/
+        //        /
+        //       / +X axis
+        //
+        // This diagram is derived from the axes in section 3.4 https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bno055-ds000.pdf
+        // and the placement of the dot/orientation from https://docs.revrobotics.com/rev-control-system/control-system-overview/dimensions#imu-location
+        //
+        // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
+        // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "fl");
         leftRear = hardwareMap.get(DcMotorEx.class, "bl");
@@ -109,11 +140,14 @@ public class OdometryMecanumDrive extends MecanumDrive {
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
         }
 
+        // TODO: reverse any motors using DcMotor.setDirection()
+
+        // TODO: if desired, use setLocalizer() to change the localization method
+        // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
         setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
-
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
     }
 
@@ -263,12 +297,17 @@ public class OdometryMecanumDrive extends MecanumDrive {
 
     @Override
     public double getRawExternalHeading() {
-        return 0;
+        return imu.getAngularOrientation().firstAngle;
     }
 
     @Override
     public Double getExternalHeadingVelocity() {
-        return null;
+        // To work around an SDK bug, use -zRotationRate in place of xRotationRate
+        // and -xRotationRate in place of zRotationRate (yRotationRate behaves as
+        // expected). This bug does NOT affect orientation.
+        //
+        // See https://github.com/FIRST-Tech-Challenge/FtcRobotController/issues/251 for details.
+        return (double) -imu.getAngularVelocity().xRotationRate;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {
