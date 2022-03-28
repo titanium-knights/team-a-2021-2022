@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.util.MotorInterpolation
 import org.firstinspires.ftc.teamcode.util.PushButton
 import org.firstinspires.ftc.teamcode.util.Slide2
 
-@Config class OuttakeController(
+class OuttakeController(
     private val slide: Slide2,
     private val carriage: Carriage,
     private val gamepad: Gamepad
@@ -110,11 +110,11 @@ import org.firstinspires.ftc.teamcode.util.Slide2
         carriage.position = interpolation.current
     }
 
-    companion object {
-        @JvmStatic var DELAY_MS = 600
-        @JvmStatic var HIGH = Slide2.MAX_POSITION
-        @JvmStatic var MID = 250
-        @JvmStatic var LOW = Slide2.MIN_POSITION - 40
-        @JvmStatic var SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = 200;
+    @Config companion object OuttakeControllerSettings {
+        @JvmField var DELAY_MS = 1000
+        @JvmField var HIGH = Slide2.MAX_POSITION
+        @JvmField var MID = 250
+        @JvmField var LOW = Slide2.MIN_POSITION + 10
+        @JvmField var SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = 200;
     }
 }

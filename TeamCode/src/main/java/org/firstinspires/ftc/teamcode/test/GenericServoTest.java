@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @TeleOp
 public class GenericServoTest extends OpMode {
     public static String servoName = "carriage";
-    public static double pos = 0.87;
+    public static double pos = 0;
     Servo servo;
     Telemetry dashTelemetry = FtcDashboard.getInstance().getTelemetry();
     @Override

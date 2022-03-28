@@ -27,7 +27,11 @@ public class MurderCycleAuton extends LinearOpMode {
     protected Carriage carriage;
 
     public static int CYCLES = 2;
-    public static double WAREHOUSE_Y = 67;
+    public static double WAREHOUSE_Y_POSE_ESTIMATE = 65;
+    public static double WAREHOUSE_Y = 68;
+    public static double BLUE_HUB_X = -3;
+
+    Integer slidePos = null;
 
     protected void setupDevices() {
         drive = new OdometryMecanumDrive(hardwareMap);
@@ -38,33 +42,22 @@ public class MurderCycleAuton extends LinearOpMode {
         intake = new TubeIntake(hardwareMap);
     }
 
-    public void dumpHigh(){
-        /* do{
-            slide.runToPosition(Slide2.MAX_POSITION);
-        }
-        while(opModeIsActive() && slide.getPower()>0.0);
-
-        carriage.dump();
-        sleep(2000);
-        carriage.idle();
-        sleep(2000);
-
-        do {
-            slide.runToPosition(Slide2.MIN_POSITION + 200);
-        } while (opModeIsActive() && slide.getPower() < 0.0); */
+    private void correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands() {
+        Pose2d estimate = drive.getPoseEstimate();
+        drive.setPoseEstimate(new Pose2d(estimate.getX(), WAREHOUSE_Y_POSE_ESTIMATE, estimate.getHeading()));
     }
+
+    private boolean enableTerribleHackSeriouslyWeShouldNotBeDoingThis = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
         setupDevices();
 
-        Pose2d rightOfBlueHub = new Pose2d(0,45,Math.toRadians(75));
+        Pose2d rightOfBlueHub = new Pose2d(BLUE_HUB_X,50,Math.toRadians(75));
         Pose2d blueWarehouse = new Pose2d(48,WAREHOUSE_Y,Math.toRadians(0));
-        Pose2d blueWarehouseIntermediate = new Pose2d(9,WAREHOUSE_Y,Math.toRadians(0));
+        Pose2d blueWarehouseIntermediate = new Pose2d(8,WAREHOUSE_Y,Math.toRadians(0));
         Pose2d carouselPos = new Pose2d(-58, 62,Math.toRadians(180));
         Pose2d startingPosition = new Pose2d(-36,63, Math.toRadians(90));
-
-        double timeAtHub = 1.5;
 
         TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(startingPosition)
                 .setReversed(true)
@@ -75,28 +68,57 @@ public class MurderCycleAuton extends LinearOpMode {
                 .addTemporalMarker(carousel::stop)
                 .setTangent(0)
                 .lineToSplineHeading(rightOfBlueHub)
-                .waitSeconds(timeAtHub)
-                .addTemporalMarker(this::dumpHigh);
+                .addTemporalMarker(() -> {
+                    slidePos = Slide2.MAX_POSITION;
+                })
+                .waitSeconds(1.0)
+                .addTemporalMarker(() -> {
+                    carriage.dump();
+                })
+                .waitSeconds(1.5)
+                .addTemporalMarker(() -> {
+                    carriage.idle();
+                })
+                .waitSeconds(0.5)
+                .addTemporalMarker(() -> {
+                    slidePos = Slide2.MIN_POSITION;
+                });
 
                 for(int i = 0; i < CYCLES; i++){
                     builder = builder.setReversed(false)
                             .splineToSplineHeading(blueWarehouseIntermediate, Math.toRadians(0))
+                            .addTemporalMarker(this::correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands)
                             .splineToSplineHeading(blueWarehouse,0)
                             .addTemporalMarker(()->{
                                 intake.setPower(1.0);
+                                slidePos = null;
+                                correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands();
                             })
                             .waitSeconds(0.5)
                             .addTemporalMarker(()->{
                                 intake.setPower(-1.0);
+                                correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands();
                             })
                             .setReversed(true)
                             .splineToLinearHeading(blueWarehouseIntermediate,Math.toRadians(180))
                             .addTemporalMarker(()->{
                                 intake.stop();
+                                slidePos = Slide2.MAX_POSITION;
+                                correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands();
                             })
                             .splineToSplineHeading(rightOfBlueHub, -rightOfBlueHub.getHeading())
-                            .addTemporalMarker(this::dumpHigh)
-                            .waitSeconds(timeAtHub);
+                            .waitSeconds(0.5)
+                            .addTemporalMarker(() -> {
+                                carriage.dump();
+                            })
+                            .waitSeconds(1.5)
+                            .addTemporalMarker(() -> {
+                                carriage.idle();
+                            })
+                            .waitSeconds(0.5)
+                            .addTemporalMarker(() -> {
+                                slidePos = Slide2.MIN_POSITION;
+                            });
                 }
 
                 builder = builder.setReversed(false)
@@ -108,6 +130,16 @@ public class MurderCycleAuton extends LinearOpMode {
         waitForStart();
 
         drive.setPoseEstimate(sequence.start());
-        drive.followTrajectorySequence(sequence);
+        drive.followTrajectorySequenceAsync(sequence);
+
+        while (opModeIsActive() && !Thread.currentThread().isInterrupted() && drive.isBusy()) {
+            drive.update();
+            if (slidePos != null) {
+                slide.runToPosition(slidePos, 0.7);
+            }
+            if (enableTerribleHackSeriouslyWeShouldNotBeDoingThis) {
+                correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands();
+            }
+        }
     }
 }

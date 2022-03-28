@@ -12,7 +12,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
     DcMotor motor2;
 
     public static int MIN_POSITION = 0;
-    public static int MAX_POSITION = 591;
+    public static int MAX_POSITION = 611;
 
     public static double IDLE_POWER = 0.01;
     public static double IDLE_POWER_RTP = 0.14;
@@ -45,21 +45,24 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
         return motor.getPower();
     }
 
-    public void runToPosition(int pos){
+    public void runToPosition(int pos, double multiplier){
         int currentPos = motor.getCurrentPosition();
         //double multiplier = Math.min(1, Math.max(0, Math.abs(pos - currentPos) / 150.0));
-        double multiplier = 1;
-        if(pos - currentPos > 100){
-            setPower(0.7 * multiplier);
+        if(pos - currentPos > 30){
+            setPower(1 * multiplier);
         }
-        else if(pos - currentPos < -100){
-            setPower(-0.7 * multiplier);
+        else if(pos - currentPos < -30){
+            setPower(-1 * multiplier);
         }
         else if (pos == 0) {
             setPower(0);
         } else {
             setPower(IDLE_POWER_RTP);
         }
+    }
+
+    public void runToPosition(int pos) {
+        runToPosition(pos, 1.0);
     }
 
     public int getCurrentPosition() {
