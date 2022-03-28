@@ -11,10 +11,10 @@ import com.qualcomm.robotcore.hardware.Servo;
     public static String VERTICAL_NAME = "vertical_odo";
     public static String HORIZONTAL_NAME = "horizontal_odo";
 
-    public static double VERTICAL_EXTENDED_POS = 0.15;
+    public static double VERTICAL_EXTENDED_POS = 0.1;
     public static double HORIZONTAL_EXTENDED_POS = 0.1;
-    public static double VERTICAL_RETRACTED_POS = 0.85;
-    public static double HORIZONTAL_RETRACTED_POS = 0.7;
+    public static double VERTICAL_RETRACTED_POS = 0.75;
+    public static double HORIZONTAL_RETRACTED_POS = 0.9;
 
     public Servo getVertical() {
         return vertical;

@@ -24,7 +24,7 @@ public class MTITeleOp extends PassdionOpMode {
     @SuppressLint("DefaultLocale")
     @Override
     protected void registerComponents() {
-        ToggleButton slowMode = new ToggleButton(() -> (gamepad1.left_stick_button && gamepad1.right_stick_button) || (gamepad2.left_stick_button && gamepad2.right_stick_button));
+        ToggleButton slowMode = new ToggleButton(() -> (gamepad1.left_stick_button && gamepad1.right_stick_button && gamepad1.cross) || (gamepad2.left_stick_button && gamepad2.right_stick_button) || gamepad1.cross || gamepad2.cross);
         register(slowMode);
         addTelemetryData("Speed", () -> {
             if (slowMode.isActive()) {

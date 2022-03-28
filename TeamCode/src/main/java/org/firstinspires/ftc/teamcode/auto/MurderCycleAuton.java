@@ -8,14 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.odometry.OdometryMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
-import org.firstinspires.ftc.teamcode.util.CapstoneMechanism2;
-import org.firstinspires.ftc.teamcode.util.CapstoneVision;
-import org.firstinspires.ftc.teamcode.util.Carousel;
-import org.firstinspires.ftc.teamcode.util.Carriage;
-import org.firstinspires.ftc.teamcode.util.ClawIntake;
-import org.firstinspires.ftc.teamcode.util.OdometryRetraction;
-import org.firstinspires.ftc.teamcode.util.Slide2;
-import org.firstinspires.ftc.teamcode.util.TubeIntake;
+import org.firstinspires.ftc.teamcode.util.*;
 
 @Autonomous(name = "Murder Cycle Auton")
 @Config
@@ -25,11 +18,17 @@ public class MurderCycleAuton extends LinearOpMode {
     protected TubeIntake intake;
     protected Slide2 slide;
     protected Carriage carriage;
+    protected TapeMeasureMechanism tape;
+    protected OdometryRetraction retraction;
 
     public static int CYCLES = 2;
-    public static double WAREHOUSE_Y_POSE_ESTIMATE = 65;
+    public static double WAREHOUSE_Y_POSE_ESTIMATE = 66.5;
     public static double WAREHOUSE_Y = 68;
-    public static double BLUE_HUB_X = -3;
+    public static double BLUE_HUB_X = -6;
+    public static double BLUE_HUB_Y = 52;
+    public static double BLUE_HUB_HEADING = 80;
+    public static double TAPE_PITCH = 0.4;
+    public static boolean enableTerribleHackSeriouslyWeShouldNotBeDoingThis = true;
 
     Integer slidePos = null;
 
@@ -40,20 +39,24 @@ public class MurderCycleAuton extends LinearOpMode {
         carriage = new Carriage(hardwareMap);
         carousel = new Carousel(hardwareMap);
         intake = new TubeIntake(hardwareMap);
+        tape = new TapeMeasureMechanism(hardwareMap);
+        tape.setPitchPosition(TAPE_PITCH, true);
+        retraction = new OdometryRetraction(hardwareMap);
+        retraction.extend();
     }
 
     private void correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands() {
-        Pose2d estimate = drive.getPoseEstimate();
-        drive.setPoseEstimate(new Pose2d(estimate.getX(), WAREHOUSE_Y_POSE_ESTIMATE, estimate.getHeading()));
+        if (enableTerribleHackSeriouslyWeShouldNotBeDoingThis) {
+            Pose2d estimate = drive.getPoseEstimate();
+            drive.setPoseEstimate(new Pose2d(estimate.getX(), WAREHOUSE_Y_POSE_ESTIMATE, estimate.getHeading()));
+        }
     }
-
-    private boolean enableTerribleHackSeriouslyWeShouldNotBeDoingThis = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
         setupDevices();
 
-        Pose2d rightOfBlueHub = new Pose2d(BLUE_HUB_X,50,Math.toRadians(75));
+        Pose2d rightOfBlueHub = new Pose2d(BLUE_HUB_X,BLUE_HUB_Y,Math.toRadians(BLUE_HUB_HEADING));
         Pose2d blueWarehouse = new Pose2d(48,WAREHOUSE_Y,Math.toRadians(0));
         Pose2d blueWarehouseIntermediate = new Pose2d(8,WAREHOUSE_Y,Math.toRadians(0));
         Pose2d carouselPos = new Pose2d(-58, 62,Math.toRadians(180));
@@ -87,10 +90,12 @@ public class MurderCycleAuton extends LinearOpMode {
                 for(int i = 0; i < CYCLES; i++){
                     builder = builder.setReversed(false)
                             .splineToSplineHeading(blueWarehouseIntermediate, Math.toRadians(0))
-                            .addTemporalMarker(this::correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands)
+                            .addTemporalMarker(() -> {
+                                intake.setPower(1.0);
+                                correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands();
+                            })
                             .splineToSplineHeading(blueWarehouse,0)
                             .addTemporalMarker(()->{
-                                intake.setPower(1.0);
                                 slidePos = null;
                                 correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands();
                             })
@@ -104,7 +109,7 @@ public class MurderCycleAuton extends LinearOpMode {
                             .addTemporalMarker(()->{
                                 intake.stop();
                                 slidePos = Slide2.MAX_POSITION;
-                                correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands();
+                                // correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands();
                             })
                             .splineToSplineHeading(rightOfBlueHub, -rightOfBlueHub.getHeading())
                             .waitSeconds(0.5)
@@ -135,11 +140,10 @@ public class MurderCycleAuton extends LinearOpMode {
         while (opModeIsActive() && !Thread.currentThread().isInterrupted() && drive.isBusy()) {
             drive.update();
             if (slidePos != null) {
-                slide.runToPosition(slidePos, 0.7);
-            }
-            if (enableTerribleHackSeriouslyWeShouldNotBeDoingThis) {
-                correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands();
+                slide.runToPosition(slidePos, 0.85);
             }
         }
+
+        // retraction.retract();
     }
 }
