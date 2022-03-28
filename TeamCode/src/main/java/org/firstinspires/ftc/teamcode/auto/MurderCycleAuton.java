@@ -74,7 +74,7 @@ public class MurderCycleAuton extends LinearOpMode {
                 .addTemporalMarker(() -> {
                     slidePos = Slide2.MAX_POSITION;
                 })
-                .waitSeconds(1.0)
+                //.waitSeconds(1.0)
                 .addTemporalMarker(() -> {
                     carriage.dump();
                 })
@@ -99,7 +99,7 @@ public class MurderCycleAuton extends LinearOpMode {
                                 slidePos = null;
                                 correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands();
                             })
-                            .waitSeconds(0.5)
+                            //.waitSeconds(0.5)
                             .addTemporalMarker(()->{
                                 intake.setPower(-1.0);
                                 correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands();
