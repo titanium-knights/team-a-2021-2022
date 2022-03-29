@@ -22,11 +22,11 @@ public class MurderCycleAuton extends LinearOpMode {
     protected OdometryRetraction retraction;
 
     public static int CYCLES = 2;
-    public static double WAREHOUSE_Y_POSE_ESTIMATE = 66.5;
+    public static double WAREHOUSE_Y_POSE_ESTIMATE = 66;
     public static double WAREHOUSE_Y = 68;
-    public static double BLUE_HUB_X = -6;
-    public static double BLUE_HUB_Y = 52;
-    public static double BLUE_HUB_HEADING = 80;
+    public static double BLUE_HUB_X = -9;
+    public static double BLUE_HUB_Y = 53;
+    public static double BLUE_HUB_HEADING = 90;
     public static double TAPE_PITCH = 0.4;
     public static boolean enableTerribleHackSeriouslyWeShouldNotBeDoingThis = true;
 
@@ -74,11 +74,11 @@ public class MurderCycleAuton extends LinearOpMode {
                 .addTemporalMarker(() -> {
                     slidePos = Slide2.MAX_POSITION;
                 })
-                //.waitSeconds(1.0)
+                .waitSeconds(0.5)
                 .addTemporalMarker(() -> {
                     carriage.dump();
                 })
-                .waitSeconds(1.5)
+                .waitSeconds(2.0)
                 .addTemporalMarker(() -> {
                     carriage.idle();
                 })
@@ -92,31 +92,30 @@ public class MurderCycleAuton extends LinearOpMode {
                             .splineToSplineHeading(blueWarehouseIntermediate, Math.toRadians(0))
                             .addTemporalMarker(() -> {
                                 intake.setPower(1.0);
-                                correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands();
                             })
                             .splineToSplineHeading(blueWarehouse,0)
                             .addTemporalMarker(()->{
                                 slidePos = null;
                                 correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands();
                             })
-                            //.waitSeconds(0.5)
-                            .addTemporalMarker(()->{
-                                intake.setPower(-1.0);
-                                correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands();
-                            })
+                            .waitSeconds(0.25)
                             .setReversed(true)
                             .splineToLinearHeading(blueWarehouseIntermediate,Math.toRadians(180))
+                            .addTemporalMarker(this::correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands)
                             .addTemporalMarker(()->{
-                                intake.stop();
                                 slidePos = Slide2.MAX_POSITION;
-                                // correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands();
+                            })
+                            .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                                intake.setPower(-1.0);
+                            })
+                            .UNSTABLE_addTemporalMarkerOffset(1.0, () -> {
+                                intake.stop();
                             })
                             .splineToSplineHeading(rightOfBlueHub, -rightOfBlueHub.getHeading())
-                            .waitSeconds(0.5)
                             .addTemporalMarker(() -> {
                                 carriage.dump();
                             })
-                            .waitSeconds(1.5)
+                            .waitSeconds(1.0)
                             .addTemporalMarker(() -> {
                                 carriage.idle();
                             })
@@ -129,6 +128,7 @@ public class MurderCycleAuton extends LinearOpMode {
                 builder = builder.setReversed(false)
                         .splineToSplineHeading(blueWarehouseIntermediate, Math.toRadians(0))
                         .splineToSplineHeading(blueWarehouse,0)
+                        .addTemporalMarker(this::correctPoseEstimateThisIsATerribleHackButTheRobotHasForcedOurHands)
                         .setReversed(true);
         TrajectorySequence sequence = builder.build();
 

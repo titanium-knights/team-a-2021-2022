@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config public class CarriageDC {
     DcMotor carriage;
-    public static int DUMP_POS = 100;
-    public static int IDLE_POS = 50;
+    public static int DUMP_POS = -200;
+    public static int IDLE_POS = 0;
     public static double CARRIAGE_POWER = 1;
     public final String MOTOR_NAME = "carriage";
     public CarriageDC(HardwareMap hmap){
