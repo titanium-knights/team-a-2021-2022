@@ -10,14 +10,16 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 @TeleOp
 public class GenericMotorTest extends OpMode {
     DcMotor motor;
-    public static String MOTOR_NAME = "capstone";
+    public static String MOTOR_NAME = "carriage";
     @Override
     public void init() {
         motor = hardwareMap.get(DcMotor.class, MOTOR_NAME);
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     @Override
     public void loop() {
         motor.setPower(gamepad1.left_stick_y/2);
+        telemetry.addData("Motor Encoder Val", motor.getCurrentPosition());
     }
 }

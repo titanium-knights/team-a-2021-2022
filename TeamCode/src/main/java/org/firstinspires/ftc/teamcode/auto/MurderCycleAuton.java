@@ -59,7 +59,7 @@ public class MurderCycleAuton extends LinearOpMode {
         Pose2d rightOfBlueHub = new Pose2d(BLUE_HUB_X,BLUE_HUB_Y,Math.toRadians(BLUE_HUB_HEADING));
         Pose2d blueWarehouse = new Pose2d(48,WAREHOUSE_Y,Math.toRadians(0));
         Pose2d blueWarehouseIntermediate = new Pose2d(8,WAREHOUSE_Y,Math.toRadians(0));
-        Pose2d carouselPos = new Pose2d(-58, 62,Math.toRadians(180));
+        Pose2d carouselPos = new Pose2d(-58, 60,Math.toRadians(180));
         Pose2d startingPosition = new Pose2d(-36,63, Math.toRadians(90));
 
         TrajectorySequenceBuilder builder = drive.trajectorySequenceBuilder(startingPosition)
