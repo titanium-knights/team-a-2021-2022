@@ -3,14 +3,11 @@ package org.firstinspires.ftc.teamcode.teleop
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.util.ElapsedTime
-import org.firstinspires.ftc.teamcode.util.Carriage
-import org.firstinspires.ftc.teamcode.util.MotorInterpolation
-import org.firstinspires.ftc.teamcode.util.PushButton
-import org.firstinspires.ftc.teamcode.util.Slide2
+import org.firstinspires.ftc.teamcode.util.*
 
 class OuttakeController(
     private val slide: Slide2,
-    private val carriage: Carriage,
+    private val carriage: CarriageDC,
     private val gamepad: Gamepad
     ): BasicPassdionComponent() {
 
@@ -21,7 +18,6 @@ class OuttakeController(
         RETRACTING
     }
 
-    private val interpolation = MotorInterpolation(Carriage.idlePosition, 1.6)
     private val dumpButton = PushButton { gamepad.b }
     private val highButton = PushButton { gamepad.y }
     private val midButton = PushButton { gamepad.x }
@@ -44,7 +40,7 @@ class OuttakeController(
     var disableSlideLimits = false
 
     override fun init(opMode: PassdionOpMode) {
-        carriage.position = interpolation.current
+        carriage.idle()
         opMode.register(dumpButton)
         opMode.register(highButton)
         opMode.register(midButton)
@@ -53,11 +49,11 @@ class OuttakeController(
     override fun update(opMode: PassdionOpMode) {
         when (state) {
             State.IDLE -> {
-                interpolation.target = Carriage.idlePosition
+                carriage.idle()
             }
             State.DUMPING -> {
-                interpolation.target = Carriage.dumpPosition
-                if (!interpolation.isBusy) {
+                carriage.dump()
+                if (!carriage.isBusy) {
                     state = State.DUMPED
                 }
             }
@@ -67,8 +63,8 @@ class OuttakeController(
                 }
             }
             State.RETRACTING -> {
-                interpolation.target = Carriage.idlePosition
-                if (!interpolation.isBusy) {
+                carriage.idle()
+                if (!carriage.isBusy) {
                     state = State.IDLE
                     slideTargetPos = LOW
                 }
@@ -106,8 +102,6 @@ class OuttakeController(
                 slide.runToPosition(slideTargetPos!!)
             }
         }
-
-        carriage.position = interpolation.current
     }
 
     @Config companion object OuttakeControllerSettings {
@@ -115,6 +109,6 @@ class OuttakeController(
         @JvmField var HIGH = Slide2.MAX_POSITION
         @JvmField var MID = 250
         @JvmField var LOW = Slide2.MIN_POSITION + 10
-        @JvmField var SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = 200;
+        @JvmField var SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = 200
     }
 }

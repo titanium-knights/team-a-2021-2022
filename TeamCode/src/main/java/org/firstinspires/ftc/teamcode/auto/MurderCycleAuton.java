@@ -17,7 +17,7 @@ public class MurderCycleAuton extends LinearOpMode {
     protected OdometryMecanumDrive drive;
     protected TubeIntake intake;
     protected Slide2 slide;
-    protected Carriage carriage;
+    protected CarriageDC carriage;
     protected TapeMeasureMechanism tape;
     protected OdometryRetraction retraction;
 
@@ -36,7 +36,7 @@ public class MurderCycleAuton extends LinearOpMode {
         drive = new OdometryMecanumDrive(hardwareMap);
         intake = new TubeIntake(hardwareMap);
         slide = new Slide2(hardwareMap);
-        carriage = new Carriage(hardwareMap);
+        carriage = new CarriageDC(hardwareMap);
         carousel = new Carousel(hardwareMap);
         intake = new TubeIntake(hardwareMap);
         tape = new TapeMeasureMechanism(hardwareMap);
