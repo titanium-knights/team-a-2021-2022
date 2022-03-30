@@ -21,7 +21,7 @@ public class Carousel {
         motor2.setPower(-power);
     }
     public void spin(boolean fast){
-        setPower(fast ? (0.75) : (0.75 / 3));
+        setPower(fast ? (1) : (0.75 / 3));
     }
     public void spin() {
         this.spin(false);
@@ -29,7 +29,7 @@ public class Carousel {
     public void stop(){
         setPower(0);
     }
-    public void spinReverse(boolean fast){ setPower(fast ? (-0.75) : (-0.75 / 3)); }
+    public void spinReverse(boolean fast){ setPower(fast ? (-1) : (-0.75 / 3)); }
     public void spinReverse() {
         this.spinReverse(false);
     }
