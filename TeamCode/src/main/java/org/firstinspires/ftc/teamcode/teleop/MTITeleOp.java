@@ -93,7 +93,7 @@ public class MTITeleOp extends PassdionOpMode {
 
         if (ENABLE_OUTTAKE) {
             Slide2 slide = new Slide2(hardwareMap);
-            Carriage carriage = new Carriage(hardwareMap);
+            CarriageDC carriage = new CarriageDC(hardwareMap);
             OuttakeController outtakeController = new OuttakeController(slide, carriage, gamepad1);
             register(outtakeController);
 

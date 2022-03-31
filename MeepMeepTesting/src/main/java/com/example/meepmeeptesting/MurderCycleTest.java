@@ -16,8 +16,9 @@ public class MurderCycleTest {
         Pose2d carousel = new Pose2d(-55, 60,Math.toRadians(180));
         MeepMeep meepMeep = new MeepMeep(500);
         Pose2d startingPosition = new Pose2d(-36,60, Math.toRadians(90));
-        Pose2d rightOfBlueHub = new Pose2d(0,45,Math.toRadians(75));
+        Pose2d rightOfBlueHub = new Pose2d(0,45,Math.toRadians(90));
 
+        Pose2d blueWarehousePreIntermediate = new Pose2d(0,60,Math.toRadians(0));
         Pose2d blueWarehouseIntermediate = new Pose2d(9,65.15,Math.toRadians(0));
         Pose2d blueWarehouse = new Pose2d(48,65.15,Math.toRadians(0));
         Telemetry telemetry = new Telemetry();
@@ -48,7 +49,8 @@ public class MurderCycleTest {
 
                                 //start cycle 1
                                 .setReversed(false)
-                                .splineToSplineHeading(blueWarehouseIntermediate, Math.toRadians(0))
+                                .splineToSplineHeading(blueWarehousePreIntermediate, Math.toRadians(90))
+                                .splineToConstantHeading(blueWarehouseIntermediate.vec(), blueWarehouseIntermediate.getHeading())
                                 .addTemporalMarker(() -> {
                                     telemetry.addData("Intake ", "On");
                                 })
