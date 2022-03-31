@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.auto;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.util.*;
 import java.util.function.BooleanSupplier;
 
 @Autonomous(name = "MTI Auton (Alt)")
+@Config
 public class MTIAutonTimeBased extends LinearOpMode {
     protected OdometryMecanumDrive odometryDrive;
     protected MecanumDrive drive;
@@ -20,10 +22,13 @@ public class MTIAutonTimeBased extends LinearOpMode {
     protected OdometryRetraction retraction;
     protected ElapsedTime elapsedTime;
 
-    public static int CYCLES = 3;
+    public static int CYCLES = 4;
     public static double TAPE_PITCH = 0.4;
     public static final Pose2d startPose = new Pose2d(-12, 63, Math.toRadians(90));
-    public static double MOVEMENT_FACTOR = 0.1;
+    public static double MOVEMENT_FACTOR = 0.025;
+    public static double TURN_TIME = 0.43;
+    public static double WAREHOUSE_DIST = 41;
+    public static double WAREHOUSE_DELAY = 1.5;
     Integer slidePos = null;
 
     private void updateDevices() {
@@ -50,7 +55,7 @@ public class MTIAutonTimeBased extends LinearOpMode {
 
     private void dumpAndLower() {
         carriage.dump();
-        waitSeconds(1);
+        waitSeconds(0.8);
         carriage.idle();
         waitSeconds(0.2);
         slidePos = Slide2.MIN_POSITION;
@@ -65,6 +70,7 @@ public class MTIAutonTimeBased extends LinearOpMode {
         slide = new Slide2(hardwareMap);
         carriage = new CarriageDC(hardwareMap);
         elapsedTime = new ElapsedTime();
+        intake = new TubeIntake(hardwareMap);
         retraction = new OdometryRetraction(hardwareMap);
         retraction.extend();
         waitForStart();
@@ -76,60 +82,64 @@ public class MTIAutonTimeBased extends LinearOpMode {
 
         // Go backwards towards the shipping hub, and perform our first dump
         drive.move(0, -1, 0);
-        waitSeconds(6 * MOVEMENT_FACTOR);
+        waitSeconds(13 * MOVEMENT_FACTOR);
         drive.stop();
         dumpAndLower();
 
         // Turn right to enter the shipping hub
-        drive.move(0, 1, 0.5);
-        waitSeconds(9.42 * MOVEMENT_FACTOR);
+        drive.move(0, 0.3, 1.0);
+        waitSeconds(0.5);
 
         // Strafe left to ensure we're next to the wall
         drive.move(-1, 0, 0);
-        waitSeconds(1);
+        waitSeconds(0.6);
 
         // Enter the warehouse
         drive.move(-0.1, 1, 0);
-        waitSeconds(48 * MOVEMENT_FACTOR);
+        waitSeconds(18 * MOVEMENT_FACTOR);
 
         // Begin cycling
         for (int i = 1; i < CYCLES; i++) {
             // Start intaking as we continue to move in
             slidePos = null;
             intake.setPower(1);
-            waitSeconds(48 * MOVEMENT_FACTOR);
+            waitSeconds(WAREHOUSE_DIST * MOVEMENT_FACTOR);
 
             // Stop the drive and wait for a bit
             drive.stop();
-            waitSeconds(0.5);
+            waitSeconds(WAREHOUSE_DELAY);
 
             // Start moving backwards
             drive.move(-0.1, -1, 0);
-            waitSeconds(24 * MOVEMENT_FACTOR);
+            waitSeconds((WAREHOUSE_DIST - 12) * MOVEMENT_FACTOR);
 
             // Move the intake in reverse
             intake.setPower(-0.5);
-            waitSeconds(48 * MOVEMENT_FACTOR);
+            waitSeconds(18 * MOVEMENT_FACTOR);
 
             // Shut off the intake, start moving the arm to dump, strafe right, then dump
-            intake.stop();
             slidePos = Slide2.MAX_POSITION;
             drive.move(1, 0, 0);
-            waitSeconds(54 * MOVEMENT_FACTOR);
+            waitSeconds(21 * MOVEMENT_FACTOR);
+            drive.move(0, 0, -1);
+            waitSeconds(TURN_TIME);
+            intake.stop();
             drive.stop();
             dumpAndLower();
+            drive.move(0, 0, 1);
+            waitSeconds(TURN_TIME);
 
             // Head back to the warehouse
             drive.move(-1, 0, 0);
-            waitSeconds(54 * MOVEMENT_FACTOR + 0.5);
+            waitSeconds(21 * MOVEMENT_FACTOR + 0.5);
             drive.move(-0.1, 1, 0);
-            waitSeconds(24 * MOVEMENT_FACTOR);
+            waitSeconds(18 * MOVEMENT_FACTOR);
         }
 
         // Shut off the slide and park
         slidePos = null;
         drive.move(-0.1, 1, 0);
-        waitSeconds(48 * MOVEMENT_FACTOR);
+        waitSeconds(36 * MOVEMENT_FACTOR);
         drive.stop();
 
         retraction.retract();
