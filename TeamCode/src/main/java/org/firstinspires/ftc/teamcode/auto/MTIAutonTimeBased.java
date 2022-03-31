@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.odometry.OdometryMecanumDrive;
 import org.firstinspires.ftc.teamcode.util.*;
 
-import java.util.function.Supplier;
+import java.util.function.BooleanSupplier;
 
 @Autonomous(name = "MTI Auton (Alt)")
 public class MTIAutonTimeBased extends LinearOpMode {
@@ -40,9 +40,9 @@ public class MTIAutonTimeBased extends LinearOpMode {
         }
     }
 
-    private void driveWhile(Supplier<Boolean> condition, double x, double y, double turn) {
+    private void driveWhile(BooleanSupplier condition, double x, double y, double turn) {
         drive.move(x, y, turn);
-        while (opModeIsActive() && !Thread.currentThread().isInterrupted() && condition.get()) {
+        while (opModeIsActive() && !Thread.currentThread().isInterrupted() && condition.getAsBoolean()) {
             updateDevices();
         }
         drive.stop();
