@@ -43,7 +43,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
     public static Pose2d blueWarehouseIntermediate;
     public static Pose2d blueWarehouse;
     public static Pose2d pB1,pB2,pD2,pD3;
-    public static double WAREHOUSE_X_OFFSET_CYCLE_2 = 2;
+    public static double WAREHOUSE_X_OFFSET_CYCLE_2 = 3 ;
     public static double WAREHOUSE_Y_OFFSET_CYCLE_2 = 3;
     Pose2d currentPose = startPose;
     Integer slidePos = 0;
@@ -153,7 +153,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
 
         }
         builder = builder.setReversed(false)
-                .lineToSplineHeading(pC)
+                .lineToSplineHeading(new Pose2d(pC.getX(),pC.getY()+2, pC.getHeading()))
                 .lineToSplineHeading(pD2)
                 .setReversed(true)
                 .addTemporalMarker(()->{
