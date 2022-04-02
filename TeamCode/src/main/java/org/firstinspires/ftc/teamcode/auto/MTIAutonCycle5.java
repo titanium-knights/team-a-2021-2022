@@ -41,6 +41,17 @@ public class MTIAutonCycle5 extends LinearOpMode {
     public static Pose2d rightOfBlueHubCycle2;
     public static final Pose2d startPose = new Pose2d(-12, 63,Math.toRadians(90));
 
+    public static Pose2d rightOfBlueCycle1;
+    public static double rightOfBlueCycle1_X = 12;
+    public static double rightOfBlueCycle1_Y = 37;
+    public static double rightOfBlueCycle1_HEADING = 45;
+
+    public static Pose2d rightOfBlueCycle2;
+    public static double rightOfBlueCycle2_X= 12;
+    public static double rightOfBlueCycle2_Y = 45;
+    public static double rightOfBlueCycle2_HEADING = 45;
+
+
     public static Pose2d blueWarehouseIntermediate;
     public static Pose2d blueWarehouse;
     public static Pose2d pB1,pB2,pD2,pD3;
@@ -54,11 +65,17 @@ public class MTIAutonCycle5 extends LinearOpMode {
     Pose2d pC = blueWarehouseIntermediate;
     Pose2d pD = blueWarehouse;
 
+    Pose2d pB_optimized1 = rightOfBlueCycle1;
+    Pose2d pB_optimized2 = rightOfBlueCycle2;
+
     protected void setupDevices() {
         rightOfBlueHub = new Pose2d(BLUE_HUB_X,BLUE_HUB_Y,Math.toRadians(BLUE_HUB_HEADING));
 
         rightOfBlueHubCycle1 = new Pose2d(BLUE_HUB_X+cycle_x_offset,BLUE_HUB_Y+cycle_y_offset, Math.toRadians(BLUE_HUB_HEADING));
         rightOfBlueHubCycle2 = new Pose2d(BLUE_HUB_X+cycle_x_offset,BLUE_HUB_Y+cycle_y_offset, Math.toRadians(BLUE_HUB_HEADING)+Math.toRadians(cycle_heading_offset));
+
+        rightOfBlueCycle1 = new Pose2d(rightOfBlueCycle1_X, rightOfBlueCycle1_Y, Math.toRadians(rightOfBlueCycle1_HEADING));
+        rightOfBlueCycle2 = new Pose2d(rightOfBlueCycle2_X, rightOfBlueCycle2_Y, Math.toRadians(rightOfBlueCycle2_HEADING));
 
         blueWarehouse = new Pose2d(WAREHOUSE_X,WAREHOUSE_Y,Math.toRadians(0));
         blueWarehouseIntermediate = new Pose2d(8,WAREHOUSE_Y,Math.toRadians(0));
@@ -69,6 +86,10 @@ public class MTIAutonCycle5 extends LinearOpMode {
         pB2 = rightOfBlueHubCycle2;
         pC = blueWarehouseIntermediate;
         pD = blueWarehouse;
+
+        pB_optimized1 = rightOfBlueCycle1;
+        pB_optimized2 = rightOfBlueCycle2;
+
         pD2 = new Pose2d(pD.getX()+WAREHOUSE_X_OFFSET_CYCLE_2, pD.getY()+WAREHOUSE_Y_OFFSET_CYCLE_2, pD.getHeading());
         pD3 = new Pose2d(pD.getX()+(WAREHOUSE_X_OFFSET_CYCLE_2*2), pD.getY()+WAREHOUSE_Y_OFFSET_CYCLE_2, pD.getHeading());
         drive = new OdometryMecanumDrive(hardwareMap);
@@ -131,7 +152,7 @@ public class MTIAutonCycle5 extends LinearOpMode {
                         slidePos = Slide2.MAX_POSITION;
                     });
             if(i==0) {
-                builder = builder.lineToSplineHeading(pB1);
+                builder = builder.lineToSplineHeading(pB_optimized1);
             }
             else{
                 builder = builder.lineToSplineHeading(pB2);
