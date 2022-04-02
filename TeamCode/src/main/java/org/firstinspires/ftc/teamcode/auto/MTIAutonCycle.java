@@ -39,7 +39,8 @@ public class MTIAutonCycle extends LinearOpMode {
 
     public static Pose2d blueWarehouseIntermediate = new Pose2d(8,WAREHOUSE_Y,Math.toRadians(0));
     public static Pose2d blueWarehouse = new Pose2d(48,WAREHOUSE_Y,Math.toRadians(0));
-    Integer slidePos = 0;
+    Pose2d currentPose = startPose;
+            Integer slidePos = 0;
     protected void setupDevices() {
         rightOfBlueHub = new Pose2d(BLUE_HUB_X,BLUE_HUB_Y,Math.toRadians(BLUE_HUB_HEADING));
         rightOfBlueHubCycle1 = new Pose2d(BLUE_HUB_X+cycle_x_offset,BLUE_HUB_Y+cycle_y_offset, Math.toRadians(BLUE_HUB_HEADING));
@@ -100,8 +101,12 @@ public class MTIAutonCycle extends LinearOpMode {
                         intake.stop();
                         slidePos = Slide2.MAX_POSITION;
                     })
+
                     .splineToSplineHeading(rightOfBlueHubCycle1,-rightOfBlueHubCycle1.getHeading())
-                    .turn(drive.getExternalHeading()-Math.toRadians(90))
+                    .addTemporalMarker(()->{
+                        currentPose = drive.getPoseEstimate();
+                    })
+                    .turn(Math.toRadians(90) - currentPose.getHeading())
                     .waitSeconds(0.5)
                     .addTemporalMarker(()->{
                         carriage.dump();
