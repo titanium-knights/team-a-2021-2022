@@ -58,7 +58,7 @@ import org.jetbrains.annotations.NotNull;
 
         @Override
         public void init(@NotNull PassdionOpMode opMode) {
-            pitchServo.setPosition(MIN_PITCH);
+//            pitchServo.setPosition(MIN_PITCH);
         }
 
         @Override

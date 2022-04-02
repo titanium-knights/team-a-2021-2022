@@ -34,6 +34,7 @@ public class MTIAutonCycle extends LinearOpMode {
     public static Pose2d rightOfBlueHub = new Pose2d(BLUE_HUB_X,BLUE_HUB_Y,Math.toRadians(BLUE_HUB_HEADING));
     public static double cycle_y_offset=5;
     public static double cycle_x_offset=0;
+    public static double heading_offset_cycle = 5;
     public static Pose2d rightOfBlueHubCycle1 = new Pose2d(BLUE_HUB_X+cycle_x_offset,BLUE_HUB_Y+cycle_y_offset, Math.toRadians(BLUE_HUB_HEADING));
     public static final Pose2d startPose = new Pose2d(-12, 63,Math.toRadians(90));
 
@@ -92,21 +93,23 @@ public class MTIAutonCycle extends LinearOpMode {
                     .addTemporalMarker(()->{
 //                        intake.setPower(-1);
                     })
-                    .setReversed(true)
-                    .splineToLinearHeading(blueWarehouseIntermediate,Math.toRadians(180))
-                    .UNSTABLE_addTemporalMarkerOffset(UNINTAKE_DELAY,()->{
+                    .UNSTABLE_addTemporalMarkerOffset(1,()-> {
                         intake.setPower(-1);
                     })
+                    .setReversed(true)
+
+//                    .waitSeconds(.5)
+//                    .UNSTABLE_addTemporalMarkerOffset(UNINTAKE_DELAY,()->{
+//                        intake.setPower(-1);
+//                    })
+                    .splineToLinearHeading(blueWarehouseIntermediate,Math.toRadians(180))
                     .addTemporalMarker(()->{
                         intake.stop();
                         slidePos = Slide2.MAX_POSITION;
                     })
 
-                    .splineToSplineHeading(rightOfBlueHubCycle1,-rightOfBlueHubCycle1.getHeading())
-                    .addTemporalMarker(()->{
-                        currentPose = drive.getPoseEstimate();
-                    })
-                    .turn(Math.toRadians(90) - currentPose.getHeading())
+                    .splineToSplineHeading(new Pose2d(rightOfBlueHubCycle1.getX()+cycle_x_offset,rightOfBlueHub.getY()+cycle_y_offset, rightOfBlueHub.getHeading()+heading_offset_cycle),-rightOfBlueHubCycle1.getHeading())
+
                     .waitSeconds(0.5)
                     .addTemporalMarker(()->{
                         carriage.dump();

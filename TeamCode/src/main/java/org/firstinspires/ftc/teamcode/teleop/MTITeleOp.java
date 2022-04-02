@@ -19,13 +19,17 @@ public class MTITeleOp extends PassdionOpMode {
     public static boolean ENABLE_CAROUSEL = true;
     public static boolean ENABLE_CAPSTONE = true;
     public static boolean ENABLE_OUTTAKE = true;
-    public static boolean ENABLE_DISTANCE_SENSOR = false;
-
+    public static boolean ENABLE_DISTANCE_SENSOR = true;
+    public static double TAPE_PITCH = 0.4;
+    public static int RUMBLE_TIME = 500;
     @SuppressLint("DefaultLocale")
     @Override
     protected void registerComponents() {
+        gamepad1.rumble(1000);
+
         OdometryRetraction odometryRetraction = new OdometryRetraction(hardwareMap);
         odometryRetraction.retract();
+
         ToggleButton slowMode = new ToggleButton(() -> (gamepad1.left_stick_button && gamepad1.right_stick_button && gamepad1.cross) || (gamepad2.left_stick_button && gamepad2.right_stick_button) || gamepad1.cross || gamepad2.cross);
         register(slowMode);
         addTelemetryData("Speed", () -> {
@@ -80,6 +84,7 @@ public class MTITeleOp extends PassdionOpMode {
 
         if (ENABLE_CAPSTONE) {
             TapeMeasureMechanism capstoneMechanism = new TapeMeasureMechanism(hardwareMap);
+            capstoneMechanism.setPitchPosition(TAPE_PITCH, true);
             TapeMeasureMechanism.Controller capstoneController = capstoneMechanism.new Controller(gamepad2);
             register(capstoneController);
             onLoop(() -> {
@@ -110,19 +115,23 @@ public class MTITeleOp extends PassdionOpMode {
             addTelemetryData("Carriage Pos", () -> carriage.getPosition());
             if (ENABLE_DISTANCE_SENSOR) {
                 AtomicBoolean didRumbleForFreight = new AtomicBoolean(false);
-                DistanceSensor ds = hardwareMap.get(DistanceSensor.class, "carriagedist");
+                DistanceSensor ds = hardwareMap.get(DistanceSensor.class, "distance_sensor");
                 onLoop(() -> {
                     if (didRumbleForFreight.get()) {
                         if (outtakeController.getState() == OuttakeController.State.DUMPED) {
                             didRumbleForFreight.set(false);
                         }
-                    } else {
+                    }
+                    else {
                         if (ds.getDistance(DistanceUnit.MM) < 80) {
+//                            addTelemetryData("here",()->"here");
+
                             didRumbleForFreight.set(true);
-                            gamepad1.rumble(100);
+                            gamepad1.rumble(RUMBLE_TIME);
                         }
                     }
                 });
+                addTelemetryData("didRumbleForFreight",()->didRumbleForFreight.get());
                 addTelemetryData("Carriage Distance", () -> ds.getDistance(DistanceUnit.MM));
             }
         }

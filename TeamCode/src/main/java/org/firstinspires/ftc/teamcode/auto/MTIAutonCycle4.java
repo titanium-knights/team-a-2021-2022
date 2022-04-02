@@ -21,24 +21,29 @@ public class MTIAutonCycle4 extends LinearOpMode {
     protected CarriageDC carriage;
     protected TapeMeasureMechanism tape;
     protected OdometryRetraction retraction;
-    public static double DUMP_TIME = 0.1;
+    public static double DUMP_TIME = 0.25;
     public static int CYCLES = 2;
     public static double UNINTAKE_DELAY = -0.75;
-    public static double WAREHOUSE_Y = 68;
+    public static double WAREHOUSE_X = 41;
+    public static double WAREHOUSE_Y = 65;
     public static double BLUE_HUB_X = -11;
     //    public static double BLUE_HUB_Y = 53;
     public static double BLUE_HUB_Y = 50;
 
     public static double BLUE_HUB_HEADING = 90;
     public static double TAPE_PITCH = 0.4;
-    public static Pose2d rightOfBlueHub = new Pose2d(BLUE_HUB_X,BLUE_HUB_Y,Math.toRadians(BLUE_HUB_HEADING));
+    public static Pose2d rightOfBlueHub;
     public static double cycle_y_offset=5;
     public static double cycle_x_offset=0;
-    public static Pose2d rightOfBlueHubCycle1 = new Pose2d(BLUE_HUB_X+cycle_x_offset,BLUE_HUB_Y+cycle_y_offset, Math.toRadians(BLUE_HUB_HEADING));
+    public static Pose2d rightOfBlueHubCycle1;
+    public static Pose2d rightOfBlueHubCycle2;
     public static final Pose2d startPose = new Pose2d(-12, 63,Math.toRadians(90));
 
-    public static Pose2d blueWarehouseIntermediate = new Pose2d(8,WAREHOUSE_Y,Math.toRadians(0));
-    public static Pose2d blueWarehouse = new Pose2d(48,WAREHOUSE_Y,Math.toRadians(0));
+    public static Pose2d blueWarehouseIntermediate;
+    public static Pose2d blueWarehouse;
+    public static Pose2d pB1,pB2,pD2;
+    public static double WAREHOUSE_X_OFFSET_CYCLE_2 = 4;
+    public static double WAREHOUSE_Y_OFFSET_CYCLE_2 = 1;
     Pose2d currentPose = startPose;
     Integer slidePos = 0;
 
@@ -51,14 +56,18 @@ public class MTIAutonCycle4 extends LinearOpMode {
         rightOfBlueHub = new Pose2d(BLUE_HUB_X,BLUE_HUB_Y,Math.toRadians(BLUE_HUB_HEADING));
 
         rightOfBlueHubCycle1 = new Pose2d(BLUE_HUB_X+cycle_x_offset,BLUE_HUB_Y+cycle_y_offset, Math.toRadians(BLUE_HUB_HEADING));
-        blueWarehouse = new Pose2d(48,WAREHOUSE_Y,Math.toRadians(0));
+        rightOfBlueHubCycle2 = new Pose2d(BLUE_HUB_X+cycle_x_offset,BLUE_HUB_Y+cycle_y_offset, Math.toRadians(BLUE_HUB_HEADING));
+
+        blueWarehouse = new Pose2d(WAREHOUSE_X,WAREHOUSE_Y,Math.toRadians(0));
         blueWarehouseIntermediate = new Pose2d(8,WAREHOUSE_Y,Math.toRadians(0));
 
         pA = startPose;
         pB = rightOfBlueHub;
+        pB1 = rightOfBlueHubCycle1;
+        pB2 = rightOfBlueHubCycle2;
         pC = blueWarehouseIntermediate;
         pD = blueWarehouse;
-
+        pD2 = new Pose2d(pD.getX()+WAREHOUSE_X_OFFSET_CYCLE_2, pD.getY()+WAREHOUSE_Y_OFFSET_CYCLE_2, pD.getHeading());
         drive = new OdometryMecanumDrive(hardwareMap);
         intake = new TubeIntake(hardwareMap);
         slide = new Slide2(hardwareMap);
@@ -80,25 +89,30 @@ public class MTIAutonCycle4 extends LinearOpMode {
                 .addTemporalMarker(()->{
                     carriage.dump();
                 })
-                .waitSeconds(1)
+                .waitSeconds(1.25)
                 .addTemporalMarker(()->{
                     carriage.idle();
 
                 })
                 .waitSeconds(DUMP_TIME)
                 //may want to add wait seconds here
-                .addTemporalMarker(()->{
+                .UNSTABLE_addTemporalMarkerOffset(1,()->{
                     slidePos = Slide2.MIN_POSITION;
                 });
 
         for(int i = 0; i < CYCLES; i++){
             builder = builder.setReversed(false)
+                    .lineToSplineHeading(pC)
                     .addTemporalMarker(()->{
                         intake.setPower(1);
-                    })
-                    .lineToSplineHeading(pC)
-                    .lineToSplineHeading(pD)
-                    .addTemporalMarker(()->{
+                    });
+                    if(i==0) {
+                        builder = builder.lineToSplineHeading(pD);
+                    }
+                    else{
+                        builder = builder.lineToSplineHeading(pD2);
+                    }
+                    builder = builder.addTemporalMarker(()->{
                         slidePos = null;
                     })
                     .addTemporalMarker(()->{
@@ -112,13 +126,17 @@ public class MTIAutonCycle4 extends LinearOpMode {
                     .addTemporalMarker(()->{
                         intake.stop();
                         slidePos = Slide2.MAX_POSITION;
-                    })
-
-                    .lineToSplineHeading(pB)
-                    .addTemporalMarker(()->{
+                    });
+                    if(i==0) {
+                        builder = builder.lineToSplineHeading(pB1);
+                    }
+                    else{
+                        builder = builder.lineToSplineHeading(pB2);
+                    }
+                    builder = builder.addTemporalMarker(()->{
                         currentPose = drive.getPoseEstimate();
                     })
-                    .waitSeconds(0.5)
+//                    .waitSeconds(0.5)
                     .addTemporalMarker(()->{
                         carriage.dump();
                     })
@@ -127,14 +145,14 @@ public class MTIAutonCycle4 extends LinearOpMode {
                         carriage.idle();
                     })
                     .waitSeconds(DUMP_TIME)
-                    .addTemporalMarker(() -> {
+                    .UNSTABLE_addTemporalMarkerOffset(1,() -> {x
                         slidePos = Slide2.MIN_POSITION;
                     });
 
         }
         builder = builder.setReversed(false)
                 .lineToSplineHeading(pC)
-                .lineToSplineHeading(pD)
+                .lineToSplineHeading(pD2)
                 .setReversed(true);
         a = builder.build();
     }
