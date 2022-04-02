@@ -29,6 +29,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
     public static double BLUE_HUB_X = -11;
     //    public static double BLUE_HUB_Y = 53;
     public static double BLUE_HUB_Y = 50;
+    public static double dumpWaitTime = 1.25;
 
     public static double BLUE_HUB_HEADING = 90;
     public static double TAPE_PITCH = 0.4;
@@ -43,6 +44,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
     public static Pose2d blueWarehouseIntermediate;
     public static Pose2d blueWarehouse;
     public static Pose2d pB1,pB2,pD2,pD3;
+    public static Pose2d pC2;
     public static double WAREHOUSE_X_OFFSET_CYCLE_2 = 3 ;
     public static double WAREHOUSE_Y_OFFSET_CYCLE_2 = 3;
     Pose2d currentPose = startPose;
@@ -67,6 +69,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
         pB1 = rightOfBlueHubCycle1;
         pB2 = rightOfBlueHubCycle2;
         pC = blueWarehouseIntermediate;
+        pC2 = new Pose2d(pC.getX()+WAREHOUSE_X_OFFSET_CYCLE_2,pC.getY()+WAREHOUSE_Y_OFFSET_CYCLE_2, pC.getHeading());
         pD = blueWarehouse;
         pD2 = new Pose2d(pD.getX()+WAREHOUSE_X_OFFSET_CYCLE_2, pD.getY()+WAREHOUSE_Y_OFFSET_CYCLE_2, pD.getHeading());
         pD3 = new Pose2d(pD.getX()+(WAREHOUSE_X_OFFSET_CYCLE_2*2), pD.getY()+WAREHOUSE_Y_OFFSET_CYCLE_2, pD.getHeading());
@@ -91,7 +94,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
                 .addTemporalMarker(()->{
                     carriage.dump();
                 })
-                .waitSeconds(1.25)
+                .waitSeconds(dumpWaitTime)
                 .addTemporalMarker(()->{
                     carriage.idle();
 
