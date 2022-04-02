@@ -35,6 +35,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
     public static Pose2d rightOfBlueHub;
     public static double cycle_y_offset=5;
     public static double cycle_x_offset=0;
+    public static double cycle_heading_offset = 5;
     public static Pose2d rightOfBlueHubCycle1;
     public static Pose2d rightOfBlueHubCycle2;
     public static final Pose2d startPose = new Pose2d(-12, 63,Math.toRadians(90));
@@ -43,7 +44,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
     public static Pose2d blueWarehouse;
     public static Pose2d pB1,pB2,pD2;
     public static double WAREHOUSE_X_OFFSET_CYCLE_2 = 4;
-    public static double WAREHOUSE_Y_OFFSET_CYCLE_2 = 1;
+    public static double WAREHOUSE_Y_OFFSET_CYCLE_2 = 3;
     Pose2d currentPose = startPose;
     Integer slidePos = 0;
 
@@ -56,7 +57,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
         rightOfBlueHub = new Pose2d(BLUE_HUB_X,BLUE_HUB_Y,Math.toRadians(BLUE_HUB_HEADING));
 
         rightOfBlueHubCycle1 = new Pose2d(BLUE_HUB_X+cycle_x_offset,BLUE_HUB_Y+cycle_y_offset, Math.toRadians(BLUE_HUB_HEADING));
-        rightOfBlueHubCycle2 = new Pose2d(BLUE_HUB_X+cycle_x_offset,BLUE_HUB_Y+cycle_y_offset, Math.toRadians(BLUE_HUB_HEADING));
+        rightOfBlueHubCycle2 = new Pose2d(BLUE_HUB_X+cycle_x_offset,BLUE_HUB_Y+cycle_y_offset, Math.toRadians(BLUE_HUB_HEADING)+Math.toRadians(cycle_heading_offset));
 
         blueWarehouse = new Pose2d(WAREHOUSE_X,WAREHOUSE_Y,Math.toRadians(0));
         blueWarehouseIntermediate = new Pose2d(8,WAREHOUSE_Y,Math.toRadians(0));
@@ -107,7 +108,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
                         intake.setPower(1);
                     });
                     if(i==0) {
-                        builder = builder.lineToSplineHeading(pD);
+                        builder = builder.lineToSplineHeading(pD2);
                     }
                     else{
                         builder = builder.lineToSplineHeading(pD2);
@@ -145,7 +146,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
                         carriage.idle();
                     })
                     .waitSeconds(DUMP_TIME)
-                    .UNSTABLE_addTemporalMarkerOffset(1,() -> {x
+                    .UNSTABLE_addTemporalMarkerOffset(1,() -> {
                         slidePos = Slide2.MIN_POSITION;
                     });
 
@@ -153,7 +154,11 @@ public class MTIAutonCycle4 extends LinearOpMode {
         builder = builder.setReversed(false)
                 .lineToSplineHeading(pC)
                 .lineToSplineHeading(pD2)
-                .setReversed(true);
+                .setReversed(true)
+                .addTemporalMarker(()->{
+                    intake.setPower(1);
+                })
+                .waitSeconds(5);
         a = builder.build();
     }
     @Override
