@@ -24,7 +24,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
     public static double DUMP_TIME = 0.25;
     public static int CYCLES = 2;
     public static double UNINTAKE_DELAY = -0.75;
-    public static double WAREHOUSE_X = 41;
+    public static double WAREHOUSE_X = 44;
     public static double WAREHOUSE_Y = 65;
     public static double BLUE_HUB_X = -11;
     //    public static double BLUE_HUB_Y = 53;
@@ -42,8 +42,8 @@ public class MTIAutonCycle4 extends LinearOpMode {
 
     public static Pose2d blueWarehouseIntermediate;
     public static Pose2d blueWarehouse;
-    public static Pose2d pB1,pB2,pD2;
-    public static double WAREHOUSE_X_OFFSET_CYCLE_2 = 4;
+    public static Pose2d pB1,pB2,pD2,pD3;
+    public static double WAREHOUSE_X_OFFSET_CYCLE_2 = 2;
     public static double WAREHOUSE_Y_OFFSET_CYCLE_2 = 3;
     Pose2d currentPose = startPose;
     Integer slidePos = 0;
@@ -69,6 +69,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
         pC = blueWarehouseIntermediate;
         pD = blueWarehouse;
         pD2 = new Pose2d(pD.getX()+WAREHOUSE_X_OFFSET_CYCLE_2, pD.getY()+WAREHOUSE_Y_OFFSET_CYCLE_2, pD.getHeading());
+        pD3 = new Pose2d(pD.getX()+(WAREHOUSE_X_OFFSET_CYCLE_2*2), pD.getY()+WAREHOUSE_Y_OFFSET_CYCLE_2, pD.getHeading());
         drive = new OdometryMecanumDrive(hardwareMap);
         intake = new TubeIntake(hardwareMap);
         slide = new Slide2(hardwareMap);
@@ -108,7 +109,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
                         intake.setPower(1);
                     });
                     if(i==0) {
-                        builder = builder.lineToSplineHeading(pD2);
+                        builder = builder.lineToSplineHeading(pD);
                     }
                     else{
                         builder = builder.lineToSplineHeading(pD2);
