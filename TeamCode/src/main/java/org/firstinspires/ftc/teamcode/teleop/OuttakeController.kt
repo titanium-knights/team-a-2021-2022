@@ -105,7 +105,7 @@ class OuttakeController(
     }
 
     @Config companion object OuttakeControllerSettings {
-        @JvmField var DELAY_MS = 1000
+        @JvmField var DELAY_MS = 500
         @JvmField var HIGH = Slide2.MAX_POSITION
         @JvmField var MID = 250
         @JvmField var LOW = Slide2.MIN_POSITION + 10

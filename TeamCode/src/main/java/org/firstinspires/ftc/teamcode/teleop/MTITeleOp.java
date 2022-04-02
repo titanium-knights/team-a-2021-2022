@@ -24,6 +24,8 @@ public class MTITeleOp extends PassdionOpMode {
     @SuppressLint("DefaultLocale")
     @Override
     protected void registerComponents() {
+        OdometryRetraction odometryRetraction = new OdometryRetraction(hardwareMap);
+        odometryRetraction.retract();
         ToggleButton slowMode = new ToggleButton(() -> (gamepad1.left_stick_button && gamepad1.right_stick_button && gamepad1.cross) || (gamepad2.left_stick_button && gamepad2.right_stick_button) || gamepad1.cross || gamepad2.cross);
         register(slowMode);
         addTelemetryData("Speed", () -> {
@@ -105,7 +107,7 @@ public class MTITeleOp extends PassdionOpMode {
                     return String.format("Moving to %d", outtakeController.getSlideTargetPos());
                 }
             });
-
+            addTelemetryData("Carriage Pos", () -> carriage.getPosition());
             if (ENABLE_DISTANCE_SENSOR) {
                 AtomicBoolean didRumbleForFreight = new AtomicBoolean(false);
                 DistanceSensor ds = hardwareMap.get(DistanceSensor.class, "carriagedist");

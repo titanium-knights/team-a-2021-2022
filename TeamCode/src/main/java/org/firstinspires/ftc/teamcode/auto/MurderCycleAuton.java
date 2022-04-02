@@ -75,7 +75,7 @@ public class MurderCycleAuton extends LinearOpMode {
                 .addTemporalMarker(() -> {
                     carriage.idle();
                 })
-                .waitSeconds(0.2)
+                .waitSeconds(0.5)
                 .addTemporalMarker(() -> {
                     slidePos = Slide2.MIN_POSITION;
                 });
