@@ -35,7 +35,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
     public static Pose2d rightOfBlueHub;
     public static double cycle_y_offset=5;
     public static double cycle_x_offset=0;
-    public static double cycle_heading_offset = 5;
+    public static double cycle_heading_offset = -8;
     public static Pose2d rightOfBlueHubCycle1;
     public static Pose2d rightOfBlueHubCycle2;
     public static final Pose2d startPose = new Pose2d(-12, 63,Math.toRadians(90));
@@ -59,7 +59,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
         rightOfBlueHubCycle1 = new Pose2d(BLUE_HUB_X+cycle_x_offset,BLUE_HUB_Y+cycle_y_offset, Math.toRadians(BLUE_HUB_HEADING));
         rightOfBlueHubCycle2 = new Pose2d(BLUE_HUB_X+cycle_x_offset,BLUE_HUB_Y+cycle_y_offset, Math.toRadians(BLUE_HUB_HEADING)+Math.toRadians(cycle_heading_offset));
 
-        blueWarehouse = new Pose2d(WAREHOUSE_X,WAREHOUSE_Y,Math.toRadians(0));
+        blueWarehouse = new Pose2d(WAREHOUS E_X,WAREHOUSE_Y,Math.toRadians(0));
         blueWarehouseIntermediate = new Pose2d(8,WAREHOUSE_Y,Math.toRadians(0));
 
         pA = startPose;
@@ -138,7 +138,7 @@ public class MTIAutonCycle4 extends LinearOpMode {
                     builder = builder.addTemporalMarker(()->{
                         currentPose = drive.getPoseEstimate();
                     })
-//                    .waitSeconds(0.5)
+                    .waitSeconds(0.1)
                     .addTemporalMarker(()->{
                         carriage.dump();
                     })
