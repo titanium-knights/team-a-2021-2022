@@ -101,6 +101,7 @@ public class MTIAutonCycle extends LinearOpMode {
                         slidePos = Slide2.MAX_POSITION;
                     })
                     .splineToSplineHeading(rightOfBlueHubCycle1,-rightOfBlueHubCycle1.getHeading())
+                    .turn(drive.getExternalHeading()-Math.toRadians(90))
                     .waitSeconds(0.5)
                     .addTemporalMarker(()->{
                         carriage.dump();

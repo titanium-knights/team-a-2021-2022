@@ -300,7 +300,7 @@ public class OdometryMecanumDriveIMU extends MecanumDrive {
 
     @Override
     public double getRawExternalHeading() {
-        return 0;
+        return imu.getAngularOrientation().firstAngle;
     }
 
     @Override
