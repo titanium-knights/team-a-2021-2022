@@ -22,7 +22,7 @@ public class MTIAutonCycle5 extends LinearOpMode {
     protected TapeMeasureMechanism tape;
     protected OdometryRetraction retraction;
     public static double DUMP_TIME = 0.25;
-    public static int CYCLES = 2;
+    public static int CYCLES = 3;
     public static double UNINTAKE_DELAY = -0.75;
     public static double WAREHOUSE_X = 44;
     public static double WAREHOUSE_Y = 65;
@@ -52,7 +52,7 @@ public class MTIAutonCycle5 extends LinearOpMode {
     public static double rightOfBlueCycle2_HEADING = 45;
 
     public static double intermediate_x_offset = 0;
-    public static double intermediate_y_offset = 1.5;
+    public static double intermediate_y_offset = 1.2;
     public static double intermediate_x = 14;
 
     public static Pose2d blueWarehouseIntermediate;
@@ -68,7 +68,8 @@ public class MTIAutonCycle5 extends LinearOpMode {
     Pose2d pC1 = blueWarehouseIntermediate;
     Pose2d pC2;
     Pose2d pD = blueWarehouse;
-
+    public static double dump_hack_bca = -1;
+    public static double dump_hack_bca2 = -0.25;
     Pose2d pB_optimized1 = rightOfBlueCycle1;
     Pose2d pB_optimized2 = rightOfBlueCycle2;
 
@@ -115,15 +116,15 @@ public class MTIAutonCycle5 extends LinearOpMode {
                     slidePos = Slide2.MAX_POSITION;
                 })
                 .lineToSplineHeading(pB)
-                .addTemporalMarker(()->{
+                .UNSTABLE_addTemporalMarkerOffset(dump_hack_bca, ()->{
                     carriage.dump();
                 })
-                .waitSeconds(dumpWaitTime)
+//                .waitSeconds(dumpWaitTime)
                 .addTemporalMarker(()->{
                     carriage.idle();
 
                 })
-                .waitSeconds(DUMP_TIME)
+//                .waitSeconds(DUMP_TIME)
                 //may want to add wait seconds here
                 .UNSTABLE_addTemporalMarkerOffset(1,()->{
                     slidePos = Slide2.MIN_POSITION;
@@ -172,15 +173,13 @@ public class MTIAutonCycle5 extends LinearOpMode {
             builder = builder.addTemporalMarker(()->{
                 currentPose = drive.getPoseEstimate();
             })
-                    .waitSeconds(0.1)
-                    .addTemporalMarker(()->{
+                    .UNSTABLE_addTemporalMarkerOffset(dump_hack_bca2, ()->{
                         carriage.dump();
                     })
-                    .waitSeconds(1)
                     .addTemporalMarker(() -> {
                         carriage.idle();
                     })
-                    .waitSeconds(DUMP_TIME)
+//                    .waitSeconds(DUMP_TIME)
                     .UNSTABLE_addTemporalMarkerOffset(1,() -> {
                         slidePos = Slide2.MIN_POSITION;
                     });
