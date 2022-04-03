@@ -53,12 +53,13 @@ public class MTIAutonCycle5 extends LinearOpMode {
 
     public static double intermediate_x_offset = 0;
     public static double intermediate_y_offset = 1.2;
-    public static double intermediate_x = 14;
+    public static double intermediate_x = 12;
 
     public static Pose2d blueWarehouseIntermediate;
     public static Pose2d blueWarehouse;
     public static Pose2d pB1,pB2,pD2,pD3;
     public static double WAREHOUSE_X_OFFSET_CYCLE_2 = 3 ;
+    private MecanumDrive drive2;
     public static double WAREHOUSE_Y_OFFSET_CYCLE_2 = 3;
     Pose2d currentPose = startPose;
     Integer slidePos = 0;
@@ -69,11 +70,13 @@ public class MTIAutonCycle5 extends LinearOpMode {
     Pose2d pC2;
     Pose2d pD = blueWarehouse;
     public static double dump_hack_bca = -1;
-    public static double dump_hack_bca2 = -0.25;
+    public static double dump_hack_bca2 = -0.5;
     Pose2d pB_optimized1 = rightOfBlueCycle1;
     Pose2d pB_optimized2 = rightOfBlueCycle2;
 
+    public static double CARRIAGE_DELAY = 0.5;
     protected void setupDevices() {
+        drive2 = new MecanumDrive(hardwareMap);
         rightOfBlueHub = new Pose2d(BLUE_HUB_X,BLUE_HUB_Y,Math.toRadians(BLUE_HUB_HEADING));
 
         rightOfBlueHubCycle1 = new Pose2d(BLUE_HUB_X+cycle_x_offset,BLUE_HUB_Y+cycle_y_offset, Math.toRadians(BLUE_HUB_HEADING));
@@ -176,7 +179,7 @@ public class MTIAutonCycle5 extends LinearOpMode {
                     .UNSTABLE_addTemporalMarkerOffset(dump_hack_bca2, ()->{
                         carriage.dump();
                     })
-                    .addTemporalMarker(() -> {
+                    .UNSTABLE_addTemporalMarkerOffset(dump_hack_bca2+CARRIAGE_DELAY,() -> {
                         carriage.idle();
                     })
 //                    .waitSeconds(DUMP_TIME)
@@ -187,12 +190,12 @@ public class MTIAutonCycle5 extends LinearOpMode {
         }
         builder = builder.setReversed(false)
                 .lineToSplineHeading(new Pose2d(pC1.getX(), pC1.getY()+2, pC1.getHeading()))
-                .lineToSplineHeading(pD2)
+//                .lineToSplineHeading(pD2)
                 .setReversed(true)
                 .addTemporalMarker(()->{
                     intake.setPower(1);
-                })
-                .waitSeconds(5);
+                });
+//                .waitSeconds(5);
         a = builder.build();
     }
     @Override
@@ -210,5 +213,8 @@ public class MTIAutonCycle5 extends LinearOpMode {
                 slide.runToPosition(slidePos, 0.85);
             }
         }
+        drive2.move(-0.2,1,0);
+        sleep(1000);
+        drive2.stop();
     }
 }
