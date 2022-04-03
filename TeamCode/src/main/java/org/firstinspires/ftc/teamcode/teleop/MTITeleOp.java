@@ -118,7 +118,7 @@ public class MTITeleOp extends PassdionOpMode {
                 DistanceSensor ds = hardwareMap.get(DistanceSensor.class, "distance_sensor");
                 onLoop(() -> {
                     if (didRumbleForFreight.get()) {
-                        if (outtakeController.getState() == OuttakeController.State.DUMPED) {
+                        if (outtakeController.getState() == OuttakeController.State.RETRACTING) {
                             didRumbleForFreight.set(false);
                         }
                     }

@@ -29,7 +29,7 @@ public class MTIAutonCycle5 extends LinearOpMode {
     public static double BLUE_HUB_X = -11;
     //    public static double BLUE_HUB_Y = 53;
     public static double BLUE_HUB_Y = 50;
-    public static double dumpWaitTime = 1.25;
+    public static double dumpWaitTime = .8;
 
     public static double BLUE_HUB_HEADING = 90;
     public static double TAPE_PITCH = 0.4;
@@ -42,15 +42,18 @@ public class MTIAutonCycle5 extends LinearOpMode {
     public static final Pose2d startPose = new Pose2d(-12, 63,Math.toRadians(90));
 
     public static Pose2d rightOfBlueCycle1;
-    public static double rightOfBlueCycle1_X = 12;
-    public static double rightOfBlueCycle1_Y = 37;
+    public static double rightOfBlueCycle1_X = 0;
+    public static double rightOfBlueCycle1_Y = 47;
     public static double rightOfBlueCycle1_HEADING = 45;
 
     public static Pose2d rightOfBlueCycle2;
-    public static double rightOfBlueCycle2_X= 12;
-    public static double rightOfBlueCycle2_Y = 45;
+    public static double rightOfBlueCycle2_X= 0;
+    public static double rightOfBlueCycle2_Y = 47;
     public static double rightOfBlueCycle2_HEADING = 45;
 
+    public static double intermediate_x_offset = 0;
+    public static double intermediate_y_offset = 1.5;
+    public static double intermediate_x = 14;
 
     public static Pose2d blueWarehouseIntermediate;
     public static Pose2d blueWarehouse;
@@ -62,7 +65,8 @@ public class MTIAutonCycle5 extends LinearOpMode {
 
     Pose2d pA = startPose;
     Pose2d pB = rightOfBlueHub;
-    Pose2d pC = blueWarehouseIntermediate;
+    Pose2d pC1 = blueWarehouseIntermediate;
+    Pose2d pC2;
     Pose2d pD = blueWarehouse;
 
     Pose2d pB_optimized1 = rightOfBlueCycle1;
@@ -78,13 +82,14 @@ public class MTIAutonCycle5 extends LinearOpMode {
         rightOfBlueCycle2 = new Pose2d(rightOfBlueCycle2_X, rightOfBlueCycle2_Y, Math.toRadians(rightOfBlueCycle2_HEADING));
 
         blueWarehouse = new Pose2d(WAREHOUSE_X,WAREHOUSE_Y,Math.toRadians(0));
-        blueWarehouseIntermediate = new Pose2d(8,WAREHOUSE_Y,Math.toRadians(0));
+        blueWarehouseIntermediate = new Pose2d(intermediate_x,WAREHOUSE_Y,Math.toRadians(0));
 
         pA = startPose;
         pB = rightOfBlueHub;
         pB1 = rightOfBlueHubCycle1;
         pB2 = rightOfBlueHubCycle2;
-        pC = blueWarehouseIntermediate;
+        pC1 = blueWarehouseIntermediate;
+        pC2 = new Pose2d(pC1.getX()+intermediate_x_offset,pC1.getY()+intermediate_y_offset, pC1.getHeading());
         pD = blueWarehouse;
 
         pB_optimized1 = rightOfBlueCycle1;
@@ -125,11 +130,18 @@ public class MTIAutonCycle5 extends LinearOpMode {
                 });
 
         for(int i = 0; i < CYCLES; i++){
-            builder = builder.setReversed(false)
-                    .lineToSplineHeading(pC)
-                    .addTemporalMarker(()->{
-                        intake.setPower(1);
-                    });
+            builder = builder.setReversed(false);
+            if(i==0){
+                builder = builder.lineToSplineHeading(pC1);
+
+            }
+            else{
+                builder = builder.lineToSplineHeading(pC2);
+            }
+
+            builder = builder.addTemporalMarker(()->{
+                intake.setPower(1);
+            });
             if(i==0) {
                 builder = builder.lineToSplineHeading(pD);
             }
@@ -143,7 +155,7 @@ public class MTIAutonCycle5 extends LinearOpMode {
 //                        intake.setPower(-1);
                     })
                     .setReversed(true)
-                    .splineToLinearHeading(pC,Math.toRadians(180))
+                    .splineToLinearHeading(pC1,Math.toRadians(180))
                     .UNSTABLE_addTemporalMarkerOffset(UNINTAKE_DELAY,()->{
                         intake.setPower(-1);
                     })
@@ -155,7 +167,7 @@ public class MTIAutonCycle5 extends LinearOpMode {
                 builder = builder.lineToSplineHeading(pB_optimized1);
             }
             else{
-                builder = builder.lineToSplineHeading(pB2);
+                builder = builder.lineToSplineHeading(pB_optimized2);
             }
             builder = builder.addTemporalMarker(()->{
                 currentPose = drive.getPoseEstimate();
@@ -175,7 +187,7 @@ public class MTIAutonCycle5 extends LinearOpMode {
 
         }
         builder = builder.setReversed(false)
-                .lineToSplineHeading(new Pose2d(pC.getX(),pC.getY()+2, pC.getHeading()))
+                .lineToSplineHeading(new Pose2d(pC1.getX(), pC1.getY()+2, pC1.getHeading()))
                 .lineToSplineHeading(pD2)
                 .setReversed(true)
                 .addTemporalMarker(()->{
