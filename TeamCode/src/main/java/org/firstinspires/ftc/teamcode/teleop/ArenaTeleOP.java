@@ -53,7 +53,7 @@ public class ArenaTeleOP extends PassdionOpMode {
                 MecanumDrive.RobotCentricComponent drivingController = drive.robotCentricComponent();
                 register(drivingController);
 
-                drivingController.multiplier = PUBLIC_MOVEMENT_MULTIPLYER;
+                onLoop(() -> drivingController.multiplier = PUBLIC_MOVEMENT_MULTIPLYER);
 
             }
         }
