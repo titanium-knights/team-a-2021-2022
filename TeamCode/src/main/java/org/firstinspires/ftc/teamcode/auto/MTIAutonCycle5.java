@@ -69,6 +69,9 @@ public class MTIAutonCycle5 extends LinearOpMode {
     Pose2d pC1 = blueWarehouseIntermediate;
     Pose2d pC2;
     Pose2d pD = blueWarehouse;
+    Pose2d pB3;
+    Pose2d pD;
+
     public static double dump_hack_bca = -1;
     public static double dump_hack_bca2 = -0.5;
     Pose2d pB_optimized1 = rightOfBlueCycle1;
