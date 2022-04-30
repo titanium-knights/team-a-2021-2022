@@ -28,7 +28,7 @@ public class TeleOpLeagues extends OpMode {
     TubeIntake intake;
     Carriage carriage;
     Slide2 slide2;
-    DistanceSensor ds;
+//    DistanceSensor ds;
     int targetPos = -1;
     public static int HIGH = Slide2.MAX_POSITION;
     public static int MID = 1260;
@@ -37,10 +37,10 @@ public class TeleOpLeagues extends OpMode {
     public static boolean DISABLE_LIMITS = false;
     DumpState dumpState = DumpState.IDLE;
     Carousel carousel;
-    CapstoneMechanism2 capstone;
+//    CapstoneMechanism2 capstone;
     MotorInterpolation carriageInterpolation;
     OdometryRetraction odometryRetraction;
-    ClawIntake claw;
+//    ClawIntake claw;
     double capstoneMechanismTimeout;
     boolean capstoneMoved = false;
     boolean freightInCarriage = false;
@@ -61,10 +61,10 @@ public class TeleOpLeagues extends OpMode {
         drive = new MecanumDrive(hardwareMap);
         slide2 = new Slide2(hardwareMap);
         carousel = new Carousel(hardwareMap);
-        ds = hardwareMap.get(DistanceSensor.class, "carriagedist");
+//        ds = hardwareMap.get(DistanceSensor.class, "carriagedist");
         carriage = new Carriage(hardwareMap);
-        capstone = new CapstoneMechanism2(hardwareMap, true);
-        claw = new ClawIntake(hardwareMap);
+//        capstone = new CapstoneMechanism2(hardwareMap, true);
+//        claw = new ClawIntake(hardwareMap);
         carriageInterpolation = new MotorInterpolation(Carriage.getIdlePosition(), 0.5);
         slowModeButton = new ToggleButton(() -> gamepad1.left_stick_button && gamepad1.right_stick_button);
         dumpButton = new PushButton(() -> gamepad1.b);
@@ -76,10 +76,14 @@ public class TeleOpLeagues extends OpMode {
         odometryRetraction.retract();
         elapsedTime = new ElapsedTime();
     }
+    public void setSlidePosition(int position) {
+        slide2.setTargetPosition(position);
+        slide2.setPower(0.9);
+    }
     @Override
     public void start(){
         elapsedTime.reset();
-        capstone.setPosition(CapstoneMechanism2.getIdle());
+//        capstone.setPosition(CapstoneMechanism2.getIdle());
         capstoneMechanismTimeout = elapsedTime.seconds() + 5;
     }
     @Override
@@ -115,24 +119,42 @@ public class TeleOpLeagues extends OpMode {
             dumpState = DumpState.DUMPING;
             freightInCarriage = false;
         }
+//        switch (dumpState) {
+//            case DUMPING:
+//                carriageInterpolation.setTarget(Carriage.getDumpPosition());
+//                if (!carriageInterpolation.isBusy()) {
+//                    dumpState = DumpState.POST_DUMPING;
+//                    dumpCompleteSeconds = elapsedTime.seconds();
+//                }
+//                break;
+//            case POST_DUMPING:
+//                if (elapsedTime.seconds() - dumpCompleteSeconds >= DELAY_MS / 1000.0) {
+//                    dumpState = DumpState.RETURNING_TO_IDLE;
+//                }
+//                break;
+//            case RETURNING_TO_IDLE:
+//                carriageInterpolation.setTarget(Carriage.getIdlePosition());
+//                if (!carriageInterpolation.isBusy()) {
+//                    dumpState = DumpState.IDLE;
+//                    targetPos = LOW;
+//                }
+//                break;
+//            case IDLE:
+//                carriageInterpolation.setTarget(Carriage.getIdlePosition());
+//        }
+//        carriage.setPosition(carriageInterpolation.getCurrent());
         switch (dumpState) {
             case DUMPING:
                 carriageInterpolation.setTarget(Carriage.getDumpPosition());
                 if (!carriageInterpolation.isBusy()) {
-                    dumpState = DumpState.POST_DUMPING;
-                    dumpCompleteSeconds = elapsedTime.seconds();
-                }
-                break;
-            case POST_DUMPING:
-                if (elapsedTime.seconds() - dumpCompleteSeconds >= DELAY_MS / 1000.0) {
-                    dumpState = DumpState.RETURNING_TO_IDLE;
+                    dumpState = TeleOpModeLeagues.DumpState.RETURNING_TO_IDLE;
                 }
                 break;
             case RETURNING_TO_IDLE:
                 carriageInterpolation.setTarget(Carriage.getIdlePosition());
                 if (!carriageInterpolation.isBusy()) {
-                    dumpState = DumpState.IDLE;
-                    targetPos = LOW;
+                    setSlidePosition(0);
+                    dumpState = TeleOpModeLeagues.DumpState.IDLE;
                 }
                 break;
             case IDLE:
@@ -169,50 +191,50 @@ public class TeleOpLeagues extends OpMode {
             slideStatus = "Moving to " + targetPos;
         }
 
-        if(clawButton.isActive()){
-            claw.grab();
-        }
-        else{
-            claw.release();
-        }
+//        if(clawButton.isActive()){
+//            claw.grab();
+//        }
+//        else{
+//            claw.release();
+//        }
 
         if (elapsedTime.seconds() > capstoneMechanismTimeout) {
             capstoneMoved = true;
         }
 
-        int capstonePos = capstone.getPosition();
-        if (gamepad1.right_bumper) {
-            if (capstonePos <= CapstoneMechanism2.getIdle()) {
-                if(slowModeButton.isActive()){
-                    capstone.setManualPower((CapstoneMechanism2.power/2));
-                }
-                else{
-                    capstone.setManualPower(CapstoneMechanism2.power);
-                }
-                capstoneMoved = true;
-            } else {
-                capstone.setManualPower(0);
-                capstoneMoved = true;
-                gamepad1.rumble(50);
-            }
-        } else if (gamepad1.left_bumper) {
-            if (capstonePos >= CapstoneMechanism2.getPickup()) {
-                if(slowModeButton.isActive()){
-                    capstone.setManualPower(-(CapstoneMechanism2.power)/2);
-                }
-                else{
-                    capstone.setManualPower(-CapstoneMechanism2.power);
-                }
-
-                capstoneMoved = true;
-            } else {
-                capstone.setManualPower(0);
-                capstoneMoved = true;
-                gamepad1.rumble(50);
-            }
-        } else if (capstoneMoved) {
-            capstone.setManualPower(0);
-        }
+//        int capstonePos = capstone.getPosition();
+//        if (gamepad1.right_bumper) {
+//            if (capstonePos <= CapstoneMechanism2.getIdle()) {
+//                if(slowModeButton.isActive()){
+//                    capstone.setManualPower((CapstoneMechanism2.power/2));
+//                }
+//                else{
+//                    capstone.setManualPower(CapstoneMechanism2.power);
+//                }
+//                capstoneMoved = true;
+//            } else {
+//                capstone.setManualPower(0);
+//                capstoneMoved = true;
+//                gamepad1.rumble(50);
+//            }
+//        } else if (gamepad1.left_bumper) {
+//            if (capstonePos >= CapstoneMechanism2.getPickup()) {
+//                if(slowModeButton.isActive()){
+//                    capstone.setManualPower(-(CapstoneMechanism2.power)/2);
+//                }
+//                else{
+//                    capstone.setManualPower(-CapstoneMechanism2.power);
+//                }
+//
+//                capstoneMoved = true;
+//            } else {
+//                capstone.setManualPower(0);
+//                capstoneMoved = true;
+//                gamepad1.rumble(50);
+//            }
+//        } else if (capstoneMoved) {
+//            capstone.setManualPower(0);
+//        }
 
         if(elapsedTime.time() < 90){
             telemetry.addData("Teleop Time Remaining",(int)(90-elapsedTime.time()));
@@ -224,16 +246,16 @@ public class TeleOpLeagues extends OpMode {
             }
             endGameStatus=true;
         }
-        if(ds.getDistance(DistanceUnit.MM) <80 && !freightInCarriage){
-            freightInCarriage = true;
-            gamepad1.rumble(100);
-
-        }
+//        if(ds.getDistance(DistanceUnit.MM) <80 && !freightInCarriage){
+//            freightInCarriage = true;
+//            gamepad1.rumble(100);
+//
+//        }
 
         telemetry.addData("speed", slowModeButton.isActive() ? "slow" : "fast");
         telemetry.addData("slide pos", slide2.getCurrentPosition());
         telemetry.addData("slide status", slideStatus);
-        telemetry.addData("Carriage Distance",ds.getDistance(DistanceUnit.MM));
+//        telemetry.addData("Carriage Distance",ds.getDistance(DistanceUnit.MM));
         telemetry.update();
 
         dumpButton.update();

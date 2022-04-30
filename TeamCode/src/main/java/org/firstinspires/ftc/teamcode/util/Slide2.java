@@ -12,7 +12,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
     DcMotor motor2;
 
     public static int MIN_POSITION = 0;
-    public static int MAX_POSITION = 611;
+    public static int MAX_POSITION = 2150;
 
     public static double IDLE_POWER = 0.01;
     public static double IDLE_POWER_RTP = 0.14;
