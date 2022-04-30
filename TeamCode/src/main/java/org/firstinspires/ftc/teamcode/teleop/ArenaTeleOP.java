@@ -22,6 +22,9 @@ public class ArenaTeleOP extends PassdionOpMode {
     public static boolean ENABLE_DISTANCE_SENSOR = true;
     public static double TAPE_PITCH = 0.4;
     public static int RUMBLE_TIME = 500;
+    public static double PUBLIC_MOVEMENT_MULTIPLYER = .3;
+    public static double PUBLIC_CAPSTONE_MULTIPLYER = .2;
+
     @SuppressLint("DefaultLocale")
     @Override
     protected void registerComponents() {
@@ -44,13 +47,13 @@ public class ArenaTeleOP extends PassdionOpMode {
                 addTelemetryData("IMU Y Angle", () -> drivingController.imu.getYAngle());
                 addTelemetryData("IMU Z Angle", () -> drivingController.imu.getZAngle());
 
-                onLoop(() ->drivingController.multiplier = 0.3);
+                onLoop(() ->drivingController.multiplier = PUBLIC_MOVEMENT_MULTIPLYER);
 
             } else {
                 MecanumDrive.RobotCentricComponent drivingController = drive.robotCentricComponent();
                 register(drivingController);
 
-                drivingController.multiplier = 0.3;
+                drivingController.multiplier = PUBLIC_MOVEMENT_MULTIPLYER;
 
             }
         }
@@ -71,7 +74,7 @@ public class ArenaTeleOP extends PassdionOpMode {
             TapeMeasureMechanism.Controller capstoneController = capstoneMechanism.new Controller(gamepad2);
             register(capstoneController);
             onLoop(() -> {
-                capstoneController.multiplier = 0.2;
+                capstoneController.multiplier = PUBLIC_CAPSTONE_MULTIPLYER;
 
             });
 
