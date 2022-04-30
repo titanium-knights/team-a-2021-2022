@@ -77,7 +77,7 @@ public class TeleOpLeagues extends OpMode {
         elapsedTime = new ElapsedTime();
     }
     public void setSlidePosition(int position) {
-        slide2.setTargetPosition(position);
+        slide2.runToPosition(position);
         slide2.setPower(0.9);
     }
     @Override
@@ -147,14 +147,14 @@ public class TeleOpLeagues extends OpMode {
             case DUMPING:
                 carriageInterpolation.setTarget(Carriage.getDumpPosition());
                 if (!carriageInterpolation.isBusy()) {
-                    dumpState = TeleOpModeLeagues.DumpState.RETURNING_TO_IDLE;
+                    dumpState = TeleOpLeagues.DumpState.RETURNING_TO_IDLE;
                 }
                 break;
             case RETURNING_TO_IDLE:
                 carriageInterpolation.setTarget(Carriage.getIdlePosition());
                 if (!carriageInterpolation.isBusy()) {
                     setSlidePosition(0);
-                    dumpState = TeleOpModeLeagues.DumpState.IDLE;
+                    dumpState = TeleOpLeagues.DumpState.IDLE;
                 }
                 break;
             case IDLE:

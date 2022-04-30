@@ -14,8 +14,8 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
     public static int MIN_POSITION = 0;
     public static int MAX_POSITION = 2150;
 
-    public static double IDLE_POWER = 0.01;
-    public static double IDLE_POWER_RTP = 0.14;
+    public static double IDLE_POWER = 0;
+    public static double IDLE_POWER_RTP = 0;
     public static boolean USE_ENCODER = false;
 
     public Slide2(HardwareMap hardwareMap){
