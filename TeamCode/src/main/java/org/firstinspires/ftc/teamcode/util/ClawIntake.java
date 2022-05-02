@@ -7,7 +7,6 @@ import org.firstinspires.ftc.teamcode.teleop.PassdionOpMode;
 import org.jetbrains.annotations.NotNull;
 
 @Config
-@Deprecated
 public class ClawIntake {
     public Servo claw;
     public static double releasePos = 1.0;

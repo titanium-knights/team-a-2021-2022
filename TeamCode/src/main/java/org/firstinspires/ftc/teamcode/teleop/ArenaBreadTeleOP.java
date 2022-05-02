@@ -10,9 +10,9 @@ import org.firstinspires.ftc.teamcode.util.*;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@TeleOp(name = "Arena TeleOP", group = "Arena")
+@TeleOp(name = "ArenaBreadTeleOP", group = "Arena")
 @Config
-public class ArenaTeleOP extends PassdionOpMode {
+public class ArenaBreadTeleOP extends PassdionOpMode {
     public static boolean ENABLE_DRIVING = true;
     public static boolean ENABLE_FIELD_CENTRIC = false;
     public static boolean ENABLE_INTAKE = true;
@@ -20,7 +20,6 @@ public class ArenaTeleOP extends PassdionOpMode {
     public static boolean ENABLE_CAPSTONE = true;
     public static boolean ENABLE_OUTTAKE = true;
     public static boolean ENABLE_DISTANCE_SENSOR = true;
-    public static double TAPE_PITCH = 0.4;
     public static int RUMBLE_TIME = 500;
     public static double PUBLIC_MOVEMENT_MULTIPLYER = .6;
     public static double PUBLIC_CAPSTONE_MULTIPLYER = .2;
@@ -58,27 +57,27 @@ public class ArenaTeleOP extends PassdionOpMode {
             }
         }
 
-        if (ENABLE_INTAKE) {
-            TubeIntake intake = new TubeIntake(hardwareMap);
-            register(intake.new Controller(gamepad1));
-        }
-
-        if (ENABLE_CAROUSEL) {
-            Carousel carousel = new Carousel(hardwareMap);
-            register(carousel.new Controller(gamepad1));
-        }
+//        if (ENABLE_INTAKE) {
+//            TubeIntake intake = new TubeIntake(hardwareMap);
+//            register(intake.new Controller(gamepad1));
+//        }
+//
+//        if (ENABLE_CAROUSEL) {
+//            Carousel carousel = new Carousel(hardwareMap);
+//            register(carousel.new Controller(gamepad1));
+//        }
 
         if (ENABLE_CAPSTONE) {
-            TapeMeasureMechanism capstoneMechanism = new TapeMeasureMechanism(hardwareMap);
-            capstoneMechanism.setPitchPosition(TAPE_PITCH, true);
-            TapeMeasureMechanism.Controller capstoneController = capstoneMechanism.new Controller(gamepad2);
+            CapstoneMechanism2 capstoneMechanism = new CapstoneMechanism2(hardwareMap);
+            CapstoneMechanism2.Controller capstoneController = capstoneMechanism.new Controller(gamepad1);
             register(capstoneController);
             onLoop(() -> {
                 capstoneController.multiplier = PUBLIC_CAPSTONE_MULTIPLYER;
 
-            });
 
-            addTelemetryData("Pitch Pos", () -> capstoneMechanism.pitchServo.getPosition());
+            });
+            ClawIntake claw = new ClawIntake(hardwareMap);
+            register(claw.new Controller(gamepad1));
         }
 
         if (ENABLE_OUTTAKE) {
