@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.util.*;
 
-@Config
+/* @Config
 @TeleOp(name = "TeleOp Leagues", group = "TeleOp")
 public class TeleOpLeagues extends OpMode {
     enum DumpState {
@@ -264,4 +264,4 @@ public class TeleOpLeagues extends OpMode {
         slideMidButton.update();
         clawButton.update();
     }
-}
+} */

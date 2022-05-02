@@ -323,4 +323,8 @@ public class OdometryMecanumDrive extends MecanumDrive {
     public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
         return new ProfileAccelerationConstraint(maxAccel);
     }
+
+    public void interrupt() {
+        trajectorySequenceRunner.interrupt();
+    }
 }
