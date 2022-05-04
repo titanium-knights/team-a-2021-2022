@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 @Config public class CapstoneMechanism2 {
     DcMotor motor;
     public static double power = 0.8;
-    public static int idle = -490;
-    public static int pickup = -2480;
+    public static int idle = 900;
+    public static int pickup = 2250;
 
     public CapstoneMechanism2(HardwareMap hardwareMap, boolean resetEncoders){
         motor = hardwareMap.dcMotor.get("capstone");
