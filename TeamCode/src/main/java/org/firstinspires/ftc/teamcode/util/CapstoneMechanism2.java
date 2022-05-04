@@ -14,6 +14,9 @@ import org.jetbrains.annotations.NotNull;
     public static int idle = -490;
     public static int pickup = -2480;
 
+    public static int frontBottom = 0;
+    public static int backBottom = -1341;
+
     public CapstoneMechanism2(HardwareMap hardwareMap, boolean resetEncoders){
         motor = hardwareMap.dcMotor.get("capstone");
         if (resetEncoders) motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -40,6 +43,12 @@ import org.jetbrains.annotations.NotNull;
 
     public static int getIdle(){
         return idle;
+    }
+    public static int getFrontBottom(){
+        return frontBottom;
+    }
+    public static int getBackBottom(){
+        return backBottom;
     }
     public static int getPickup() { return pickup; }
 
@@ -68,22 +77,22 @@ import org.jetbrains.annotations.NotNull;
         public void update(@NotNull PassdionOpMode opMode) {
             int pos = getPosition();
             if (gamepad.right_bumper) {
-                // if (pos <= CapstoneMechanism2.getIdle()) {
-                //     setManualPower(CapstoneMechanism2.power * multiplier);
-                // } else {
-                //     setManualPower(0);
-                //     gamepad.rumble(50);
-                // }
-                setManualPower(CapstoneMechanism2.power * multiplier);
+                if (pos <= CapstoneMechanism2.getFrontBottom()) {
+                    setManualPower(CapstoneMechanism2.power * multiplier);
+                } else {
+                    setManualPower(0);
+                    gamepad.rumble(50);
+                }
+                // setManualPower(CapstoneMechanism2.power * multiplier);
                 movedManually = true;
             } else if (gamepad.left_bumper) {
-                // if (pos >= CapstoneMechanism2.getPickup()) {
-                //     setManualPower(-CapstoneMechanism2.power * multiplier);
-                // } else {
-                //     setManualPower(0);
-                //     gamepad.rumble(50);
-                // }
-                setManualPower(-CapstoneMechanism2.power * multiplier);
+                if (pos >= CapstoneMechanism2.getBackBottom()) {
+                    setManualPower(-CapstoneMechanism2.power * multiplier);
+                } else {
+                    setManualPower(0);
+                    gamepad.rumble(50);
+                }
+                // setManualPower(-CapstoneMechanism2.power * multiplier);
                 movedManually = true;
             } else if (movedManually) {
                 setManualPower(0);
