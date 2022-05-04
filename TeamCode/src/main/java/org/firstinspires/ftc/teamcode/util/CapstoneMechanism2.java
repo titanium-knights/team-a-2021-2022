@@ -76,6 +76,7 @@ import org.jetbrains.annotations.NotNull;
                  }
                 setManualPower(CapstoneMechanism2.power * multiplier);
                 movedManually = true;
+
             } else if (gamepad.left_bumper) {
                  if (pos >= CapstoneMechanism2.getPickup()) {
                      setManualPower(-CapstoneMechanism2.power * multiplier);
@@ -85,6 +86,7 @@ import org.jetbrains.annotations.NotNull;
                  }
                 setManualPower(-CapstoneMechanism2.power * multiplier);
                 movedManually = true;
+
             } else if (movedManually) {
                 setManualPower(0);
             }
