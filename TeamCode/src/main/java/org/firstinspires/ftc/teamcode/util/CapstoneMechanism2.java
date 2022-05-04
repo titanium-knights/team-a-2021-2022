@@ -61,7 +61,7 @@ import org.jetbrains.annotations.NotNull;
         @Override
         public void start(@NotNull PassdionOpMode opMode) {
             super.start(opMode);
-            setPosition(getIdle());
+            // setPosition(getIdle());
         }
 
         @Override
