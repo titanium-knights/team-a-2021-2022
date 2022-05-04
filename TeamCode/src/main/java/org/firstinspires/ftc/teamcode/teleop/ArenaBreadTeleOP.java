@@ -80,43 +80,7 @@ public class ArenaBreadTeleOP extends PassdionOpMode {
             register(claw.new Controller(gamepad1));
         }
 
-        if (ENABLE_OUTTAKE) {
-            Slide2 slide = new Slide2(hardwareMap);
-            CarriageDC carriage = new CarriageDC(hardwareMap);
-            OuttakeController outtakeController = new OuttakeController(slide, carriage, gamepad1);
-            register(outtakeController);
-
-            addTelemetryData("Slide Pos", slide::getCurrentPosition);
-            addTelemetryData("Slide Status", () -> {
-                if (outtakeController.isSlideUnderManualControl()) {
-                    return "Manual";
-                } else {
-                    return String.format("Moving to %d", outtakeController.getSlideTargetPos());
-                }
-            });
-            addTelemetryData("Carriage Pos", () -> carriage.getPosition());
-            if (ENABLE_DISTANCE_SENSOR) {
-                AtomicBoolean didRumbleForFreight = new AtomicBoolean(false);
-                DistanceSensor ds = hardwareMap.get(DistanceSensor.class, "distance_sensor");
-                onLoop(() -> {
-                    if (didRumbleForFreight.get()) {
-                        if (outtakeController.getState() == OuttakeController.State.RETRACTING) {
-                            didRumbleForFreight.set(false);
-                        }
-                    }
-                    else {
-                        if (ds.getDistance(DistanceUnit.MM) < 80) {
-//                            addTelemetryData("here",()->"here");
-
-                            didRumbleForFreight.set(true);
-                            gamepad1.rumble(RUMBLE_TIME);
-                        }
-                    }
-                });
-                addTelemetryData("didRumbleForFreight",()->didRumbleForFreight.get());
-                addTelemetryData("Carriage Distance", () -> ds.getDistance(DistanceUnit.MM));
-            }
-        }
+        
 
         register(new TimeTelemetry());
     }
