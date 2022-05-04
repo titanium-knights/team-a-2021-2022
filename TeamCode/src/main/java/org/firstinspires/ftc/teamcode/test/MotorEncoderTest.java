@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @TeleOp
 public class MotorEncoderTest extends OpMode {
     DcMotorEx motor;
-    public static String motorName = "capstone_arm";
+    public static String motorName = "capstone";
     Telemetry dashTelemetry = FtcDashboard.getInstance().getTelemetry();
 
     @Override
