@@ -21,7 +21,11 @@ public class BreaddieDance extends LinearOpMode {
     CapstoneMechanism2 capstone;
     ClawIntake clawIntake;
 
-    public static int beat = 500;
+    public static int INTRO_BEAT = 125;
+    public static int SPINNY_BEAT = 94;
+    public static int SPINNY_BEAT_MID = 78;
+
+    public static double POWER = .02;
 
     public void initialize() {
         drive = new MecanumDrive(hardwareMap);
@@ -36,26 +40,71 @@ public class BreaddieDance extends LinearOpMode {
 
         //dance :-)
             //drive left, drive right immediately
+        //cc left, cw - right
 
         //initial turn left turn right taps
-        drive.turnLeftWithPower(.5);
-        sleep(beat);
+        drive.turnLeftWithPower(POWER);
+        sleep(INTRO_BEAT);
         drive.stop();
+        sleep(INTRO_BEAT/2);
 
-        drive.turnRightWithPower(.5);
-        sleep(beat);
+        drive.turnRightWithPower(POWER);
+        sleep(INTRO_BEAT);
         drive.stop();
-        sleep(beat);
+        sleep(INTRO_BEAT/2);
 
-        drive.turnRightWithPower(.5);
-        sleep(beat);
+        drive.turnRightWithPower(POWER);
+        sleep(INTRO_BEAT);
         drive.stop();
+        sleep(INTRO_BEAT/2);
 
-        drive.turnLeftWithPower(.5);
-        sleep(beat);
+        drive.turnLeftWithPower(POWER);
+        sleep(INTRO_BEAT);
         drive.stop();
+        sleep(INTRO_BEAT/2);
 
-        //stop-motion looking 180 turn (with a little jaz inbetween)
+        //stop-motion looking 180 turn (with a little jaz in-between)
+        //three counter clockwise spins
+        for (int i=0; i<3; i++) {
+            drive.turnLeftWithPower(POWER);
+            sleep(SPINNY_BEAT);
+            drive.stop();
+            sleep(INTRO_BEAT/2);
+        }
+
+        sleep(INTRO_BEAT);
+        //semi pause and flip flop
+        //one-two cw, one-two cc
+        for (int i=0; i<2; i++) {
+            drive.turnRightWithPower(POWER);
+            sleep(SPINNY_BEAT_MID);
+            drive.stop();
+            sleep(INTRO_BEAT/4);
+        }
+
+        for (int i=0; i<2; i++) {
+            drive.turnLeftWithPower(POWER);
+            sleep(SPINNY_BEAT_MID);
+            drive.stop();
+            sleep(INTRO_BEAT/4);
+        }
+
+        //long cw spin into sexy pause
+        drive.turnRightWithPower(POWER);
+        sleep((long) (SPINNY_BEAT*1.25));
+        drive.stop();
+        sleep(INTRO_BEAT);
+
+        //wave time like the queen (of england)
+        //three arm waves clockwise
+        //pause
+        //more arm waves
+
+        //sit
+        //stand
+        //sit
+        //wave like a girlboss
+        //sit
 
 
 
