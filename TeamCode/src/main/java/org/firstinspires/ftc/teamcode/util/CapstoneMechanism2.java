@@ -84,7 +84,6 @@ import org.jetbrains.annotations.NotNull;
                      setManualPower(0);
                      gamepad.rumble(50);
                  }
-                setManualPower(-CapstoneMechanism2.power * multiplier);
                 movedManually = true;
             } else if (movedManually) {
                 setManualPower(0);
