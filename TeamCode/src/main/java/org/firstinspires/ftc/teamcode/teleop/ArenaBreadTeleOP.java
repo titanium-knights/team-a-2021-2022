@@ -80,6 +80,8 @@ public class ArenaBreadTeleOP extends PassdionOpMode {
             ClawIntake claw = new ClawIntake(hardwareMap);
             register(claw.new Controller(gamepad1));
 
+            addTelemetryData("Capstone Position:", () -> capstoneMechanism.getPosition());
+
         }
 
 //        if (ENABLE_OUTTAKE) {
