@@ -21,11 +21,11 @@ public class BreaddieDance extends LinearOpMode {
     CapstoneMechanism2 capstone;
     ClawIntake clawIntake;
 
-    public static int INTRO_BEAT = 125;
+    public static int INTRO_BEAT = 300;
     public static int SPINNY_BEAT = 94;
     public static int SPINNY_BEAT_MID = 78;
 
-    public static double POWER = .02;
+    public static double POWER = .5;
 
     public void initialize() {
         drive = new MecanumDrive(hardwareMap);
