@@ -17,19 +17,27 @@ import org.jetbrains.annotations.NotNull;
 @Autonomous
 public class BreaddieDance extends LinearOpMode {
     MecanumDrive drive;
-    CapstoneMechanism2 capstone;
-    ClawIntake clawIntake;
+    CapstoneMechanism2 arm;
+    ClawIntake claw;
 
     public static int INTRO_BEAT = 300;
+
     public static int SPINNY_BEAT = 94;
     public static int SPINNY_BEAT_MID = 78;
 
-    public static double POWER = .5;
+    public static int ALL_ACTIONS_BEAT = 250;
+    public static int ALL_ACTIONS_PAUSE = 120;
+
+    public static int SIT_PAUSE = 250;
+
+    public static double POWER_BODY = .5;
+    public static double POWER_ARM = .25;
 
     public void initialize() {
         drive = new MecanumDrive(hardwareMap);
-        capstone = new CapstoneMechanism2(hardwareMap);
-        clawIntake = new ClawIntake(hardwareMap);
+        arm = new CapstoneMechanism2(hardwareMap);
+
+        claw = new ClawIntake(hardwareMap);
     }
 
     @Override
@@ -42,22 +50,22 @@ public class BreaddieDance extends LinearOpMode {
         //cc left, cw - right
 
         //initial turn left turn right taps
-        drive.turnLeftWithPower(POWER);
+        drive.turnLeftWithPower(POWER_BODY);
         sleep(INTRO_BEAT);
         drive.stop();
         sleep(INTRO_BEAT/2);
 
-        drive.turnRightWithPower(POWER);
+        drive.turnRightWithPower(POWER_BODY);
         sleep(INTRO_BEAT);
         drive.stop();
         sleep(INTRO_BEAT/2);
 
-        drive.turnRightWithPower(POWER);
+        drive.turnRightWithPower(POWER_BODY);
         sleep(INTRO_BEAT);
         drive.stop();
         sleep(INTRO_BEAT/2);
 
-        drive.turnLeftWithPower(POWER);
+        drive.turnLeftWithPower(POWER_BODY);
         sleep(INTRO_BEAT);
         drive.stop();
         sleep(INTRO_BEAT/2);
@@ -65,7 +73,7 @@ public class BreaddieDance extends LinearOpMode {
         //stop-motion looking 180 turn (with a little jaz in-between)
         //three counter clockwise spins
         for (int i=0; i<3; i++) {
-            drive.turnLeftWithPower(POWER);
+            drive.turnLeftWithPower(POWER_BODY);
             sleep(SPINNY_BEAT);
             drive.stop();
             sleep(INTRO_BEAT/2);
@@ -75,26 +83,61 @@ public class BreaddieDance extends LinearOpMode {
         //semi pause and flip flop
         //one-two cw, one-two cc
         for (int i=0; i<2; i++) {
-            drive.turnRightWithPower(POWER);
+            drive.turnRightWithPower(POWER_BODY);
             sleep(SPINNY_BEAT_MID);
             drive.stop();
             sleep(INTRO_BEAT/4);
         }
 
         for (int i=0; i<2; i++) {
-            drive.turnLeftWithPower(POWER);
+            drive.turnLeftWithPower(POWER_BODY);
             sleep(SPINNY_BEAT_MID);
             drive.stop();
             sleep(INTRO_BEAT/4);
         }
 
         //long cw spin into sexy pause
-        drive.turnRightWithPower(POWER);
+        drive.turnRightWithPower(POWER_BODY);
         sleep((long) (SPINNY_BEAT*1.25));
         drive.stop();
         sleep(INTRO_BEAT);
 
-        //wave time like the queen (of england)
+        //fuller spin
+
+        //all movement x3: while spinning, arm goes up and down 3 cycles
+        for (int i=0; i<3; i++) {
+
+            drive.turnLeftWithPower(POWER_BODY); //movement thorughout spinnyyyy
+            sleep(ALL_ACTIONS_BEAT);
+
+            arm.setManualPower(POWER_ARM); //arm up and down
+            sleep(ALL_ACTIONS_BEAT);
+
+            arm.setManualPower(-POWER_ARM);
+            sleep(ALL_ACTIONS_BEAT);
+
+            arm.setManualPower(POWER_ARM);
+            sleep(ALL_ACTIONS_BEAT);
+
+            arm.setManualPower(-POWER_ARM);
+            sleep(ALL_ACTIONS_BEAT);
+
+            arm.setManualPower(0);
+            drive.stop();
+            sleep(ALL_ACTIONS_PAUSE);
+        }
+        //all movement done --> goes into sit, arm
+        arm.setManualPower(-POWER_ARM);
+        sleep(SIT_PAUSE);
+        arm.setManualPower(0);
+        sleep(SIT_PAUSE);
+
+        arm.setManualPower(POWER_ARM);
+        sleep(SIT_PAUSE);
+        arm.setManualPower(0);
+        sleep(SIT_PAUSE);
+
+        //wave time like the queen (of england) --claw
         //three arm waves clockwise
         //pause
         //more arm waves
@@ -102,7 +145,7 @@ public class BreaddieDance extends LinearOpMode {
         //sit
         //stand
         //sit
-        //wave like a girlboss
+        //wave like a girlboss --claw
         //sit
 
 
