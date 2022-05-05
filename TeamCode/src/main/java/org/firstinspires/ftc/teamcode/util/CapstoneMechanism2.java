@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
     DcMotor motor;
     public static double power = 0.8;
     public static int idle = 1020; //front pickup
-    public static int pickup = -939; //back limit
+    public static int pickup = -832; //back limit
 
     public CapstoneMechanism2(HardwareMap hardwareMap, boolean resetEncoders){
         motor = hardwareMap.dcMotor.get("capstone");
@@ -75,7 +75,6 @@ import org.jetbrains.annotations.NotNull;
                      setManualPower(0);
                      gamepad.rumble(50);
                  }
-                setManualPower(CapstoneMechanism2.power * multiplier);
                 movedManually = true;
             } else if (gamepad.left_bumper) {
                  if (pos >= CapstoneMechanism2.getPickup()) {
@@ -84,7 +83,6 @@ import org.jetbrains.annotations.NotNull;
                      setManualPower(0);
                      gamepad.rumble(50);
                  }
-                setManualPower(-CapstoneMechanism2.power * multiplier);
                 movedManually = true;
             } else if (movedManually) {
                 setManualPower(0);
