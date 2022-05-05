@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 
 @Config
 @Autonomous
-
 public class BreaddieDance extends LinearOpMode {
     MecanumDrive drive;
     CapstoneMechanism2 capstone;
