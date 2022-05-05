@@ -73,7 +73,7 @@ public class BreaddieDance extends LinearOpMode {
         //stop-motion looking 180 turn (with a little jaz in-between)
         //three counter clockwise spins
         for (int i=0; i<3; i++) {
-            drive.turnLeftWithPower(POWER_BODY);
+            drive.turnRightWithPower(POWER_BODY);
             sleep(SPINNY_BEAT);
             drive.stop();
             sleep(INTRO_BEAT/2);
