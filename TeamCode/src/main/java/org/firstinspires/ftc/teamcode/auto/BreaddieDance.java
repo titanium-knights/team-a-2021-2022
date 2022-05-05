@@ -29,6 +29,7 @@ public class BreaddieDance extends LinearOpMode {
     public static int ALL_ACTIONS_PAUSE = 120;
 
     public static int SIT_PAUSE = 250;
+    public static int WAVE_BEAT = 200;
 
     public static double POWER_BODY = .5;
     public static double POWER_ARM = .25;
@@ -38,6 +39,10 @@ public class BreaddieDance extends LinearOpMode {
         arm = new CapstoneMechanism2(hardwareMap);
 
         claw = new ClawIntake(hardwareMap);
+    }
+
+    public void sit() {
+
     }
 
     @Override
@@ -71,7 +76,7 @@ public class BreaddieDance extends LinearOpMode {
         sleep(INTRO_BEAT/2);
 
         //stop-motion looking 180 turn (with a little jaz in-between)
-        //three counter clockwise spins
+        //three clockwise spins
         for (int i=0; i<3; i++) {
             drive.turnRightWithPower(POWER_BODY);
             sleep(SPINNY_BEAT);
@@ -81,16 +86,16 @@ public class BreaddieDance extends LinearOpMode {
 
         sleep(INTRO_BEAT);
         //semi pause and flip flop
-        //one-two cw, one-two cc
+        //one-two ccw, one-two cw
         for (int i=0; i<2; i++) {
-            drive.turnRightWithPower(POWER_BODY);
+            drive.turnLeftWithPower(POWER_BODY);
             sleep(SPINNY_BEAT_MID);
             drive.stop();
             sleep(INTRO_BEAT/4);
         }
 
         for (int i=0; i<2; i++) {
-            drive.turnLeftWithPower(POWER_BODY);
+            drive.turnRightWithPower(POWER_BODY);
             sleep(SPINNY_BEAT_MID);
             drive.stop();
             sleep(INTRO_BEAT/4);
@@ -106,38 +111,55 @@ public class BreaddieDance extends LinearOpMode {
 
         //all movement x3: while spinning, arm goes up and down 3 cycles
         for (int i=0; i<3; i++) {
-
             drive.turnLeftWithPower(POWER_BODY); //movement thorughout spinnyyyy
             sleep(ALL_ACTIONS_BEAT);
 
-            arm.setManualPower(POWER_ARM); //arm up and down
-            sleep(ALL_ACTIONS_BEAT);
+            for (i=0; i<2; i++) {
+                arm.setManualPower(POWER_ARM); //arm up and down
+                sleep(ALL_ACTIONS_BEAT);
 
-            arm.setManualPower(-POWER_ARM);
-            sleep(ALL_ACTIONS_BEAT);
-
-            arm.setManualPower(POWER_ARM);
-            sleep(ALL_ACTIONS_BEAT);
-
-            arm.setManualPower(-POWER_ARM);
-            sleep(ALL_ACTIONS_BEAT);
+                arm.setManualPower(-POWER_ARM);
+                sleep(ALL_ACTIONS_BEAT);
+            }
 
             arm.setManualPower(0);
             drive.stop();
             sleep(ALL_ACTIONS_PAUSE);
-        }
-        //all movement done --> goes into sit, arm
-        arm.setManualPower(-POWER_ARM);
-        sleep(SIT_PAUSE);
-        arm.setManualPower(0);
-        sleep(SIT_PAUSE);
 
-        arm.setManualPower(POWER_ARM);
-        sleep(SIT_PAUSE);
-        arm.setManualPower(0);
-        sleep(SIT_PAUSE);
+        }
+
+        //all movement done --> goes into sit,, instead of sitting moving arm up and down --> do this twice
+        for (int i=0; i<2; i++) {
+            arm.setManualPower(-POWER_ARM);
+            sleep(SIT_PAUSE);
+            arm.setManualPower(0);
+            sleep(SIT_PAUSE);
+
+            arm.setManualPower(POWER_ARM);
+            sleep(SIT_PAUSE);
+            arm.setManualPower(0);
+            sleep(SIT_PAUSE);
+        }
 
         //wave time like the queen (of england) --claw
+
+        for (int i=0; i<2; i++) {
+            arm.setManualPower(POWER_ARM);
+            sleep(WAVE_BEAT);
+            arm.setManualPower(0);
+            sleep(WAVE_BEAT);
+
+            claw.grab();
+            sleep(WAVE_BEAT);
+            claw.release();
+            sleep(WAVE_BEAT);
+
+
+            sleep(SIT_PAUSE);
+            arm.setManualPower(0);
+            sleep(SIT_PAUSE);
+        }
+
         //three arm waves clockwise
         //pause
         //more arm waves
