@@ -128,12 +128,12 @@ public class BreaddieDance extends LinearOpMode {
 
             //all movement done --> goes into sit,, instead of sitting moving arm up and down --> do this twice
             for (int i = 0; i < 2; i++) {
-                arm.setManualPower(POWER_ARM);
+                arm.setManualPower(-POWER_ARM);
                 sleep(SIT_MOTION);
                 arm.setManualPower(0);
                 sleep(SIT_PAUSE);
 
-                arm.setManualPower(-POWER_ARM);
+                arm.setManualPower(POWER_ARM);
                 sleep(SIT_MOTION);
                 arm.setManualPower(0);
                 sleep(SIT_PAUSE);
