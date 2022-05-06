@@ -114,10 +114,10 @@ public class BreaddieDance extends LinearOpMode {
                 sleep(ALL_ACTIONS_BEAT);
 
                 for (i = 0; i < 2; i++) {
-                    arm.setManualPower(POWER_ARM); //arm up and down
+                    arm.setManualPower(-POWER_ARM); //arm up and down
                     sleep(ALL_ACTIONS_BEAT);
 
-                    arm.setManualPower(-POWER_ARM);
+                    arm.setManualPower(POWER_ARM);
                     sleep(ALL_ACTIONS_BEAT);
                 }
 
