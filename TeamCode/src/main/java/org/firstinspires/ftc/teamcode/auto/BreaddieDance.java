@@ -43,7 +43,7 @@ public class BreaddieDance extends LinearOpMode {
     }
 
     @Override
-    public void runOpMode(){
+    public void runOpMode(){ //*to the beat of the club penguin club in the plaza
         initialize();
         waitForStart();
 
@@ -140,7 +140,9 @@ public class BreaddieDance extends LinearOpMode {
             }
 
             //wave time like the queen (of england) --claw
-
+                //three arm waves clockwise
+            //pause
+                //more arm waves
             for (int i = 0; i < 2; i++) {
                 arm.setManualPower(POWER_ARM);
                 sleep(SIT_MOTION);
@@ -157,15 +159,26 @@ public class BreaddieDance extends LinearOpMode {
                 sleep(SIT_PAUSE);
             }
 
-            //three arm waves clockwise
-            //pause
-            //more arm waves
-
             //sit
             //stand
             //sit
-            //wave like a girlboss --claw
-            //sit
+            for (int i = 0; i < 2; i++) {
+                arm.setManualPower(-POWER_ARM);
+                sleep(SIT_MOTION);
+                arm.setManualPower(0);
+                sleep(SIT_PAUSE);
+
+                arm.setManualPower(POWER_ARM);
+                sleep(SIT_MOTION);
+                arm.setManualPower(0);
+                sleep(SIT_PAUSE);
+            }
+
+            //end it off w a spin !!
+
+            drive.turnLeftWithPower(POWER_BODY);
+            sleep(INTRO_BEAT);
+            drive.stop();
         }
 
 
