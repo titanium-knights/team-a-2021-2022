@@ -142,7 +142,7 @@ public class BreaddieDance extends LinearOpMode {
             //wave time like the queen (of england) --claw
 
             for (int i = 0; i < 2; i++) {
-                arm.setManualPower(POWER_ARM);
+                arm.setManualPower(-POWER_ARM);
                 sleep(SIT_MOTION);
                 arm.setManualPower(0);
                 sleep(WAVE_BEAT);
