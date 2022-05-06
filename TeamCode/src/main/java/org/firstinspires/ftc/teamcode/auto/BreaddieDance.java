@@ -72,7 +72,7 @@ public class BreaddieDance extends LinearOpMode {
             drive.turnLeftWithPower(POWER_BODY);
             sleep(INTRO_BEAT);
             drive.stop();
-            sleep(INTRO_BEAT / 2);
+            sleep(INTRO_BEAT);
 
             //stop-motion looking 180 turn (with a little jaz in-between)
             //three clockwise spins
@@ -114,10 +114,10 @@ public class BreaddieDance extends LinearOpMode {
                 sleep(ALL_ACTIONS_BEAT);
 
                 for (i = 0; i < 2; i++) {
-                    arm.setManualPower(-POWER_ARM); //arm up and down
+                    arm.setManualPower(POWER_ARM); //arm up and down
                     sleep(ALL_ACTIONS_BEAT);
 
-                    arm.setManualPower(POWER_ARM);
+                    arm.setManualPower(-POWER_ARM);
                     sleep(ALL_ACTIONS_BEAT);
                 }
 
@@ -128,12 +128,12 @@ public class BreaddieDance extends LinearOpMode {
 
             //all movement done --> goes into sit,, instead of sitting moving arm up and down --> do this twice
             for (int i = 0; i < 2; i++) {
-                arm.setManualPower(-POWER_ARM);
+                arm.setManualPower(POWER_ARM);
                 sleep(SIT_MOTION);
                 arm.setManualPower(0);
                 sleep(SIT_PAUSE);
 
-                arm.setManualPower(POWER_ARM);
+                arm.setManualPower(-POWER_ARM);
                 sleep(SIT_MOTION);
                 arm.setManualPower(0);
                 sleep(SIT_PAUSE);
@@ -142,7 +142,7 @@ public class BreaddieDance extends LinearOpMode {
             //wave time like the queen (of england) --claw
 
             for (int i = 0; i < 2; i++) {
-                arm.setManualPower(-POWER_ARM);
+                arm.setManualPower(POWER_ARM);
                 sleep(SIT_MOTION);
                 arm.setManualPower(0);
                 sleep(WAVE_BEAT);
