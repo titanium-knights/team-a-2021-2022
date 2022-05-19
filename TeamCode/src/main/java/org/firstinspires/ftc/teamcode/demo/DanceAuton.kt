@@ -33,14 +33,6 @@ class DanceAuton: TimepointAuton() {
         }
 
         after(1.0) {
-            carriage.dump()
-        }
-
-        after(1.0) {
-            carriage.idle()
-        }
-
-        after(1.0) {
             slideTargetPosition = Slide2.MIN_POSITION + 10
             drive.driveForwardsWithPower(-1.0)
         }
