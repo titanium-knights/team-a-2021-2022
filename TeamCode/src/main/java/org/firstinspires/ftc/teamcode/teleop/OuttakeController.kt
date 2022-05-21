@@ -5,6 +5,14 @@ import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.util.*
 
+@Config object OuttakeControllerSettings {
+    @JvmField var DELAY_MS = 500
+    @JvmField var HIGH = Slide2.MAX_POSITION
+    @JvmField var MID = 250
+    @JvmField var LOW = Slide2.MIN_POSITION + 10
+    @JvmField var SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = 200
+}
+
 class OuttakeController(
     private val slide: Slide2,
     private val carriage: CarriageDC,
@@ -40,7 +48,7 @@ class OuttakeController(
     var disableSlideLimits = false
 
     override fun init(opMode: PassdionOpMode) {
-        carriage.idle()
+        // carriage.idle()
         opMode.register(dumpButton)
         opMode.register(highButton)
         opMode.register(midButton)
@@ -58,7 +66,7 @@ class OuttakeController(
                 }
             }
             State.DUMPED -> {
-                if (timeInState >= DELAY_MS / 1000.0) {
+                if (timeInState >= OuttakeControllerSettings.DELAY_MS / 1000.0) {
                     state = State.RETRACTING
                 }
             }
@@ -66,21 +74,21 @@ class OuttakeController(
                 carriage.idle()
                 if (!carriage.isBusy) {
                     state = State.IDLE
-                    slideTargetPos = LOW
+                    slideTargetPos = OuttakeControllerSettings.LOW
                 }
             }
         }
 
         when {
             highButton.isPressed -> {
-                slideTargetPos = if (slideTargetPos == HIGH) LOW else HIGH
+                slideTargetPos = if (slideTargetPos == OuttakeControllerSettings.HIGH) OuttakeControllerSettings.LOW else OuttakeControllerSettings.HIGH
             }
             midButton.isPressed -> {
-                slideTargetPos = if (slideTargetPos == MID) LOW else MID
+                slideTargetPos = if (slideTargetPos == OuttakeControllerSettings.MID) OuttakeControllerSettings.LOW else OuttakeControllerSettings.MID
             }
         }
 
-        if (dumpButton.isPressed && slide.currentPosition >= SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD) {
+        if (dumpButton.isPressed && slide.currentPosition >= OuttakeControllerSettings.SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD) {
             state = State.DUMPING
         }
 
@@ -102,13 +110,5 @@ class OuttakeController(
                 slide.runToPosition(slideTargetPos!!)
             }
         }
-    }
-
-    @Config companion object OuttakeControllerSettings {
-        @JvmField var DELAY_MS = 500
-        @JvmField var HIGH = Slide2.MAX_POSITION
-        @JvmField var MID = 250
-        @JvmField var LOW = Slide2.MIN_POSITION + 10
-        @JvmField var SLIDE_SAFE_CARRIAGE_MOTION_THRESHOLD = 200
     }
 }

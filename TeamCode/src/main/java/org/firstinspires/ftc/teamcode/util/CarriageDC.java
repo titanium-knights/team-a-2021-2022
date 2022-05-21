@@ -8,11 +8,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
     DcMotor carriage;
     public static int DUMP_POS = -192;
     public static int IDLE_POS = -5;
-    public static double CARRIAGE_POWER = 1;
+    public static double CARRIAGE_POWER = 0.5;
     public final String MOTOR_NAME = "carriage";
     public CarriageDC(HardwareMap hmap){
         carriage = hmap.get(DcMotor.class, MOTOR_NAME);
         carriage.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        carriage.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
     public int getPosition(){
         return carriage.getCurrentPosition();
